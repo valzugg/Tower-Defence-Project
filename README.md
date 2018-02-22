@@ -1,0 +1,1 @@
+Tämä on projektin ensimmäinen vaihe
