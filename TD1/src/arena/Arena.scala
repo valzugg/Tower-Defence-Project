@@ -1,10 +1,13 @@
 package arena
 
 import processing.core.PApplet
+import user_interface._
 
-class Arena(width: Int = 20, height: Int = 16) {
-  
+class Arena(p: Game, width: Int = 20, height: Int = 15) {
+  val parent = p.asInstanceOf[PApplet]
   val squares = Array.ofDim[Square](width,height)
+  
+  def towerCount = squares.flatten.filter(_.isInstanceOf[Tower]).length
   
   private def makeSquare(x: String, col: Int, row: Int) = {
     if (x == "0") {
@@ -21,7 +24,13 @@ class Arena(width: Int = 20, height: Int = 16) {
     squares(row) = line.zipWithIndex.map(x => makeSquare(x._1,x._2,row))
   }
   
-  //def mouseSquare(x: Int, y: Int) = squares(x)(y)
-  
+  def setTower(x: Int, y: Int) = {
+    if (squares(x)(y).isInstanceOf[Empty]) {
+      squares(x)(y) = new Tower(x,y)
+      true
+    } else {
+      false
+    }
+  }
 
 }
