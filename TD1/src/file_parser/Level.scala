@@ -7,7 +7,7 @@ import user_interface._
 class Level(file: String, p: Game) {
   
   val arena = new Arena(p)
-  var index = 0
+  private var index = 0
   
   val fileReader = new FileReader(file)
   val lineReader = new BufferedReader( fileReader )
