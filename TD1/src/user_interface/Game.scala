@@ -6,6 +6,7 @@ import processing.core.PConstants
 import scala.util.Random
 import file_parser._
 import arena._
+import objects._
 
 // https://processing.org/reference/
 // https://www.youtube.com/thecodingtrain
@@ -42,7 +43,10 @@ class Game extends PApplet {
   def onMenu = mSqX > aWidth-1
   
   // a mob
-  val ant = new Mob(-sqSize,sqSize*8,0.5.toFloat, null, this)
+  val ants = Array.ofDim[Mob](5)
+  for (a <- 1 to 5) {
+    ants(a-1) = new Mob(-sqSize*a*2,sqSize*8,0.8.toFloat, null, this)
+  }
   
   val arena = Array.ofDim[PImage](4)
   val menu = Array.ofDim[PImage](2)
@@ -59,7 +63,7 @@ class Game extends PApplet {
     arena(1) = loadImage("imgs/path.png")
     arena(2) = loadImage("imgs/tower.png")
     arena(3) = loadImage("imgs/towerNo.png")
-    ant.img  = loadImage("imgs/ant.png")
+    ants.foreach(_.img  = loadImage("imgs/ant.png"))
     menu(0)  = loadImage("imgs/menu.jpg")
     menu(1)  = loadImage("imgs/menutop.jpg")
     font = createFont("Arial",16,true)
@@ -140,15 +144,21 @@ class Game extends PApplet {
         }
       } 
     } else {
-      menuChoose = 0
+      menuChoose = 0        //the color's opacity the the cursor isn't there goes to zero
       menuCol    = (255, 0) //when the player doesnt have enough money, the menu turns red
+      buyT       = false
     }
     
 
-    //mob stuff
-    ant.act()
-    image(ant.img,ant.x,ant.y,30,40)
-
+    /////////////////////mob stuff//////////////////////////
+    translate(sqSize/8,sqSize/8)
+    //imageMode(3)
+    for (a <- ants) {
+      a.act()
+      image(a.img,a.x,a.y,30,30)
+    }
+    //imageMode(0)
+    ////////////////////////////////////////////////////////
     
     fr += 1
     if (fr % 90 == 0)
@@ -193,94 +203,4 @@ object Player {
     
 }
 
-/** Mob represents an enemy in a tower defence game 
- *  
- */
-class Mob(sx: Float ,sy: Float ,val speed: Float, var img: PImage, p: Game) {
-  val sqSize  = 40
-  
-  var x = sx
-  var y = sy
-  
-  var dir = (0,0)
-  
-  //the mob's current square
-  def square = {
-    p.lvls(p.lvlN).arena.squares(x.toInt/sqSize)(y.toInt/sqSize)
-  }
-  
-  //a square of given arena coordinates relative to the mob
-  def nextSq(xx: Int,yy: Int) = {
-    p.lvls(p.lvlN).arena.squares((y.toInt/sqSize) + yy)((x.toInt/sqSize) + xx)
-  } //changin x and y around does magic
-  
-  
-  //still a problem with the coords detection
-  //intelligent movement
-  //true if-helvetti
-  def act() = {
-    
-    //when at start
-    if (x < 0) {
-      move(1,0)
-    } else if (x.toInt % 40 == 0 || y.toInt % 40 == 0) { //checks only at every square
-      //moving right
-      if (dir == (1,0)) {
-        if (!nextSq(1,0).isInstanceOf[Path]) {
-          if (nextSq(0,1).isInstanceOf[Path]) {
-            move(0, 1)
-          } else {
-            move(0,-1)
-          }
-        } else {
-          move(1,0)
-        } //moving down
-      } else if (dir == (0,1)) {
-        if (!nextSq(0,1).isInstanceOf[Path]) {
-          if (nextSq(1,0).isInstanceOf[Path]) {
-            move(1, 0)
-          } else {
-            move(-1,0)
-          }
-        } else {
-          move(0,1)
-        } //moving left
-      } else if (dir == (-1,0)) {
-        if (!nextSq(-1,0).isInstanceOf[Path]) {
-          if (nextSq(0,1).isInstanceOf[Path]) {
-            move(0, 1)
-          } else {
-            move(0,-1)
-          }
-        } else {
-          move(-1,0)
-        } //moving up
-      } else if (dir == (0,-1)) {
-        if (!nextSq(0,-1).isInstanceOf[Path]) {
-          if (nextSq(1,0).isInstanceOf[Path]) {
-            move(1, 0)
-          } else {
-            move(-1,0)
-          }
-        } else {
-          move(0,-1)
-        }
-      }
-    } else {
-      move(dir._1, dir._2)
-    }
-  }
-  
-  // move(1, 0) will move right
-  // move(-1,0) will move left
-  // move(0, 1) will move down
-  // move(0,-1) will move up
-  def move(mx: Int,my: Int) = {
-    x += mx*speed
-    y += my*speed
-    dir = (mx,my)
-  }
-  
-  
-}
 
