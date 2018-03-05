@@ -7,13 +7,24 @@ import processing.core.PImage
 /** Mob represents an enemy in a tower defence game 
  *  
  */
-class Mob(sx: Float ,sy: Float ,val speed: Float, var img: PImage, p: Game) {
+class Mob(sx: Float ,sy: Float ,val speed: Float, p: Game) {
   val sqSize  = 40
   
   var x = sx
   var y = sy
   
   var dir = (0,0)
+  
+  /** Outputs the index of the sprite in the sprite array.
+   *  0 = right, 1 = up, 2 = down, 3 = left*/
+  def img = {
+    dir match {
+      case (1, 0) => 0
+      case (0,-1) => 1
+      case (0, 1) => 2
+      case _      => 3
+    }
+  }
   
   //the mob's current square
   def square = {
@@ -29,6 +40,7 @@ class Mob(sx: Float ,sy: Float ,val speed: Float, var img: PImage, p: Game) {
   //still a problem with the coords detection
   //intelligent movement
   //true if-helvetti
+  /**The algorithm by which the mobs find their way on the path*/
   def act() = {
     //when at start
     if (x < 0) {

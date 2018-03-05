@@ -43,9 +43,10 @@ class Game extends PApplet {
   def onMenu = mSqX > aWidth-1
   
   // a mob
+  val antSprites = Array.ofDim[PImage](4)
   val ants = Array.ofDim[Mob](5)
   for (a <- 1 to ants.size) {
-    ants(a-1) = new Mob(-sqSize*a*(1.2.toFloat),sqSize*8,0.8.toFloat, null, this)
+    ants(a-1) = new Mob(-sqSize*a*(1.2.toFloat),sqSize*8,0.8.toFloat, this)
   }
   
   val arena = Array.ofDim[PImage](4)
@@ -57,16 +58,16 @@ class Game extends PApplet {
   var buyT = false      //keeps track of if the player is buying towers currently
   var menuCol = (0,255) //changes the menu buttons from green to red and back
   
-  
-  var s = 4 //speed of the display (a bit messed up)
-  
   override def setup() {
     frameRate(60)
     arena(0) = loadImage("imgs/grass.png")
     arena(1) = loadImage("imgs/path.png")
     arena(2) = loadImage("imgs/tower.png")
     arena(3) = loadImage("imgs/towerNo.png")
-    ants.foreach(_.img  = loadImage("imgs/ant.png"))
+    
+    //loads the ant sprites
+    (0 to 3).foreach(i => antSprites(i) = loadImage("imgs/ant" + i + ".png"))
+    
     menu(0)  = loadImage("imgs/menu.jpg")
     menu(1)  = loadImage("imgs/menutop.jpg")
     font = createFont("Arial",16,true)
@@ -157,12 +158,11 @@ class Game extends PApplet {
     /////////////////////mob stuff//////////////////////////
     
       translate(sqSize/4,sqSize/4)
-      //imageMode(3)
+      
       for (a <- ants) {
         a.act()
-        image(a.img,a.x,a.y,sqSize/2,sqSize/2)
+        image(antSprites(a.img),a.x,a.y,sqSize/2,sqSize/2)
       }
-      //imageMode(0)
     
     ////////////////////////////////////////////////////////
     
@@ -195,9 +195,6 @@ class Game extends PApplet {
     
   }
   
-//  override def keyPressed() {
-//    if (s == 4) s = 1 else s = 4
-//  }
   
 }
 
