@@ -44,8 +44,8 @@ class Game extends PApplet {
   
   // a mob
   val ants = Array.ofDim[Mob](5)
-  for (a <- 1 to 5) {
-    ants(a-1) = new Mob(-sqSize*a*2,sqSize*8,0.8.toFloat, null, this)
+  for (a <- 1 to ants.size) {
+    ants(a-1) = new Mob(-sqSize*a*(1.2.toFloat),sqSize*8,0.8.toFloat, null, this)
   }
   
   val arena = Array.ofDim[PImage](4)
@@ -56,6 +56,9 @@ class Game extends PApplet {
   
   var buyT = false      //keeps track of if the player is buying towers currently
   var menuCol = (0,255) //changes the menu buttons from green to red and back
+  
+  
+  var s = 4 //speed of the display (a bit messed up)
   
   override def setup() {
     frameRate(60)
@@ -149,19 +152,22 @@ class Game extends PApplet {
       buyT       = false
     }
     
-
+    
+    
     /////////////////////mob stuff//////////////////////////
-    translate(sqSize/8,sqSize/8)
-    //imageMode(3)
-    for (a <- ants) {
-      a.act()
-      image(a.img,a.x,a.y,30,30)
-    }
-    //imageMode(0)
+    
+      translate(sqSize/4,sqSize/4)
+      //imageMode(3)
+      for (a <- ants) {
+        a.act()
+        image(a.img,a.x,a.y,sqSize/2,sqSize/2)
+      }
+      //imageMode(0)
+    
     ////////////////////////////////////////////////////////
     
     fr += 1
-    if (fr % 90 == 0)
+    if (fr % 80 == 0)
       Player.money += 1
     
   }
@@ -186,8 +192,12 @@ class Game extends PApplet {
           menuChoose = 100
         }
       }
-      
+    
   }
+  
+//  override def keyPressed() {
+//    if (s == 4) s = 1 else s = 4
+//  }
   
 }
 

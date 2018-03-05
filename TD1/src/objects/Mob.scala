@@ -30,11 +30,14 @@ class Mob(sx: Float ,sy: Float ,val speed: Float, var img: PImage, p: Game) {
   //intelligent movement
   //true if-helvetti
   def act() = {
-    
     //when at start
     if (x < 0) {
       move(1,0)
-    } else if (x.toInt % 40 == 0 || y.toInt % 40 == 0) { //checks only at every square
+    } else if (if (dir != (-1,0)) {      //checks only at every square
+        x.toInt % 40 == 20 || y.toInt % 40 == 0 
+      } else { 
+        x.toInt % 40 ==  0 || y.toInt % 40 == 20 
+      }) { 
       //moving right
       if (dir == (1,0)) {
         if (!nextSq(1,0).isInstanceOf[Path]) {
