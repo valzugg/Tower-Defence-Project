@@ -23,7 +23,7 @@ class Game extends PApplet {
   val pi = 3.14159265359
   var fr = 0
   
-  var lvlN = 1 //index of the level vector
+  var lvlN = 0 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
   
@@ -46,7 +46,7 @@ class Game extends PApplet {
   val antSprites = Array.ofDim[PImage](4)
   val ants = Array.ofDim[Mob](5)
   for (a <- 1 to ants.size) {
-    ants(a-1) = new Mob(-sqSize*a*(1.2.toFloat),sqSize*8,0.8.toFloat, this)
+    ants(a-1) = new Mob(-sqSize*a*(1.2.toFloat),sqSize*2,0.8.toFloat, "imgs/ant.png", this)
   }
   
   val arena = Array.ofDim[PImage](4)
@@ -66,7 +66,7 @@ class Game extends PApplet {
     arena(3) = loadImage("imgs/towerNo.png")
     
     //loads the ant sprites
-    (0 to 3).foreach(i => antSprites(i) = loadImage("imgs/ant" + i + ".png"))
+    (0 to 3).foreach(i => antSprites(i) = loadImage("imgs/ant.png"))
     
     menu(0)  = loadImage("imgs/menu.jpg")
     menu(1)  = loadImage("imgs/menutop.jpg")
@@ -154,16 +154,18 @@ class Game extends PApplet {
     }
     
     
-    
     /////////////////////mob stuff//////////////////////////
-    
-      translate(sqSize/4,sqSize/4)
       
       for (a <- ants) {
+        pushMatrix()
+        translate(sqSize/2,sqSize/2)
+        translate(a.x,a.y) // the axis is being moved with each sprite
+        rotate((scala.math.Pi.toFloat/32)*a.x)
         a.act()
-        image(antSprites(a.img),a.x,a.y,sqSize/2,sqSize/2)
+        // poista turhat spritet
+        image(antSprites(0),-sqSize/4,-sqSize/4,sqSize/2,sqSize/2)
+        popMatrix()
       }
-    
     ////////////////////////////////////////////////////////
     
     fr += 1

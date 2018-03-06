@@ -10,12 +10,10 @@ class Arena(p: Game, width: Int = 20, height: Int = 15) {
   def towerCount = squares.flatten.filter(_.isInstanceOf[Tower]).length
   
   private def makeSquare(x: String, col: Int, row: Int) = {
-    if (x == "0") {
-      new Empty(col,row)
-    } else if (x == "1") {
-      new Path(col,row)
-    } else {
-      new Tower(col,row)
+    x match {
+      case "0" => new Empty(col,row)
+      case "1" => new Path( col,row)
+      case _   => new Tower(col,row)
     }
   }
   
