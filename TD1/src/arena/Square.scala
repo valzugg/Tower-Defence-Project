@@ -1,6 +1,12 @@
 package arena
 
+/** Represents a square on the arena grid.
+ *  A square can be an instance of Empty, Path or
+ *  Tower.
+ */
 trait Square {
-  val i: Int
-  var mouse: Boolean
+  val i: Int //the index in level creation
 }
+
+case class Empty(x: Int, y: Int) extends Square { val i = 0 }
+case class Path(x: Int, y: Int)  extends Square { val i = 1 }

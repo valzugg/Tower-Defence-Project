@@ -20,20 +20,22 @@ object Game extends App {
 //processing -> purkkaratkaisut
 class Game extends PApplet {
   def r = Random.nextInt(3)
-  val pi = 3.14159265359
-  var fr = 0
   
-  var lvlN = 0 //index of the level vector
+  var fr = 0 // the current frame of the animation
+  
+  var lvlN = 1 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
-  
+                    
+  // the starting line number for the mobs
+  def startPath = lvls(lvlN).arena.start
+                    
   val sqSize  = 40 //square's size in pixels
   
   val aWidth  = 20 //arena's width
   val aHeight = 15 //arena's height
   
-  val mWidth  = 6  //menu's width
-  val mHeight = 15 //menu's height
+  val mWidth  = 4  //menu's width
   
   //mouse's location in the grid's coodinates
   def mSqX = mouseX.toInt/sqSize
@@ -46,7 +48,7 @@ class Game extends PApplet {
   val antSprites = Array.ofDim[PImage](4)
   val ants = Array.ofDim[Mob](5)
   for (a <- 1 to ants.size) {
-    ants(a-1) = new Mob(-sqSize*a*(1.2.toFloat),sqSize*2,0.8.toFloat, "imgs/ant.png", this)
+    ants(a-1) = new Mob(-sqSize*a*(2.7.toFloat),sqSize*startPath,0.8.toFloat, "imgs/ant.png", this)
   }
   
   val arena = Array.ofDim[PImage](4)
@@ -70,12 +72,12 @@ class Game extends PApplet {
     
     menu(0)  = loadImage("imgs/menu.jpg")
     menu(1)  = loadImage("imgs/menutop.jpg")
-    font = createFont("Arial",16,true)
+    font = createFont("Arial Bold",16,true)
   }
   
   //sets the size of the window
   override def settings() = {
-    size(aWidth * sqSize + sqSize * 4, aHeight * sqSize)
+    size(aWidth * sqSize + sqSize * mWidth, aHeight * sqSize)
   }
   
   
@@ -92,14 +94,21 @@ class Game extends PApplet {
     
     textFont(font,16)
     fill(0)  
-    text("Val's Tower Defence",sqSize*aWidth+ 9,21)
-    fill(255,0,0)
-    text("Val's Tower Defence",sqSize*aWidth+ 8,20)
+    text("Val's Tower Defence",sqSize*aWidth+ 5,21)
+    fill(46, 204, 113)
+    text("Val's Tower Defence",sqSize*aWidth+ 4,20)
     fill(0) 
     textFont(font,20)
-    text("Money: " + Player.money,sqSize*aWidth+ 9,61)
+    text("Money:   " + Player.money,sqSize*aWidth+ 9,61)
     fill(255, 255, 0)
-    text("Money: " + Player.money,sqSize*aWidth+ 8,60)
+    text("Money:   " + Player.money,sqSize*aWidth+ 8,60)
+    
+    fill(0) 
+    textFont(font,22)
+    text("HP:       " + Player.hp,sqSize*aWidth+ 9,91)
+    fill(255, 0, 0)
+    text("HP:       " + Player.hp,sqSize*aWidth+ 8,90)
+    
     
     for (row <- 0 until 4) {
       for (col <- 0 until 2) {
@@ -156,20 +165,13 @@ class Game extends PApplet {
     
     /////////////////////mob stuff//////////////////////////
       
-      for (a <- ants) {
-        pushMatrix()
-        translate(sqSize/2,sqSize/2)
-        translate(a.x,a.y) // the axis is being moved with each sprite
-        rotate((scala.math.Pi.toFloat/32)*a.x)
-        a.act()
-        // poista turhat spritet
-        image(antSprites(0),-sqSize/4,-sqSize/4,sqSize/2,sqSize/2)
-        popMatrix()
-      }
+    for (a <- ants) {
+      a.doStuff(antSprites(0))
+    }
     ////////////////////////////////////////////////////////
     
     fr += 1
-    if (fr % 80 == 0)
+    if (fr % 200 == 0)
       Player.money += 1
     
   }
@@ -180,6 +182,7 @@ class Game extends PApplet {
   val leftMouse = 37
   var menuChoose = 0 //transparency of the menu button
   
+  //korjattavaa
   override def mousePressed() {
     if (mouseButton == leftMouse)
       if (!onMenu && buyT) { 
@@ -199,17 +202,3 @@ class Game extends PApplet {
   
   
 }
-
-
-object Player {
-    var money = 10
-    var hp    = 100
-    
-    def buyTower(x: Int, y: Int, a: Arena) = {
-      if (money > 4)
-        if (a.setTower(x,y)) money -= 5
-    }
-    
-}
-
-

@@ -21,7 +21,7 @@ class Level(file: String, p: Game) {
       index += 1
     }
     while( line != null ) {
-      //create path for mobs
+      //create mob waves
       line = lineReader.readLine()
       index += 1
     }
