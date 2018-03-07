@@ -8,15 +8,17 @@ import processing.core.PApplet
 /** Represents an enemy in a tower defence game 
  *  
  */
-class Mob(sx: Float ,sy: Float ,val speed: Float, img: String, g: Game) {
+class Mob(w: Wave ,val speed: Float, hitpoints: Int, g: Game, i: Int) {
   val game = g.asInstanceOf[PApplet]
+  
+  val hp = new HealthBar(this,hitpoints)
   
   val sqSize  = 40
   val halfPi  = (scala.math.Pi.toFloat/2)
   
   //keep track of the mob's location
-  var x = sx
-  var y = sy
+  var x = -sqSize*i*(w.distance.toFloat)
+  var y = g.startPath*sqSize.toFloat
   
   //keeps track of the mob's current direction
   var dir = (0,0)
@@ -26,6 +28,18 @@ class Mob(sx: Float ,sy: Float ,val speed: Float, img: String, g: Game) {
   val left  = (-1,0)
   val down  = (0, 1)
   val up    = (0,-1)
+  
+  /** Checks if mobs hitpoints are up. */
+  def dead = if (hp.amount < 1) true else false
+
+  // assists hp in knowing when to display itself
+  var hasBeenDamaged = false
+  
+  /** Removes given amount of hitpoints. */
+  def damage(by: Double) = {
+    this.hp.damage(by)
+    hasBeenDamaged = true
+  }
   
   /** Returns the direction to the right of the given direction*/
   private def rightOf(d: (Int,Int)) = {
@@ -73,18 +87,27 @@ class Mob(sx: Float ,sy: Float ,val speed: Float, img: String, g: Game) {
   }
   
   
+  private def moveToStart() = {
+      this.x = -sqSize
+      this.y = sqSize*g.startPath
+  }
+  
   /**The algorithm by which the mobs finds its way on the path*/
   private def act() = {
-    rotate()
-    //when at start
-    if (x < 0) {
-      move(right)
-    } else if (if (dir != left) {    
-        x.toInt % 40 == 20 || y.toInt % 40 == 0 
-      } else {     //checks only at every square
-        x.toInt % 40 ==  0
-      }) { 
-      checkDir(dir)
+    if (x >= sqSize*(g.arena.sizeX)) moveToStart()
+    if (x < sqSize*(g.arena.sizeX - 1)) {
+      rotate()
+      if (x < 0) { //when at start
+        move(right)
+      } else if (if (dir != left) {    
+          x.toInt % 40 == 20 || y.toInt % 40 == 0 
+        } else {     //checks only at every square
+          x.toInt % 40 ==  0
+        }) { 
+        checkDir(dir)
+      } else {
+        move(dir)
+      }
     } else {
       move(dir)
     }
@@ -101,16 +124,53 @@ class Mob(sx: Float ,sy: Float ,val speed: Float, img: String, g: Game) {
     }
   }
   
-  
   /** The concrete stuff that is sent to be done at the Game class.
    *  @param img The sprite of the mob as a PImage already loaded.*/
   def doStuff(img: PImage) = {
-    game.pushMatrix()
-    game.translate(sqSize/2,sqSize/2)
-    game.translate(this.x,this.y) // the 'axis' of the mob is being moved
-    this.act()
-    game.image(img,-sqSize/4,-sqSize/4,sqSize/2,sqSize/2)
-    game.popMatrix()
+    if (!dead) {
+      game.pushMatrix()
+      game.translate(sqSize/2,sqSize/2)
+      game.translate(this.x,this.y) // the 'axis' of the mob is being moved
+      this.act()
+      game.image(img,-sqSize/4,-sqSize/4,sqSize/2,sqSize/2)
+      game.popMatrix()
+    }
   }
 
+}
+
+
+/** Represents the health bar of a mob.
+ *  A mob's health bar follows it, going above it and showing in
+ *  green and red how much health a mob has. 
+ *  If health is up, mob dies. The health bar should only show up
+ *  after the mob has been damaged.
+ * 	@param m The mob to which the health bar belongs
+ *  @param fullAmount the original amount of health the mob spawns with.*/
+class HealthBar(val m: Mob, fullAmount: Double) {
+  // keep track of the mob's coordinates
+  def x = m.x + 2
+  def y = m.y - 5
+  
+  // the size of the health bar
+  val xSize = 35
+  val ySize = 3
+  
+  var amount = fullAmount
+  
+  def damage(by: Double) = { amount -= by }
+  
+  /** Drawing of the health bar when called in Game's draw().
+   *  Drawn only if mob is alive.*/
+  def doStuff() = {
+    if (!m.dead && m.hasBeenDamaged) {
+      m.game.noStroke()
+      m.game.fill(255,0,0)
+      m.game.rect(x,y,xSize,ySize)
+      m.game.noStroke()
+      m.game.fill(0,255,0)
+      m.game.rect(x,y,(amount/fullAmount).toFloat*xSize,ySize)
+    }
+  }
+  
 }

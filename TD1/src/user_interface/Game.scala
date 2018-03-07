@@ -23,13 +23,15 @@ class Game extends PApplet {
   
   var fr = 0 // the current frame of the animation
   
-  var lvlN = 1 //index of the level vector
+  var lvlN = 0 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
                     
-  // the starting line number for the mobs
-  def startPath = lvls(lvlN).arena.start
+  def arena = lvls(lvlN).arena
                     
+  // the starting line number for the mobs
+  def startPath = arena.start                
+  
   val sqSize  = 40 //square's size in pixels
   
   val aWidth  = 20 //arena's width
@@ -44,14 +46,13 @@ class Game extends PApplet {
   //determines whether the mouse is on the menu
   def onMenu = mSqX > aWidth-1
   
-  // a mob
-  val antSprites = Array.ofDim[PImage](4)
-  val ants = Array.ofDim[Mob](5)
-  for (a <- 1 to ants.size) {
-    ants(a-1) = new Mob(-sqSize*a*(2.7.toFloat),sqSize*startPath,0.8.toFloat, "imgs/ant.png", this)
-  }
+  val obstacles = Array.ofDim[PImage](8)
   
-  val arena = Array.ofDim[PImage](4)
+  val wave = new Wave(10,1,1.0, 100, "imgs/ant.png", this)
+  val testDef1 = new Defence(sqSize*7 + sqSize/2.toFloat,sqSize*4 + sqSize/2.toFloat,100,0.5,this)
+  val testDef2 = new Defence(sqSize*7 + sqSize/2.toFloat,sqSize*5 + sqSize/2.toFloat,100,0.5,this)
+  
+  val squares = Array.ofDim[PImage](4)
   val menu = Array.ofDim[PImage](2)
   var font: PFont  = null
   
@@ -62,13 +63,14 @@ class Game extends PApplet {
   
   override def setup() {
     frameRate(60)
-    arena(0) = loadImage("imgs/grass.png")
-    arena(1) = loadImage("imgs/path.png")
-    arena(2) = loadImage("imgs/tower.png")
-    arena(3) = loadImage("imgs/towerNo.png")
+    squares(0) = loadImage("imgs/grass.png")
+    squares(1) = loadImage("imgs/path.png")
+    squares(2) = loadImage("imgs/tower.png")
+    squares(3) = loadImage("imgs/towerNo.png")
     
-    //loads the ant sprites
-    (0 to 3).foreach(i => antSprites(i) = loadImage("imgs/ant.png"))
+    (0 to 7).foreach(o => obstacles(o) = loadImage("imgs/obs" + o + ".png"))
+    
+    wave.sprite = loadImage(wave.img)
     
     menu(0)  = loadImage("imgs/menu.jpg")
     menu(1)  = loadImage("imgs/menutop.jpg")
@@ -86,7 +88,7 @@ class Game extends PApplet {
     
     ////////////////////MENU////////////////////////////
     
-    if (fr < 1) { //magic
+    if (fr < 1) { // joooh, purkkaratkaisu
       image(menu(0),sqSize*20,sqSize*3,sqSize*4,sqSize*12)
     }
     
@@ -109,6 +111,7 @@ class Game extends PApplet {
     fill(255, 0, 0)
     text("HP:       " + Player.hp,sqSize*aWidth+ 8,90)
     
+    stroke(1)
     
     for (row <- 0 until 4) {
       for (col <- 0 until 2) {
@@ -129,7 +132,7 @@ class Game extends PApplet {
       }
     }
     
-    image(arena(2),sqSize*21,sqSize*3)
+    image(squares(2),sqSize*21,sqSize*3)
     
     //////////////////////////////////////////////////////
       
@@ -137,21 +140,36 @@ class Game extends PApplet {
     //draws the grid of the arena
     for (row <- 0 until aHeight) {
       for (col <- 0 until aWidth) {
-        image(arena(lvls(lvlN).arena.squares(row)(col).i), 
-        col * sqSize, row * sqSize, sqSize, sqSize)
+        //if (lvls(lvlN).arena.squares(row)(col).i == 0 || lvls(lvlN).arena.squares(row)(col).i == 1 || lvls(lvlN).arena.squares(row)(col).i == 3)
+          image(squares(lvls(lvlN).arena.squares(row)(col).i), 
+          col * sqSize, row * sqSize, sqSize, sqSize)
+        //else 
+        //  image(arena(0), col * sqSize, row * sqSize, sqSize, sqSize)  
       }
     }
+    
+    
+    
+    //draws obstacles
+//    for (row <- 0 until aHeight) {
+//      for (col <- 0 until aWidth) {
+//        if (lvls(lvlN).arena.squares(row)(col).i == 2) {
+//          image(obstacles(0), 
+//          col * sqSize, row * sqSize, sqSize, sqSize)
+//        }
+//      }
+//    }
     
     //sets the sprites of towers
     if (Player.money > 4) { //menu color turns off when not enough money
       menuCol = (0, 255) //when the player has enough money, the menu turns green
       if (!onMenu && buyT) {
         if (lvls(lvlN).arena.squares(mSqY)(mSqX).isInstanceOf[Empty]) {
-          image(arena(2),(mSqX)*sqSize, 
+          image(squares(2),(mSqX)*sqSize, 
                          (mSqY)*sqSize, 
                           sqSize, sqSize)
         } else {
-          image(arena(3),(mSqX)*sqSize, 
+          image(squares(3),(mSqX)*sqSize, 
                          (mSqY)*sqSize, 
                           sqSize, sqSize)
         }
@@ -163,12 +181,14 @@ class Game extends PApplet {
     }
     
     
+    
     /////////////////////mob stuff//////////////////////////
       
-    for (a <- ants) {
-      a.doStuff(antSprites(0))
-    }
+    wave.doStuff()
     ////////////////////////////////////////////////////////
+    
+    testDef1.doStuff()
+    testDef2.doStuff()
     
     fr += 1
     if (fr % 200 == 0)
@@ -198,6 +218,12 @@ class Game extends PApplet {
         }
       }
     
+  }
+  
+  
+  //lol
+  override def keyPressed() {
+    wave.mobs(Random.nextInt(wave.size - 1)).damage(10)
   }
   
   
