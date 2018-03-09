@@ -3,6 +3,7 @@ package objects
 import user_interface.Game
 import processing.core.PApplet
 import processing.core.PImage
+import scala.collection.mutable.Buffer
 
 /** Represents a wave of mobs in a tower defence game.
  *  @param size The number of mobs in this wave (Int)
@@ -14,7 +15,7 @@ import processing.core.PImage
  */
 class Wave(val size: Int, val distance: Double, speed: Double, hp: Int, val img: String, g: Game) {
   val game = g.asInstanceOf[PApplet]
-  val sqSize = 40
+  val sqSize = arena.Square.size
   
   var sprite: PImage = null
   
@@ -22,6 +23,8 @@ class Wave(val size: Int, val distance: Double, speed: Double, hp: Int, val img:
   for (m <- 0 until size) {
     mobs(m) = new Mob(this,speed.toFloat,hp,g,m+1)
   }
+  
+  def deadMobs = mobs.filter(_.dead)
   
   /** Returns the index of the mob in queue.*/
   def inQueAs(m: Mob) = {

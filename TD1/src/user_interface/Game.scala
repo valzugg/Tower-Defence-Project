@@ -23,16 +23,18 @@ class Game extends PApplet {
   
   var fr = 0 // the current frame of the animation
   
-  var lvlN = 0 //index of the level vector
+  var lvlN = 1 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
                     
   def arena = lvls(lvlN).arena
-                    
+          
+  val player = new Player(this)
+  
   // the starting line number for the mobs
   def startPath = arena.start                
   
-  val sqSize  = 40 //square's size in pixels
+  val sqSize  = Square.size //square's size in pixels
   
   val aWidth  = 20 //arena's width
   val aHeight = 15 //arena's height
@@ -48,9 +50,13 @@ class Game extends PApplet {
   
   val obstacles = Array.ofDim[PImage](8)
   
+  def centerOfSquare(x: Int, y: Int) = {
+    (sqSize*x + sqSize/2.toFloat,sqSize*y + sqSize/2.toFloat)
+  }
+  
   val wave = new Wave(10,1,1.0, 100, "imgs/ant.png", this)
-  val testDef1 = new Defence(sqSize*7 + sqSize/2.toFloat,sqSize*4 + sqSize/2.toFloat,100,0.5,this)
-  val testDef2 = new Defence(sqSize*7 + sqSize/2.toFloat,sqSize*5 + sqSize/2.toFloat,100,0.5,this)
+//  val testDef1 = new Defence(centerOfSquare(8,9),100,0.7,this)
+//  val testDef2 = new Defence(centerOfSquare(8,10),100,0.7,this)
   
   val squares = Array.ofDim[PImage](4)
   val menu = Array.ofDim[PImage](2)
@@ -62,7 +68,7 @@ class Game extends PApplet {
   var menuCol = (0,255) //changes the menu buttons from green to red and back
   
   override def setup() {
-    frameRate(60)
+    frameRate(30)
     squares(0) = loadImage("imgs/grass.png")
     squares(1) = loadImage("imgs/path.png")
     squares(2) = loadImage("imgs/tower.png")
@@ -83,11 +89,23 @@ class Game extends PApplet {
   }
   
   
+  ////pretty risky business////////////////////////////////
+  var fps = 30
+  
+  def changeFPS = {
+    if (fps == 30) fps = 120 else fps = 30
+  }
+  //////////////////////////////////////////////////////////
+  //smarter way to do - make a method here 
+  //somewhere that changes the speed of the mobs,
+  //the damage made by defences, and other stuff accordingly
+  //////////////////////////////////////////////////////////
   
   override def draw() = {
     
-    ////////////////////MENU////////////////////////////
+    frameRate(fps)
     
+    ////////////////////MENU////////////////////////////
     if (fr < 1) { // joooh, purkkaratkaisu
       image(menu(0),sqSize*20,sqSize*3,sqSize*4,sqSize*12)
     }
@@ -101,15 +119,15 @@ class Game extends PApplet {
     text("Val's Tower Defence",sqSize*aWidth+ 4,20)
     fill(0) 
     textFont(font,20)
-    text("Money:   " + Player.money,sqSize*aWidth+ 9,61)
+    text("Money:   " + player.money,sqSize*aWidth+ 9,61)
     fill(255, 255, 0)
-    text("Money:   " + Player.money,sqSize*aWidth+ 8,60)
+    text("Money:   " + player.money,sqSize*aWidth+ 8,60)
     
     fill(0) 
     textFont(font,22)
-    text("HP:       " + Player.hp,sqSize*aWidth+ 9,91)
+    text("HP:       " + player.hp,sqSize*aWidth+ 9,91)
     fill(255, 0, 0)
-    text("HP:       " + Player.hp,sqSize*aWidth+ 8,90)
+    text("HP:       " + player.hp,sqSize*aWidth+ 8,90)
     
     stroke(1)
     
@@ -136,15 +154,20 @@ class Game extends PApplet {
     
     //////////////////////////////////////////////////////
       
-      
+    //TODO: Korjaa alempi koodi fiksuksi  
+    
+    //println(arena)
+    
     //draws the grid of the arena
-    for (row <- 0 until aHeight) {
-      for (col <- 0 until aWidth) {
-        //if (lvls(lvlN).arena.squares(row)(col).i == 0 || lvls(lvlN).arena.squares(row)(col).i == 1 || lvls(lvlN).arena.squares(row)(col).i == 3)
-          image(squares(lvls(lvlN).arena.squares(row)(col).i), 
-          col * sqSize, row * sqSize, sqSize, sqSize)
-        //else 
-        //  image(arena(0), col * sqSize, row * sqSize, sqSize, sqSize)  
+    for (col <- 0 until aWidth) {
+      for (row <- 0 until aHeight) {
+        if (!arena.squares(col)(row).isInstanceOf[Tower]) {
+          image(squares(arena.squares(col)(row).i), 
+                col * sqSize, row * sqSize, sqSize, sqSize)
+        } else {
+          image(squares(0), col * sqSize, row * sqSize, sqSize, sqSize)
+          image(squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
+        }
       }
     }
     
@@ -160,11 +183,14 @@ class Game extends PApplet {
 //      }
 //    }
     
+    
+    //TODO: Korjaa alempi koodi fiksuksi
+    
     //sets the sprites of towers
-    if (Player.money > 4) { //menu color turns off when not enough money
+    if (player.money > 4) { //menu color turns off when not enough money
       menuCol = (0, 255) //when the player has enough money, the menu turns green
       if (!onMenu && buyT) {
-        if (lvls(lvlN).arena.squares(mSqY)(mSqX).isInstanceOf[Empty]) {
+        if (arena.squares(mSqX)(mSqY).isInstanceOf[Empty]) {
           image(squares(2),(mSqX)*sqSize, 
                          (mSqY)*sqSize, 
                           sqSize, sqSize)
@@ -182,17 +208,18 @@ class Game extends PApplet {
     
     
     
-    /////////////////////mob stuff//////////////////////////
-      
+    /////////////////////#doStuff()//////////////////////////
+    arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
     wave.doStuff()
-    ////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////
     
-    testDef1.doStuff()
-    testDef2.doStuff()
+    
+    
+    player.getMoney()
     
     fr += 1
     if (fr % 200 == 0)
-      Player.money += 1
+      player.money += 1
     
   }
   
@@ -204,11 +231,15 @@ class Game extends PApplet {
   
   //korjattavaa
   override def mousePressed() {
-    if (mouseButton == leftMouse)
+    if (mouseButton == leftMouse) {
+      if (!arena.towers.isEmpty) {
+//        println(arena.towers(0).pos)       //TESTING
+//        println((mSqX*sqSize,mSqY*sqSize))
+      }
       if (!onMenu && buyT) { 
-        Player.buyTower(mSqY,mSqX,lvls(lvlN).arena)
-      } else if (mouseX > sqSize*21 && mouseX < sqSize*22 &&
-                 mouseY > sqSize*3  && mouseY < sqSize*4) {
+        player.buyTower(mSqX,mSqY)
+        
+      } else if (mSqX == 21 && mSqY == 3) {
         if (buyT) {
           buyT = false 
           menuChoose = 0
@@ -217,13 +248,18 @@ class Game extends PApplet {
           menuChoose = 100
         }
       }
-    
+    } else if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) {
+      
+      ////TÄSSÄ/////
+      arena.towers(mSqX)(mSqY).addDefence(new Defence(arena.towers(mSqX)(mSqY),100,0.7,this))
+      //////////////
+    }
   }
   
   
   //lol
   override def keyPressed() {
-    wave.mobs(Random.nextInt(wave.size - 1)).damage(10)
+    changeFPS
   }
   
   

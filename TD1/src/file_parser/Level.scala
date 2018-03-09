@@ -20,6 +20,8 @@ class Level(file: String, p: Game) {
       line = lineReader.readLine()
       index += 1
     }
+    arena.squares = arena.squaresTransposed.transpose
+    
     while( line != null ) {
       //create mob waves
       line = lineReader.readLine()

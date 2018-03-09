@@ -10,11 +10,10 @@ import processing.core.PApplet
  */
 class Mob(w: Wave ,val speed: Float, hitpoints: Int, g: Game, i: Int) {
   val game = g.asInstanceOf[PApplet]
-  
   val hp = new HealthBar(this,hitpoints)
-  
-  val sqSize  = 40
+  val sqSize  = Square.size
   val halfPi  = (scala.math.Pi.toFloat/2)
+  val moneyValue = ((hitpoints/10)*speed).toInt
   
   //keep track of the mob's location
   var x = -sqSize*i*(w.distance.toFloat)
@@ -28,6 +27,11 @@ class Mob(w: Wave ,val speed: Float, hitpoints: Int, g: Game, i: Int) {
   val left  = (-1,0)
   val down  = (0, 1)
   val up    = (0,-1)
+  
+  //returns the index of the mob in the wave
+  override def toString() = {
+    w.mobs.zipWithIndex.filter(_._1 == this)(0)._2.toString
+  }
   
   /** Checks if mobs hitpoints are up. */
   def dead = if (hp.amount < 1) true else false
@@ -54,13 +58,14 @@ class Mob(w: Wave ,val speed: Float, hitpoints: Int, g: Game, i: Int) {
   
   //the mob's current square
   def square = {
-    g.lvls(g.lvlN).arena.squares(x.toInt/sqSize)(y.toInt/sqSize)
+    g.arena.squares(x.toInt/sqSize)(y.toInt/sqSize)
   }
   
+  //TODO: Misksi pitää käyttää trasponoitua koordinaatistoa?
   //a square of given arena coordinates relative to the mob
   private def nextSq(d: (Int, Int)) = {
-    g.lvls(g.lvlN).arena.squares((y.toInt/sqSize) + d._2)((x.toInt/sqSize) + d._1)
-  } //changin x and y around does magic
+    g.arena.squaresTransposed((y.toInt/sqSize) + d._2)((x.toInt/sqSize) + d._1)
+  } 
   
   
   /** The core of the act() method's algorithm.
@@ -109,7 +114,7 @@ class Mob(w: Wave ,val speed: Float, hitpoints: Int, g: Game, i: Int) {
         move(dir)
       }
     } else {
-      move(dir)
+      move(dir) // in the case the mob finishes the path
     }
   }
  

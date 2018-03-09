@@ -2,10 +2,12 @@ package arena
 
 import processing.core.PApplet
 import user_interface._
+import scala.collection.mutable.Buffer
 
 class Arena(g: Game, width: Int = 20, height: Int = 15) {
   val parent = g.asInstanceOf[PApplet]
-  val squares = Array.ofDim[Square](width,height)
+  val squaresTransposed = Array.ofDim[Square](height,width)
+  var squares = squaresTransposed.transpose
   
   val sizeX = 20
   val sizeY = 15
@@ -14,7 +16,20 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   var start = 0
   var end   = 0
   
-  def towerCount = squares.flatten.filter(_.isInstanceOf[Tower]).length
+  //keeps track of the towers in the arena
+  val towers = Array.ofDim[Tower](width,height)
+  
+  override def toString() = {
+    val s = Buffer[String]()
+    for (col <- 0 until sizeX) {
+      for (row <- 0 until sizeY) {
+        s += (squares(col)(row) + " ")
+      }
+      s += "\n"
+    }
+    s.reduceLeft(_+_)
+  }
+
   
   private def makeSquare(x: String, col: Int, row: Int) = {
     x match {
@@ -29,7 +44,7 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   //also sets the start row correctly for the mobs
   def setRow(row: Int, line: Array[String]) = {
     if (line(0) == "1")     { start = row } //start row set
-    squares(row) = line.zipWithIndex.map(x => makeSquare(x._1,x._2,row))
+    squaresTransposed(row) = line.zipWithIndex.map(x => makeSquare(x._1,x._2,row))
   }
   
   /** Sets a Tower in the given position if possible.
@@ -37,7 +52,8 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
    *  Boolean indicating if the placing was successful.*/
   def setTower(x: Int, y: Int) = {
     if (squares(x)(y).isInstanceOf[Empty]) {
-      squares(x)(y) = new Tower(x,y)
+      towers(x)(y) = new Tower(x,y) 
+      squares(x)(y) = towers(x)(y)
       true
     } else {
       false

@@ -1,14 +1,20 @@
 package objects
 
-import arena.Arena
+import user_interface.Game
 
-object Player {
-  var money = 10
+class Player(g: Game) {
+  val initMoney = 10
+  var money = 0
   var hp    = 100
   
-  def buyTower(x: Int, y: Int, a: Arena) = {
+  def buyTower(x: Int, y: Int) = {
     if (money > 4)
-      if (a.setTower(x,y)) money -= 5
+      if (g.arena.setTower(x,y)) money -= 5
+  }
+  
+  //TODO
+  def getMoney() = {
+    money = (g.wave.deadMobs.length*g.wave.mobs(0).moneyValue) + initMoney
   }
     
 }
