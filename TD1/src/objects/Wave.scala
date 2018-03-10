@@ -25,6 +25,7 @@ class Wave(val size: Int, val distance: Double, val speed: Double, hp: Int, val 
   }
   
   def deadMobs = mobs.filter(_.dead)
+  def aliveMobs = mobs.filter(!_.dead)
   
   /** Returns the index of the mob in queue.*/
   def inQueAs(m: Mob) = {

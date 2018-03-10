@@ -19,6 +19,8 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   var x = -sqSize*i*(w.distance.toFloat)
   var y = g.startPath*sqSize.toFloat
   
+  def pos = (x + sqSize/2,y + sqSize/2)
+  
   //keeps track of the mob's current direction
   var dir = (0,0)
   

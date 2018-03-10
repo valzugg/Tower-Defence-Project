@@ -22,6 +22,8 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
   val sqSize = Square.size
   val location = tower.pos
   
+  val color: (Float,Float,Float,Float)
+  
   /**keeps track of the target mob*/
   var t: Mob = closestMob 
   
@@ -38,15 +40,15 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
   /** Returns the distance between two positions in 2D space.
    *  A position is represented by a tuple of Float numbers, where
    *  the first number is the x-coord and second the y-coord.*/
-  private def distance(pos1: (Float, Float), pos2: (Float, Float)) = {
+  def distance(pos1: (Float, Float), pos2: (Float, Float)) = {
     hypot(abs(pos1._1 - pos2._1), abs(pos1._2 - pos2._2))
   }
   
   /**Returns the alive mob closest to this defence. 
-   * Used when retargeting. see target()*/
+   * Used when retargeting. see target().*/
   private def closestMob: Mob = {
     g.wave.mobs.sortBy(m => distance(location,(m.x,m.y))).
-    filter(!_.dead).reverse.last
+    filter(!_.dead)(0)
   }
   
   /**Determines when defence is retargeted, and retargets it if necessary. 
@@ -67,13 +69,11 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
   }
   
   /**Takes care of drawing the shooting animation when a target is being shot.
-   * Also damages the target mob accordingly. The speciality() method is also
-   * called here. Note that it is called before anything else.*/
+   * Also damages the target mob accordingly.*/
   private def shoot() = {
-    speciality()
     chooseTarget()
     if (withinRange(targetPos)) {
-      game.stroke(255,0,0,150)
+      game.stroke(color._1,color._2,color._3,color._4)
       game.line(location._1,location._2,targetPos._1,targetPos._2)
       t.damage(damage)
     }
@@ -83,8 +83,11 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
   def speciality(): Unit
   
   /**The method that is called in Game class.
-   * Draws the defence, and shows the range as a circle.*/
+   * Draws the defence, and shows the range as a circle. 
+   * The speciality() method is also called here. 
+   * Note that it is called before shoot().*/
   def doStuff() = {
+    speciality()
     game.image(g.defences(i), location._1 - sqSize/2, location._2 - sqSize/2, sqSize, sqSize)
     game.noFill()
     game.stroke(0,0,0,100)
@@ -94,8 +97,10 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
   
 }
 
+/**Defence which slow the opponent down by 60% when being shot at. */
 class IceDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, i: Int, g: Game) 
 extends Defence(tower,range,damage,speed,cost,i,g) {
+  val color = (0,0,255,150)
   
   //the original speed of the mob
   val tSpeed = g.currentWave.speed
@@ -110,4 +115,35 @@ extends Defence(tower,range,damage,speed,cost,i,g) {
     }
   }
 }
+
+
+/**Defence which 'chain tragets' another mob as well, and damages that by 50% of the normal damage. */
+class FireDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, i: Int, g: Game) 
+extends Defence(tower,range,damage,speed,cost,i,g) {
+  val color = (255,0,0,150)
+  
+  //the other target
+  var t2 = { g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
+             filter(_ != t)(0)
+  }
+
+  //TODO: smarter way to do this?
+  private def chooseT2() = {
+    t2 = g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
+         filter(_ != t)(0)
+  }
+  
+  /**Targets and damages another mob which is also within range.
+   * A line is drawn between the target mob and the other mob.*/
+  def speciality() = {
+    if (t.dead || t2.dead || !withinRange(t2.pos)) {
+      chooseT2()
+    } else {
+      game.stroke(255,0,0,150)
+      game.line(targetPos._1,targetPos._2,t2.x + sqSize/2,t2.y + sqSize/2)
+      t2.damage(damage/2) //the second target experiences only half of the normal damage
+    }
+  }
+}
+
 

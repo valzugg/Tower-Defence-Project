@@ -55,7 +55,7 @@ class Game extends PApplet {
     (sqSize*x + sqSize/2.toFloat,sqSize*y + sqSize/2.toFloat)
   }
   
-  val wave = new Wave(10,1,1.0, 100, "imgs/ant.png", this)
+  val wave = new Wave(10,1,1.0, 1000, "imgs/ant.png", this)
 //  val testDef1 = new Defence(centerOfSquare(8,9),100,0.7,this)
 //  val testDef2 = new Defence(centerOfSquare(8,10),100,0.7,this)
   def currentWave = wave
@@ -256,7 +256,7 @@ class Game extends PApplet {
     } else if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) {
       
       ////TÄSSÄ/////
-      arena.towers(mSqX)(mSqY).addDefence(new IceDefence(arena.towers(mSqX)(mSqY),100,0.7,1,1,0,this))
+      arena.towers(mSqX)(mSqY).addDefence(new FireDefence(arena.towers(mSqX)(mSqY),100,0.7,1,1,0,this))
       //////////////
     }
   }
