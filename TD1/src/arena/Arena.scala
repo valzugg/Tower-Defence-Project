@@ -5,9 +5,10 @@ import user_interface._
 import scala.collection.mutable.Buffer
 
 class Arena(g: Game, width: Int = 20, height: Int = 15) {
-  val parent = g.asInstanceOf[PApplet]
+  val game = g.asInstanceOf[PApplet]
   val squaresTransposed = Array.ofDim[Square](height,width)
   var squares = squaresTransposed.transpose
+  val sqSize = Square.size
   
   val sizeX = 20
   val sizeY = 15
@@ -57,6 +58,20 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
       true
     } else {
       false
+    }
+  }
+  
+  def drawArena() = {
+    for (col <- 0 until g.aWidth) {
+      for (row <- 0 until g.aHeight) {
+        if (!this.squares(col)(row).isInstanceOf[Tower]) {
+          g.image(g.squares(this.squares(col)(row).i), 
+                col * sqSize, row * sqSize, sqSize, sqSize)
+        } else {
+          g.image(g.squares(0), col * sqSize, row * sqSize, sqSize, sqSize)
+          g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
+        }
+      }
     }
   }
 

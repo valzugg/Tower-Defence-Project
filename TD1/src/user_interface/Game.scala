@@ -12,12 +12,12 @@ import objects._
 // https://www.youtube.com/thecodingtrain
 // http://kenney.nl/assets/tower-defense-top-down
 
-//makes the program runnable
+/**makes the program runnable*/
 object Game extends App {
   PApplet.main("user_interface.Game")
 }
 
-//processing -> purkkaratkaisut
+
 class Game extends PApplet {
   val menu = new Menu(this)
   
@@ -45,36 +45,29 @@ class Game extends PApplet {
   def mSqX = mouseX.toInt/sqSize
   def mSqY = mouseY.toInt/sqSize
   
-  //determines whether the mouse is on the menu
-  def onMenu = mSqX > aWidth-1
   
   val obstacles = Array.ofDim[PImage](8)
-  val defences = Array.ofDim[PImage](2)
+  val defences  = Array.ofDim[PImage](2)
+  val squares   = Array.ofDim[PImage](4)
+  val menuS     = Array.ofDim[PImage](2)
+  
   
   def centerOfSquare(x: Int, y: Int) = {
     (sqSize*x + sqSize/2.toFloat,sqSize*y + sqSize/2.toFloat)
   }
   
-  def iceDef  = new IceDefence(arena.towers(mSqX)(mSqY),80,0.7,1,1,this)
-  def fireDef = new FireDefence(arena.towers(mSqX)(mSqY),100,0.7,1,1,this)
   
   val wave = new Wave(10,1,1.0, 300, "imgs/ant.png", this)
   def currentWave = wave
   
-  
-  val squares = Array.ofDim[PImage](4)
-  val menuS = Array.ofDim[PImage](2)
   var font: PFont  = null
   
   val sounds = Array.ofDim[PImage](2)
   
-  var buyT = false      //keeps track of if the player is buying towers currently
-  var menuCol = (0,255) //changes the menu buttons from green to red and back
-  
   override def setup() {
     frameRate(30)
     squares(0) = loadImage("imgs/arena0.png")
-    squares(1) = loadImage("imgs/arena3.png")
+    squares(1) = loadImage("imgs/arena1.png")
     squares(2) = loadImage("imgs/tower.png")
     squares(3) = loadImage("imgs/towerNo.png")
     
@@ -113,103 +106,16 @@ class Game extends PApplet {
     
     frameRate(fps)
     
-    ////////////////////MENU////////////////////////////
-    if (fr < 1) { // joooh, purkkaratkaisu
-      image(menuS(0),sqSize*20,sqSize*3,sqSize*4,sqSize*12)
-    }
+    //should draw the menu background, the tiles, and the text on the top
+    menu.doStuff()
+
+    arena.drawArena()
     
-    image(menuS(1),sqSize*20,0,sqSize*4,sqSize*3)
+    menu.buyingShit()
     
-    textFont(font,16)
-    fill(0)  
-    text("Val's Tower Defence",sqSize*aWidth+ 5,21)
-    fill(46, 204, 113)
-    text("Val's Tower Defence",sqSize*aWidth+ 4,20)
-    fill(0) 
-    textFont(font,20)
-    text("Money:   " + player.money,sqSize*aWidth+ 9,61)
-    fill(255, 255, 0)
-    text("Money:   " + player.money,sqSize*aWidth+ 8,60)
-    
-    fill(0) 
-    textFont(font,22)
-    text("HP:       " + player.hp,sqSize*aWidth+ 9,91)
-    fill(255, 0, 0)
-    text("HP:       " + player.hp,sqSize*aWidth+ 8,90)
-    
-    stroke(1)
-    
-    for (row <- 0 until 4) {
-      for (col <- 0 until 2) {
-        if (mouseX > sqSize*21 + col*sqSize && mouseX < sqSize*22 + col*sqSize &&
-          mouseY > sqSize*3 + row*sqSize && mouseY < sqSize*4 + row*sqSize) {
-          fill(menuCol._1,menuCol._2, 0,menuChoose + 80)
-          rect((mSqX)*sqSize,(mSqY)*sqSize,sqSize,sqSize)
-        }
-      }
-    }
-      
-      
-    fill(180,180,180,100-menuChoose)
-    for (row <- 0 until 4) {
-      for (col <- 0 until 2) {
-        rect(sqSize * 21 + col * sqSize, 
-             sqSize * 3 + row * sqSize, sqSize, sqSize)
-      }
-    }
-    
-    image(squares(2),sqSize*21,sqSize*3)
-    
-    //////////////////////////////////////////////////////
-      
-    //TODO: Korjaa alempi koodi fiksuksi  
-    
-    //println(arena)
-    
-    //draws the grid of the arena
-    for (col <- 0 until aWidth) {
-      for (row <- 0 until aHeight) {
-        if (!arena.squares(col)(row).isInstanceOf[Tower]) {
-          image(squares(arena.squares(col)(row).i), 
-                col * sqSize, row * sqSize, sqSize, sqSize)
-        } else {
-          image(squares(0), col * sqSize, row * sqSize, sqSize, sqSize)
-          image(squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
-        }
-      }
-    }
-    
-    
-    //TODO: Korjaa alempi koodi fiksuksi
-    
-    //sets the sprites of towers
-    if (player.money > 4) { //menu color turns off when not enough money
-      menuCol = (0, 255) //when the player has enough money, the menu turns green
-      if (!onMenu && buyT) {
-        if (arena.squares(mSqX)(mSqY).isInstanceOf[Empty]) {
-          image(squares(2),(mSqX)*sqSize, 
-                         (mSqY)*sqSize, 
-                          sqSize, sqSize)
-        } else {
-          image(squares(3),(mSqX)*sqSize, 
-                         (mSqY)*sqSize, 
-                          sqSize, sqSize)
-        }
-      } 
-    } else {
-      menuChoose = 0        //the color's opacity the the cursor isn't there goes to zero
-      menuCol    = (255, 0) //when the player doesnt have enough money, the menu turns red
-      buyT       = false
-    }
-    
-    
-    
-    /////////////////////#doStuff()//////////////////////////
     arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
+    
     wave.doStuff()
-    /////////////////////////////////////////////////////////
-    
-    
     
     player.getMoney()
     
@@ -220,36 +126,9 @@ class Game extends PApplet {
   }
   
   
-  
-  
-  val leftMouse = 37
-  var menuChoose = 0 //transparency of the menu button
-  
   //korjattavaa
   override def mousePressed() {
-    if (mouseButton == leftMouse) {
-      if (!arena.towers.isEmpty) {
-//        println(arena.towers(0).pos)       //TESTING
-//        println((mSqX*sqSize,mSqY*sqSize))
-      }
-      if (!onMenu && buyT) { 
-        player.buyTower(mSqX,mSqY)
-        
-      } else if (mSqX == 21 && mSqY == 3) {
-        if (buyT) {
-          buyT = false 
-          menuChoose = 0
-        } else {
-          buyT = true
-          menuChoose = 100
-        }
-      }
-    } else if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) {
-      
-      ////TÄSSÄ/////
-      arena.towers(mSqX)(mSqY).addDefence(if (Random.nextBoolean) iceDef else fireDef)
-      //////////////
-    }
+    menu.clickingStuff()
   }
   
   
