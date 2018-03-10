@@ -7,6 +7,8 @@ import file_parser._
 import arena._
 import objects._
 
-object Menu {
+class Menu(g: Game) {
+  val game = g.asInstanceOf[PApplet]
+  
   
 }

@@ -12,7 +12,7 @@ class Player(g: Game) {
       if (g.arena.setTower(x,y)) money -= 5
   }
   
-  //TODO
+  //TODO: Rahasysteemi
   def getMoney() = {
     money = (g.wave.deadMobs.length*g.wave.mobs(0).moneyValue) + initMoney
   }

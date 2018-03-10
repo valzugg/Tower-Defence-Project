@@ -19,11 +19,11 @@ object Game extends App {
 
 //processing -> purkkaratkaisut
 class Game extends PApplet {
-  def r = Random.nextInt(3)
+  val menu = new Menu(this)
   
   var fr = 0 // the current frame of the animation
   
-  var lvlN = 1 //index of the level vector
+  var lvlN = 0 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
                     
@@ -49,20 +49,21 @@ class Game extends PApplet {
   def onMenu = mSqX > aWidth-1
   
   val obstacles = Array.ofDim[PImage](8)
-  val defences = Array.ofDim[PImage](1)
+  val defences = Array.ofDim[PImage](2)
   
   def centerOfSquare(x: Int, y: Int) = {
     (sqSize*x + sqSize/2.toFloat,sqSize*y + sqSize/2.toFloat)
   }
   
-  val wave = new Wave(10,1,1.0, 1000, "imgs/ant.png", this)
-//  val testDef1 = new Defence(centerOfSquare(8,9),100,0.7,this)
-//  val testDef2 = new Defence(centerOfSquare(8,10),100,0.7,this)
+  def iceDef  = new IceDefence(arena.towers(mSqX)(mSqY),80,0.7,1,1,this)
+  def fireDef = new FireDefence(arena.towers(mSqX)(mSqY),100,0.7,1,1,this)
+  
+  val wave = new Wave(10,1,1.0, 300, "imgs/ant.png", this)
   def currentWave = wave
   
   
   val squares = Array.ofDim[PImage](4)
-  val menu = Array.ofDim[PImage](2)
+  val menuS = Array.ofDim[PImage](2)
   var font: PFont  = null
   
   val sounds = Array.ofDim[PImage](2)
@@ -72,8 +73,8 @@ class Game extends PApplet {
   
   override def setup() {
     frameRate(30)
-    squares(0) = loadImage("imgs/grass.png")
-    squares(1) = loadImage("imgs/path.png")
+    squares(0) = loadImage("imgs/arena0.png")
+    squares(1) = loadImage("imgs/arena3.png")
     squares(2) = loadImage("imgs/tower.png")
     squares(3) = loadImage("imgs/towerNo.png")
     
@@ -83,8 +84,8 @@ class Game extends PApplet {
     
     wave.sprite = loadImage(wave.img)
     
-    menu(0)  = loadImage("imgs/menu.jpg")
-    menu(1)  = loadImage("imgs/menutop.jpg")
+    menuS(0)  = loadImage("imgs/menu.jpg")
+    menuS(1)  = loadImage("imgs/menutop.jpg")
     font = createFont("Arial Bold",16,true)
   }
   
@@ -100,6 +101,8 @@ class Game extends PApplet {
   def changeFPS = {
     if (fps == 30) fps = 120 else fps = 30
   }
+  
+  //TODO: fps change
   //////////////////////////////////////////////////////////
   //smarter way to do - make a method here 
   //somewhere that changes the speed of the mobs,
@@ -112,10 +115,10 @@ class Game extends PApplet {
     
     ////////////////////MENU////////////////////////////
     if (fr < 1) { // joooh, purkkaratkaisu
-      image(menu(0),sqSize*20,sqSize*3,sqSize*4,sqSize*12)
+      image(menuS(0),sqSize*20,sqSize*3,sqSize*4,sqSize*12)
     }
     
-    image(menu(1),sqSize*20,0,sqSize*4,sqSize*3)
+    image(menuS(1),sqSize*20,0,sqSize*4,sqSize*3)
     
     textFont(font,16)
     fill(0)  
@@ -175,18 +178,6 @@ class Game extends PApplet {
         }
       }
     }
-    
-    
-    
-    //draws obstacles
-//    for (row <- 0 until aHeight) {
-//      for (col <- 0 until aWidth) {
-//        if (lvls(lvlN).arena.squares(row)(col).i == 2) {
-//          image(obstacles(0), 
-//          col * sqSize, row * sqSize, sqSize, sqSize)
-//        }
-//      }
-//    }
     
     
     //TODO: Korjaa alempi koodi fiksuksi
@@ -256,7 +247,7 @@ class Game extends PApplet {
     } else if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) {
       
       ////TÄSSÄ/////
-      arena.towers(mSqX)(mSqY).addDefence(new FireDefence(arena.towers(mSqX)(mSqY),100,0.7,1,1,0,this))
+      arena.towers(mSqX)(mSqY).addDefence(if (Random.nextBoolean) iceDef else fireDef)
       //////////////
     }
   }

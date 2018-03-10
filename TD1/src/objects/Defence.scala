@@ -17,12 +17,13 @@ import scala.math._
  *  @param cost The cost this defence has in the store
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
-abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, i: Int, g: Game) {
+abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, g: Game) {
   val game = g.asInstanceOf[PApplet]
   val sqSize = Square.size
   val location = tower.pos
   
-  val color: (Float,Float,Float,Float)
+  val i: Int //the index of the sprite
+  var color: (Float,Float,Float,Float) //the color of the shooting stuffs
   
   /**keeps track of the target mob*/
   var t: Mob = closestMob 
@@ -98,9 +99,12 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
 }
 
 /**Defence which slow the opponent down by 60% when being shot at. */
-class IceDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, i: Int, g: Game) 
-extends Defence(tower,range,damage,speed,cost,i,g) {
-  val color = (0,0,255,150)
+class IceDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, g: Game) 
+extends Defence(tower,range,damage,speed,cost,g) {
+  val i = 0
+  def r     = scala.util.Random.nextInt(100)
+  def colorR = (r.toFloat,r.toFloat,255.toFloat,200.toFloat)
+  var color = colorR
   
   //the original speed of the mob
   val tSpeed = g.currentWave.speed
@@ -108,8 +112,10 @@ extends Defence(tower,range,damage,speed,cost,i,g) {
   /**Slows the mob down while it is being shot.*/
   def speciality() = {
     if (withinRange(targetPos)) {
-      if (tSpeed < 2*t.speed) 
+      if (tSpeed < 2*t.speed) {
         t.speed = t.speed * 0.4.toFloat
+      }
+      color = colorR
     } else {
       t.speed = tSpeed.toFloat
     }
@@ -117,10 +123,11 @@ extends Defence(tower,range,damage,speed,cost,i,g) {
 }
 
 
-/**Defence which 'chain tragets' another mob as well, and damages that by 50% of the normal damage. */
-class FireDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, i: Int, g: Game) 
-extends Defence(tower,range,damage,speed,cost,i,g) {
-  val color = (255,0,0,150)
+/**Defence which 'chain targets' another mob as well, and damages that by 50% of the normal damage. */
+class FireDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, g: Game) 
+extends Defence(tower,range,damage,speed,cost,g) {
+  val i = 1
+  var color = (255,0,0,200)
   
   //the other target
   var t2 = { g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
