@@ -8,7 +8,7 @@ import processing.core.PApplet
 /** Represents an enemy in a tower defence game 
  *  
  */
-class Mob(w: Wave ,val speed: Float, hitpoints: Int, g: Game, i: Int) {
+class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   val game = g.asInstanceOf[PApplet]
   val hp = new HealthBar(this,hitpoints)
   val sqSize  = Square.size
@@ -29,9 +29,7 @@ class Mob(w: Wave ,val speed: Float, hitpoints: Int, g: Game, i: Int) {
   val up    = (0,-1)
   
   //returns the index of the mob in the wave
-  override def toString() = {
-    w.mobs.zipWithIndex.filter(_._1 == this)(0)._2.toString
-  }
+  override def toString() = i.toString
   
   /** Checks if mobs hitpoints are up. */
   def dead = if (hp.amount < 1) true else false

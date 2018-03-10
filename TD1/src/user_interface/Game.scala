@@ -49,6 +49,7 @@ class Game extends PApplet {
   def onMenu = mSqX > aWidth-1
   
   val obstacles = Array.ofDim[PImage](8)
+  val defences = Array.ofDim[PImage](1)
   
   def centerOfSquare(x: Int, y: Int) = {
     (sqSize*x + sqSize/2.toFloat,sqSize*y + sqSize/2.toFloat)
@@ -57,6 +58,8 @@ class Game extends PApplet {
   val wave = new Wave(10,1,1.0, 100, "imgs/ant.png", this)
 //  val testDef1 = new Defence(centerOfSquare(8,9),100,0.7,this)
 //  val testDef2 = new Defence(centerOfSquare(8,10),100,0.7,this)
+  def currentWave = wave
+  
   
   val squares = Array.ofDim[PImage](4)
   val menu = Array.ofDim[PImage](2)
@@ -75,6 +78,8 @@ class Game extends PApplet {
     squares(3) = loadImage("imgs/towerNo.png")
     
     (0 to 7).foreach(o => obstacles(o) = loadImage("imgs/obs" + o + ".png"))
+    
+    (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def" + d + ".png"))
     
     wave.sprite = loadImage(wave.img)
     
@@ -251,7 +256,7 @@ class Game extends PApplet {
     } else if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) {
       
       ////TÄSSÄ/////
-      arena.towers(mSqX)(mSqY).addDefence(new Defence(arena.towers(mSqX)(mSqY),100,0.7,this))
+      arena.towers(mSqX)(mSqY).addDefence(new IceDefence(arena.towers(mSqX)(mSqY),100,0.7,1,1,0,this))
       //////////////
     }
   }

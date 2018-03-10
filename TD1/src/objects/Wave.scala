@@ -13,7 +13,7 @@ import scala.collection.mutable.Buffer
  *  @param img The path to the mobs sprite (String)
  *  @param g The game in which this wave belongs (Game)
  */
-class Wave(val size: Int, val distance: Double, speed: Double, hp: Int, val img: String, g: Game) {
+class Wave(val size: Int, val distance: Double, val speed: Double, hp: Int, val img: String, g: Game) {
   val game = g.asInstanceOf[PApplet]
   val sqSize = arena.Square.size
   
