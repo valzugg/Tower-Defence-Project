@@ -21,8 +21,8 @@ class Menu(val g: Game) {
   def onMenu = mSqX > aWidth-1
   
   def player  = g.player
-  val aWidth  = g.aWidth
-  val aHeight = g.aHeight
+  val aWidth  = 20
+  val aHeight = 15
   
   var buyT = false      //keeps track of if the player is buying towers currently
   var menuCol = (0,255) //changes the menu buttons from green to red and back
@@ -78,6 +78,8 @@ class Menu(val g: Game) {
     }
     
     game.image(g.squares(2),sqSize*21,sqSize*3)
+    
+    //println(aWidth)
   }
   
   //TODO: TORNIT EIVÄT PIIRRY JOSTAIN SYYSTÄ

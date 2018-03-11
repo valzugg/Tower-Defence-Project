@@ -97,6 +97,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
       this.y = sqSize*g.startPath
   }
   
+  //TODO: Algoritmi joka tekee reitin valmiiksi, tai tarkistaa eri tavalla, ongelma suuremilla nopeuksilla
   /**The algorithm by which the mobs finds its way on the path*/
   private def act() = {
     if (x >= sqSize*(g.arena.sizeX)) moveToStart()

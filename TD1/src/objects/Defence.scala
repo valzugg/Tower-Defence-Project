@@ -48,8 +48,10 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
   /**Returns the alive mob closest to this defence. 
    * Used when retargeting. see target().*/
   private def closestMob: Mob = {
-    g.wave.mobs.sortBy(m => distance(location,(m.x,m.y))).
-    filter(!_.dead)(0)
+    if (!g.wave.aliveMobs.isEmpty)
+      g.wave.aliveMobs.sortBy(m => distance(location,(m.x,m.y))).apply(0)
+    else
+      null
   }
   
   /**Determines when defence is retargeted, and retargets it if necessary. 
@@ -73,7 +75,7 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
    * Also damages the target mob accordingly.*/
   private def shoot() = {
     chooseTarget()
-    if (withinRange(targetPos)) {
+    if (t != null && withinRange(targetPos)) {
       game.stroke(color._1,color._2,color._3,color._4)
       game.line(location._1,location._2,targetPos._1,targetPos._2)
       t.damage(damage)
@@ -88,12 +90,15 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
    * The speciality() method is also called here. 
    * Note that it is called before shoot().*/
   def doStuff() = {
-    speciality()
-    game.image(g.defences(i), location._1 - sqSize/2, location._2 - sqSize/2, sqSize, sqSize)
+    game.image(g.defences(i), location._1 - sqSize/2, 
+               location._2 - sqSize/2, sqSize, sqSize)
     game.noFill()
     game.stroke(0,0,0,100)
     game.ellipse(location._1, location._2, range*2, range*2)
-    shoot()
+    if (t != null) {
+      speciality()
+      shoot()
+    }
   }
   
 }
@@ -127,7 +132,9 @@ extends Defence(tower,range,damage,speed,cost,g) {
 class FireDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, g: Game) 
 extends Defence(tower,range,damage,speed,cost,g) {
   val i = 1
-  var color = (255,0,0,200)
+  def r      = scala.util.Random.nextInt(100)
+  def colorR = (255.toFloat,r.toFloat,r.toFloat,200.toFloat)
+  var color  = colorR
   
   //the other target
   var t2 = { g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
@@ -136,8 +143,9 @@ extends Defence(tower,range,damage,speed,cost,g) {
 
   //TODO: smarter way to do this?
   private def chooseT2() = {
-    t2 = g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
-         filter(_ != t)(0)
+    if (g.currentWave.aliveMobs.size > 1)
+      t2 = g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
+           filter(_ != t)(0)
   }
   
   /**Targets and damages another mob which is also within range.
@@ -146,10 +154,11 @@ extends Defence(tower,range,damage,speed,cost,g) {
     if (t.dead || t2.dead || !withinRange(t2.pos)) {
       chooseT2()
     } else {
-      game.stroke(255,0,0,150)
+      game.stroke(color._1,color._2,color._3,color._4)
       game.line(targetPos._1,targetPos._2,t2.x + sqSize/2,t2.y + sqSize/2)
       t2.damage(damage/2) //the second target experiences only half of the normal damage
     }
+    color  = colorR
   }
 }
 
