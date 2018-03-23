@@ -57,7 +57,7 @@ class Game extends PApplet {
   }
   
   
-  val wave = new Wave(10,1,1.0, 300, "imgs/ant.png", this)
+  val wave = new Wave(10,1,1.0, 50, "imgs/ant.png", this)
   def currentWave = wave
   
   var font: PFont  = null
@@ -118,6 +118,8 @@ class Game extends PApplet {
     wave.doStuff()
     
     player.getMoney()
+    
+    println(arena.start)
     
     fr += 1
     if (fr % 200 == 0)

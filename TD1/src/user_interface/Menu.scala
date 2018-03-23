@@ -37,8 +37,7 @@ class Menu(val g: Game) {
     
     game.image(g.menuS(1),sqSize*20,0,sqSize*4,sqSize*3)
     
-    
-    //TODO: TEKSTI EI TOIMI JOSTAIN SYYSTÄ
+    //TODO: Tämä koodi lyhyemmäksi
     game.textFont(g.font,16)
     game.fill(0)  
     game.text("Val's Tower Defence",sqSize*aWidth+ 5,21)
@@ -82,7 +81,6 @@ class Menu(val g: Game) {
     //println(aWidth)
   }
   
-  //TODO: TORNIT EIVÄT PIIRRY JOSTAIN SYYSTÄ
   def buyingShit() = {
     if (player.money > 4) { //menu color turns off when not enough money
       menuCol = (0, 255) //when the player has enough money, the menu turns green

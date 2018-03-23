@@ -34,7 +34,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   override def toString() = i.toString
   
   /** Checks if mobs hitpoints are up. */
-  def dead = if (hp.amount < 1) true else false
+  def dead = hp.amount < 1
 
   // assists hp in knowing when to display itself
   var hasBeenDamaged = false
@@ -61,10 +61,9 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
     g.arena.squares(x.toInt/sqSize)(y.toInt/sqSize)
   }
   
-  //TODO: Misksi pitää käyttää trasponoitua koordinaatistoa?
   //a square of given arena coordinates relative to the mob
   private def nextSq(d: (Int, Int)) = {
-    g.arena.squaresTransposed((y.toInt/sqSize) + d._2)((x.toInt/sqSize) + d._1)
+    g.arena.squares((x.toInt/sqSize) + d._1)((y.toInt/sqSize) + d._2)
   } 
   
   
