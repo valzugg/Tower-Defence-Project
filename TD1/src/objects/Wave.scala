@@ -19,12 +19,12 @@ class Wave(val size: Int, val distance: Double, val speed: Double, hp: Int, val 
   
   var sprite: PImage = null
   
-  val mobs = Array.ofDim[Mob](size)
+  val mobs = Buffer[Mob]()
   for (m <- 0 until size) {
-    mobs(m) = new Mob(this,speed.toFloat,hp,g,m+1)
+    mobs += new Mob(this,speed.toFloat,hp,g,m)
   }
   
-  def deadMobs = mobs.filter(_.dead)
+  def deadMobs  = mobs.filter(_.dead)
   def aliveMobs = mobs.filter(!_.dead)
   
   /** Returns the index of the mob in queue.*/

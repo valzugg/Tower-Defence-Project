@@ -119,8 +119,6 @@ class Game extends PApplet {
     
     player.getMoney()
     
-    println(arena.start)
-    
     fr += 1
     if (fr % 200 == 0)
       player.money += 1

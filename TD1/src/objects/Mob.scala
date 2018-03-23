@@ -16,7 +16,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   val moneyValue = ((hitpoints/10)*speed).toInt
   
   //keep track of the mob's location
-  var x = -sqSize*i*(w.distance.toFloat)
+  var x = -sqSize * (i + 1) * (w.distance.toFloat)
   var y = g.startPath*sqSize.toFloat
   
   def pos = (x + sqSize/2,y + sqSize/2)
@@ -36,6 +36,11 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   /** Checks if mobs hitpoints are up. */
   def dead = hp.amount < 1
 
+  /** Removes this mob from the wave it belongs if it is dead. */
+  def kill() = {
+    if (dead) w.mobs.remove(i)
+  }
+  
   // assists hp in knowing when to display itself
   var hasBeenDamaged = false
   
