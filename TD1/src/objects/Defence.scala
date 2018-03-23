@@ -17,7 +17,7 @@ import scala.math._
  *  @param cost The cost this defence has in the store
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
-abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, g: Game) {
+abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Double, val cost: Int, g: Game) {
   val game = g.asInstanceOf[PApplet]
   val sqSize = Square.size
   val location = tower.pos
@@ -137,28 +137,36 @@ extends Defence(tower,range,damage,speed,cost,g) {
   var color  = colorR
   
   //the other target
-  var t2 = { g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
-             filter(_ != t)(0)
+  var t2 = {
+    if (g.currentWave.aliveMobs.size > 1)
+      secondMob
+    else
+      null
   }
 
-  //TODO: smarter way to do this?
   private def chooseT2() = {
     if (g.currentWave.aliveMobs.size > 1)
-      t2 = g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
-           filter(_ != t)(0)
+      t2 = secondMob
+  }
+  
+  private def secondMob = {
+    g.currentWave.aliveMobs.sortBy(m => distance((t.x,t.y),(m.x,m.y))).
+    filter(_ != t)(0)
   }
   
   /**Targets and damages another mob which is also within range.
    * A line is drawn between the target mob and the other mob.*/
   def speciality() = {
-    if (t.dead || t2.dead || !withinRange(t2.pos)) {
-      chooseT2()
-    } else {
-      game.stroke(color._1,color._2,color._3,color._4)
-      game.line(targetPos._1,targetPos._2,t2.x + sqSize/2,t2.y + sqSize/2)
-      t2.damage(damage/2) //the second target experiences only half of the normal damage
+    if (t2 != null) {
+      if (t.dead || t2.dead || !withinRange(t2.pos)) {
+        chooseT2()
+      } else {
+        game.stroke(color._1,color._2,color._3,color._4)
+        game.line(targetPos._1,targetPos._2,t2.x + sqSize/2,t2.y + sqSize/2)
+        t2.damage(damage/2) //the second target experiences only half of the normal damage
+      }
+      color  = colorR
     }
-    color  = colorR
   }
 }
 

@@ -106,7 +106,7 @@ class Menu(val g: Game) {
       if (!arena.towers.isEmpty) {
       }
       if (!onMenu && buyT) { 
-        player.buyTower(mSqX,mSqY)
+        store.buyTower(mSqX,mSqY)
         
       } else if (mSqX == 21 && mSqY == 3) {
         if (buyT) {
@@ -119,7 +119,7 @@ class Menu(val g: Game) {
       }
     } else if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) {
       /////TÄSSÄ/////
-      arena.towers(mSqX)(mSqY).addDefence(if (Random.nextBoolean) store.iceDef else store.fireDef)
+      store.buyDef(arena.towers(mSqX)(mSqY),store.iceDef)
       ///////////////
     }
   }
@@ -129,8 +129,24 @@ class Menu(val g: Game) {
 
 
 class Store(m: Menu) {
-  def iceDef  = new IceDefence(m.arena.towers(m.mSqX)(m.mSqY),80,0.7,1,1,m.g)
-  def fireDef = new FireDefence(m.arena.towers(m.mSqX)(m.mSqY),100,0.7,1,1,m.g)
+  val p = m.player //player
+  val g = m.g      //game
+  def a = g.arena  //current arena
+  
+  def iceDef  = new IceDefence(m.arena.towers(m.mSqX)(m.mSqY),80,0.7,1,5,m.g)
+  def fireDef = new FireDefence(m.arena.towers(m.mSqX)(m.mSqY),100,0.7,1,5,m.g)
+  
+  def buyDef(t: Tower, d: Defence) = {
+    if (p.money >= d.cost)
+      if (t.addDefence(d))
+        p.money -= d.cost
+  }
+
+  def buyTower(x: Int, y: Int) = {
+    if (p.money > 4)
+      if (a.setTower(x,y)) 
+        p.money -= 5
+  }
   
 }
 

@@ -2,7 +2,6 @@ package user_interface
 
 import processing._
 import processing.core._
-import processing.core.PConstants
 import scala.util.Random
 import file_parser._
 import arena._
@@ -19,7 +18,8 @@ object Game extends App {
 
 
 class Game extends PApplet {
-  val menu = new Menu(this)
+  val player = new Player(this)
+  val menu   = new Menu(this)
   
   var fr = 0 // the current frame of the animation
   
@@ -28,8 +28,6 @@ class Game extends PApplet {
                     new Level("lvls/2.lvl", this))
                     
   def arena = lvls(lvlN).arena
-          
-  val player = new Player(this)
   
   // the starting line number for the mobs
   def startPath = arena.start                
@@ -57,7 +55,7 @@ class Game extends PApplet {
   }
   
   
-  val wave = new Wave(10,1,1.0, 50, "imgs/ant.png", this)
+  val wave = new Wave(10,2,1.0, 50, "imgs/ant.png", this)
   def currentWave = wave
   
   var font: PFont  = null
@@ -117,11 +115,7 @@ class Game extends PApplet {
     
     wave.doStuff()
     
-    player.getMoney()
-    
     fr += 1
-    if (fr % 200 == 0)
-      player.money += 1
     
   }
   

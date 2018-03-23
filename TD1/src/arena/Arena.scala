@@ -30,7 +30,6 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
     }
     s.reduceLeft(_+_)
   }
-
   
   private def makeSquare(x: String, col: Int, row: Int) = {
     x match {
@@ -40,6 +39,13 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
       case  _  => new Tower(col,row)
     }
   }
+  
+  
+  def path: Vector[(Int,Int)] = {
+    //TODO
+    ???
+  }
+  
   
   //adds a given row of squares in the Array
   //also sets the start row correctly for the mobs

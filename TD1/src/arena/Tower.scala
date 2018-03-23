@@ -10,8 +10,15 @@ class Tower(x: Int, y: Int) extends Square {
   
   private var defence: Option[Defence] = None
   
+  /** Adds a defence to this tower if one doesn't already exist.
+   *  Returns a boolean indicating if the addition was succeseful.*/
   def addDefence(d: Defence) = {
-    defence = Some(d)
+    if (defence.isEmpty) {
+      defence = Some(d)
+      true
+    } else {
+      false
+    }
   }
   
   def doStuff() = {

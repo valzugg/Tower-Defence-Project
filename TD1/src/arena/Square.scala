@@ -7,6 +7,7 @@ package arena
 trait Square {
   val i: Int //the index in level creation
   def doStuff(): Unit
+  override def toString() = i.toString
 }
 
 object Square {
@@ -15,13 +16,10 @@ object Square {
 
 case class Empty(x: Int, y: Int) extends Square { 
   val i = 0 ; def doStuff() = {} 
-  override def toString() = "0"
 }
 case class Path(x: Int, y: Int)  extends Square { 
   val i = 1 ; def doStuff() = {} 
-  override def toString() = "1"
 }
 case class Obstacle(x: Int, y: Int) extends Square { 
-  val i = 0 ; def doStuff() = {} 
-  override def toString() = "x"
+  val i = 9 ; def doStuff() = {} 
 } //no working implementation yet

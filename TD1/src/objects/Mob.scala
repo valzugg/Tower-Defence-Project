@@ -15,8 +15,10 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   val halfPi  = (scala.math.Pi.toFloat/2)
   val moneyValue = ((hitpoints/10)*speed).toInt
   
+  val r = scala.util.Random.nextFloat() 
+  
   //keep track of the mob's location
-  var x = -sqSize * (i + 1) * (w.distance.toFloat)
+  var x = (-sqSize * (i + 1) * w.distance) - (r * w.distance * 20)
   var y = g.startPath*sqSize.toFloat
   
   def pos = (x + sqSize/2,y + sqSize/2)
@@ -38,7 +40,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
 
   /** Removes this mob from the wave it belongs if it is dead. */
   def kill() = {
-    if (dead) w.mobs.remove(i)
+    g.player.money += moneyValue
   }
   
   // assists hp in knowing when to display itself
@@ -47,6 +49,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   /** Removes given amount of hitpoints. */
   def damage(by: Double) = {
     this.hp.damage(by)
+    if (dead) { this.kill() }
     hasBeenDamaged = true
   }
   
