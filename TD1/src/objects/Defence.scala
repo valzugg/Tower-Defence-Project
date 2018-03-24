@@ -17,16 +17,15 @@ import scala.math._
  *  @param cost The cost this defence has in the store
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
-abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Double, val cost: Int, g: Game) {
+abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, val cost: Int, g: Game) {
   val game = g.asInstanceOf[PApplet]
   val sqSize = Square.size
   val location = tower.pos
   
   // the projectile
-  val bullet = new Projectile(this)
+  val bullet = new Projectile(this, damage, speed)
   
   val i: Int //the index of the sprite
-  var color: (Float,Float,Float,Float) //the color of the shooting stuffs
   
   /**keeps track of the target mob*/
   var t: Mob = closestMob 
@@ -80,9 +79,8 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
     chooseTarget()
     if (t != null && withinRange(targetPos)) {
       bullet.doStuff()
-      game.stroke(color._1,color._2,color._3,color._4)
-      game.line(location._1,location._2,targetPos._1,targetPos._2)
-      t.damage(damage)
+      //game.stroke(color._1,color._2,color._3,color._4)
+      //game.line(location._1,location._2,targetPos._1,targetPos._2)
     }
   }
   
@@ -108,7 +106,7 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
 }
 
 /**Defence which slow the opponent down by 60% when being shot at. */
-class IceDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, g: Game) 
+class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game) 
 extends Defence(tower,range,damage,speed,cost,g) {
   val i = 0
   def r     = scala.util.Random.nextInt(100)
@@ -133,12 +131,9 @@ extends Defence(tower,range,damage,speed,cost,g) {
 
 
 /**Defence which 'chain targets' another mob as well, and damages that by 50% of the normal damage. */
-class FireDefence(tower: Tower, range: Int, damage: Double, speed: Double, cost: Int, g: Game) 
+class FireDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game) 
 extends Defence(tower,range,damage,speed,cost,g) {
   val i = 1
-  def r      = scala.util.Random.nextInt(100)
-  def colorR = (255.toFloat,r.toFloat,r.toFloat,200.toFloat)
-  var color  = colorR
   
   //the other target
   var t2 = {
@@ -165,11 +160,10 @@ extends Defence(tower,range,damage,speed,cost,g) {
       if (t.dead || t2.dead || !withinRange(t2.pos)) {
         chooseT2()
       } else {
-        game.stroke(color._1,color._2,color._3,color._4)
-        game.line(targetPos._1,targetPos._2,t2.x + sqSize/2,t2.y + sqSize/2)
+        //game.stroke(color._1,color._2,color._3,color._4)
+        //game.line(targetPos._1,targetPos._2,t2.x + sqSize/2,t2.y + sqSize/2)
         t2.damage(damage/2) //the second target experiences only half of the normal damage
       }
-      color  = colorR
     }
   }
 }
