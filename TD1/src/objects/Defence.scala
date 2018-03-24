@@ -22,6 +22,9 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
   val sqSize = Square.size
   val location = tower.pos
   
+  // the projectile
+  val bullet = new Projectile(this)
+  
   val i: Int //the index of the sprite
   var color: (Float,Float,Float,Float) //the color of the shooting stuffs
   
@@ -76,6 +79,7 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
   private def shoot() = {
     chooseTarget()
     if (t != null && withinRange(targetPos)) {
+      bullet.doStuff()
       game.stroke(color._1,color._2,color._3,color._4)
       game.line(location._1,location._2,targetPos._1,targetPos._2)
       t.damage(damage)
