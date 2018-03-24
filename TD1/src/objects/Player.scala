@@ -7,5 +7,8 @@ class Player(g: Game) {
   var money = 10
   var hp    = 100
   
+  def getPaid() = {
+    money += g.currentWave.mobs(0).moneyValue
+  }
     
 }

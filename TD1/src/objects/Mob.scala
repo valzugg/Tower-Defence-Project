@@ -13,7 +13,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   val hp = new HealthBar(this,hitpoints)
   val sqSize  = Square.size
   val halfPi  = (scala.math.Pi.toFloat/2)
-  val moneyValue = ((hitpoints/10)*speed).toInt
+  val moneyValue = ((hitpoints/30)*speed).toInt
   
   val r = scala.util.Random.nextFloat() 
   
@@ -37,19 +37,15 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   
   /** Checks if mobs hitpoints are up. */
   def dead = hp.amount < 1
-
-  /** Removes this mob from the wave it belongs if it is dead. */
-  def kill() = {
-    g.player.money += moneyValue
-  }
   
   // assists hp in knowing when to display itself
   var hasBeenDamaged = false
   
-  /** Removes given amount of hitpoints. */
+  /** Removes given amount of hitpoints.
+   *  Also gives the player money if the mob dies. */
   def damage(by: Double) = {
     this.hp.damage(by)
-    if (dead) { this.kill() }
+    if (dead) { g.player.getPaid() }
     hasBeenDamaged = true
   }
   

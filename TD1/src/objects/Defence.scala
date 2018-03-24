@@ -59,7 +59,7 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Doub
    * or it is dead.*/
   private def chooseTarget() = {
     if (!withinRange(targetPos) || t.dead) {
-        target()
+      target()
     }
   }
   
