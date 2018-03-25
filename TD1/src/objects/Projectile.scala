@@ -6,7 +6,7 @@ import arena.Square
 class Projectile(d: Defence, damage: Int, speed: Int) {
   val g = d.game
   val sqSize = Square.size
-  val hitboxSize = 4
+  val hitboxSize = 10
   
   // location of the projectile
   var x = d.location._1
@@ -16,8 +16,8 @@ class Projectile(d: Defence, damage: Int, speed: Int) {
   def ty = d.t.y + sqSize/2
   
   // the target location in relation to the projectile
-  def xtx = tx-x
-  def yty = ty-y
+  def xtx = tx - x
+  def yty = ty - y
   
   // the angle at which the projectile is shot
   def angle = atan((ty - y)/(tx - x)).toFloat

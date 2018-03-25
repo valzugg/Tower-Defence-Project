@@ -13,6 +13,12 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   val sizeX = 20
   val sizeY = 15
   
+  // vector directions
+  val right = (1, 0)
+  val left  = (-1,0)
+  val down  = (0, 1)
+  val up    = (0,-1)
+  
   // the start and end rows of the level
   var start = 0
   var end   = 0
@@ -40,10 +46,46 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
     }
   }
   
+  /** Returns the direction to the right of the given direction*/
+  private def rightOf(d: (Int,Int)) = {
+    if (d._2==0) (d._2,d._1) else (-d._2,d._1)
+  }
   
-  def path: Vector[(Int,Int)] = {
-    //TODO
-    ???
+  /** Returns the direction to the left of the given direction*/
+  private def leftOf(d: (Int,Int)) = {
+    if (d._1==0) (d._2,d._1) else (d._2,-d._1)
+  }
+  
+  //a square of given arena coordinates relative to the mob
+  private def nextSq(loc : (Int, Int), d: (Int, Int)) = {
+    g.arena.squares((loc._1.toInt/sqSize) + d._1)((loc._2.toInt/sqSize) + d._2)
+  }
+  
+  /** 
+   *  @param d The direction in which the mob is moving as a vector.*/
+  private def checkDir(loc: (Int, Int), d: (Int, Int)) = {
+    nextSq(loc,d) match {                  //checks the square in the front
+      case Path(_,_) => d
+      case _ => {
+        nextSq(loc,rightOf(d)) match {     //checks the square on the right
+          case Path(_,_) => rightOf(d)
+          case _         => leftOf(d) } }
+    } 
+  }
+  
+  // TODO: Put into use
+  val path: Vector[(Int,Int)] = {
+    var loc = (0,start)
+    var dir = right
+    val b   = Buffer[(Int,Int)]()
+    
+    while (loc._1 > sizeX) {
+      b += checkDir(loc, dir)
+      dir = b.last
+      loc = b.reduceLeft( (f,l) => (f._1 + l._1,f._2 + l._2) )
+    }
+    
+    b.toVector
   }
   
   
