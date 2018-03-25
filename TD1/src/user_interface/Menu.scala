@@ -119,7 +119,7 @@ class Menu(val g: Game) {
       }
     } else if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) {
       /////TÄSSÄ/////
-      store.buyDef(arena.towers(mSqX)(mSqY),store.iceDef)
+      store.buyDef(arena.towers(mSqX)(mSqY),store.basicDef)
       ///////////////
     }
   }
@@ -133,8 +133,9 @@ class Store(m: Menu) {
   val g = m.g      //game
   def a = g.arena  //current arena
   
-  def iceDef  = new IceDefence(m.arena.towers(m.mSqX)(m.mSqY),80,20,3,5,m.g)
-  def fireDef = new FireDefence(m.arena.towers(m.mSqX)(m.mSqY),100,10,3,5,m.g)
+  def basicDef  = new BasicDefence(m.arena.towers(m.mSqX)(m.mSqY),200,20,4,5,m.g)
+  def iceDef    = new IceDefence(m.arena.towers(m.mSqX)(m.mSqY),80,20,1,5,m.g,0.5.toFloat)
+  def fireDef   = new FireDefence(m.arena.towers(m.mSqX)(m.mSqY),100,10,3,5,m.g)
   
   def buyDef(t: Tower, d: Defence) = {
     if (p.money >= d.cost)

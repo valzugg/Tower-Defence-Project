@@ -47,8 +47,8 @@ class Projectile(d: Defence, damage: Int, speed: Int) {
   
   def doStuff() = {
     damage()
-    g.fill(255,255,255,255)
-    g.stroke(255,255,255,255)
+    g.fill(0,0,255,255)
+    g.stroke(0,0,255,255)
     g.ellipse(x,y,3,3)
     move()
     //println((x, y), (tx, ty))

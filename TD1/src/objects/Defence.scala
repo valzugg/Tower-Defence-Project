@@ -22,8 +22,8 @@ abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, va
   val sqSize = Square.size
   val location = tower.pos
   
-  // the projectile
-  val bullet = new Projectile(this, damage, speed)
+  // the current projectile
+  var bullet = new Projectile(this, damage, speed)
   
   val i: Int //the index of the sprite
   
@@ -79,8 +79,8 @@ abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, va
     chooseTarget()
     if (t != null && withinRange(targetPos)) {
       bullet.doStuff()
-      //game.stroke(color._1,color._2,color._3,color._4)
-      //game.line(location._1,location._2,targetPos._1,targetPos._2)
+//    if (bullet.hitsTarget || !withinRange(bullet.x,bullet.y))
+//      bullet = new Projectile(this, damage, speed) 
     }
   }
   
@@ -105,13 +105,20 @@ abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, va
   
 }
 
-/**Defence which slow the opponent down by 60% when being shot at. */
-class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game) 
+/**A defence without a speciality.*/
+class BasicDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game) 
 extends Defence(tower,range,damage,speed,cost,g) {
   val i = 0
-  def r     = scala.util.Random.nextInt(100)
-  def colorR = (r.toFloat,r.toFloat,255.toFloat,200.toFloat)
-  var color = colorR
+  
+  /**Does nothing.*/
+  def speciality() = {}
+}
+
+
+/**Defence which slow the opponent down by the given ratio of slowBy when being shot at. */
+class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game, slowBy: Float) 
+extends Defence(tower,range,damage,speed,cost,g) {
+  val i = 0
   
   //the original speed of the mob
   val tSpeed = g.currentWave.speed
@@ -120,9 +127,8 @@ extends Defence(tower,range,damage,speed,cost,g) {
   def speciality() = {
     if (withinRange(targetPos)) {
       if (tSpeed < 2*t.speed) {
-        t.speed = t.speed * 0.4.toFloat
+        t.speed = t.speed * (1 - slowBy)
       }
-      color = colorR
     } else {
       t.speed = tSpeed.toFloat
     }
