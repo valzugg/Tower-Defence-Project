@@ -2,7 +2,7 @@ package arena
 
 import processing.core.PApplet
 import user_interface._
-import scala.collection.mutable.Buffer
+import scala.collection.mutable.Queue
 
 class Arena(g: Game, width: Int = 20, height: Int = 15) {
   val game = g.asInstanceOf[PApplet]
@@ -27,9 +27,9 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   val towers = Array.ofDim[Tower](width,height)
   
   override def toString() = {
-    val s = Buffer[String]()
-    for (col <- 0 until sizeX) {
-      for (row <- 0 until sizeY) {
+    val s = Queue[String]()
+    for (row <- 0 until sizeY) {
+      for (col <- 0 until sizeX) {
         s += (squares(col)(row) + " ")
       }
       s += "\n"
@@ -58,7 +58,7 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   
   //a square of given arena coordinates relative to the mob
   private def nextSq(loc : (Int, Int), d: (Int, Int)) = {
-    g.arena.squares((loc._1.toInt/sqSize) + d._1)((loc._2.toInt/sqSize) + d._2)
+    squares(loc._1 + d._1)(loc._2 + d._2)
   }
   
   /** 
@@ -73,18 +73,23 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
     } 
   }
   
+  def testCheckDir() = {
+    println(checkDir((0,8), (1,0)))
+  }
+  
+  
   // TODO: Put into use
-  val path: Vector[(Int,Int)] = {
+  /** Creates a Vector of directions which the mob uses to navigate. */
+  def path: Vector[(Int,Int)] = {
     var loc = (0,start)
     var dir = right
-    val b   = Buffer[(Int,Int)]()
+    val b   = Queue[(Int,Int)]()
     
-    while (loc._1 > sizeX) {
+    while (loc._1 < sizeX - 2) {
       b += checkDir(loc, dir)
       dir = b.last
-      loc = b.reduceLeft( (f,l) => (f._1 + l._1,f._2 + l._2) )
+      loc = (loc._1 + dir._1, loc._2 + dir._2)
     }
-    
     b.toVector
   }
   

@@ -23,7 +23,7 @@ class Game extends PApplet {
   
   var fr = 0 // the current frame of the animation
   
-  var lvlN = 0 //index of the level vector
+  var lvlN = 1 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
                     
@@ -63,6 +63,7 @@ class Game extends PApplet {
   val sounds = Array.ofDim[PImage](2)
   
   override def setup() {
+    
     frameRate(30)
     squares(0) = loadImage("imgs/arena0.png")
     squares(1) = loadImage("imgs/arena1.png")

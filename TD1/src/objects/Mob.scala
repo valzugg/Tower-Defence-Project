@@ -14,6 +14,9 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   val sqSize  = Square.size
   val halfPi  = (scala.math.Pi.toFloat/2)
   val moneyValue = ((hitpoints/30)*speed).toInt
+  def frame = g.fr
+  val path = g.arena.path
+  var pathIndex = 0 // keeps track of how far the mob is along the path
   
   val r = scala.util.Random.nextFloat() 
   
@@ -98,24 +101,26 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   private def moveToStart() = {
       this.x = -sqSize
       this.y = sqSize*g.startPath
+      // damage the player
+      g.player.hp -= moneyValue * 5
   }
   
-  //TODO: Algoritmi joka tekee reitin valmiiksi, tai tarkistaa eri tavalla, ongelma suuremilla nopeuksilla
+  // TODO: FIX
+  def currentDir = {
+    if (x > 0)
+      path((frame/sqSize) % path.size)
+    else (0,0)
+  }
+  
   /**The algorithm by which the mobs finds its way on the path*/
   private def act() = {
     if (x >= sqSize*(g.arena.sizeX)) moveToStart()
     if (x < sqSize*(g.arena.sizeX - 1)) {
-      rotate()
       if (x < 0) { //when at start
         move(right)
-      } else if (if (dir != left) {    
-          x.toInt % 40 == 20 || y.toInt % 40 == 0 
-        } else {     //checks only at every square
-          x.toInt % 40 ==  0
-        }) { 
-        checkDir(dir)
-      } else {
-        move(dir)
+      } else {     //when in the main arena
+        move(currentDir)
+        rotate()
       }
     } else {
       move(dir) // in the case the mob finishes the path
