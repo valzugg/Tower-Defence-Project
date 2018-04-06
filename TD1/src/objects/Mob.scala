@@ -14,9 +14,9 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   val sqSize  = Square.size
   val halfPi  = (scala.math.Pi.toFloat/2)
   val moneyValue = ((hitpoints/30)*speed).toInt
-  def frame = g.fr
+  
   val path = g.arena.path
-  var pathIndex = 0 // keeps track of how far the mob is along the path
+  var dist = 0 // keeps track of how far the mob is along the path
   
   val r = scala.util.Random.nextFloat() 
   
@@ -27,13 +27,12 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   def pos = (x + sqSize/2,y + sqSize/2)
   
   //keeps track of the mob's current direction
-  var dir = (0,0)
+  var dir   = (0,0)
   
-  //vector directions defined for ease of use
   val right = (1, 0)
-  val left  = (-1,0)
-  val down  = (0, 1)
   val up    = (0,-1)
+  val down  = (0, 1)
+  val left  = (-1,0)
   
   //returns the index of the mob in the wave
   override def toString() = i.toString
@@ -52,67 +51,33 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
     hasBeenDamaged = true
   }
   
-  /** Returns the direction to the right of the given direction*/
-  private def rightOf(d: (Int,Int)) = {
-    if (d._2==0) (d._2,d._1) else (-d._2,d._1)
-  }
-  
-  /** Returns the direction to the left of the given direction*/
-  private def leftOf(d: (Int,Int)) = {
-    if (d._1==0) (d._2,d._1) else (d._2,-d._1)
-  }
-  
-  
   //the mob's current square
   def square = {
     g.arena.squares(x.toInt/sqSize)(y.toInt/sqSize)
   }
   
-  //a square of given arena coordinates relative to the mob
-  private def nextSq(d: (Int, Int)) = {
-    g.arena.squares((x.toInt/sqSize) + d._1)((y.toInt/sqSize) + d._2)
-  } 
-  
-  
-  /** The core of the act() method's algorithm.
-   *  Checks the next square in the given direction and 
-   *  moves the mob in the direction where possible.
-   *  Note that it is assumed that a mob cannot be in a situation 
-   *  where it would have to go back to where it came from.
-   *  @param d The direction in which the mob is moving as a vector.*/
-  private def checkDir(d: (Int, Int)) = {
-    nextSq(d) match {                  //checks the square in the front
-      case Path(_,_) => move(d)
-      case _ => {
-        nextSq(rightOf(d)) match {     //checks the square on the right
-          case Path(_,_) => move(rightOf(d))
-          case _         => move(leftOf(d)) } }
-    } 
-  }
-  
-  /** Moves the mob in the given direction and sets it's dir variable correct*/
+  /** Moves the mob in the given direction and sets 
+   *  it's dir and dist variables correct.*/
   private def move(d: (Int, Int)) = {
     x += d._1*speed
     y += d._2*speed
     dir = (d._1,d._2)
+    if (x > 0) // updates the distance variable
+      dist += scala.math.abs((d._1*speed + d._2*speed).toInt)
   }
   
   
   private def moveToStart() = {
-      this.x = -sqSize
-      this.y = sqSize*g.startPath
-      // damage the player
-      g.player.hp -= moneyValue * 5
+    this.x = -sqSize
+    this.y = sqSize*g.startPath
+    // damage the player
+    g.player.hp -= moneyValue * 5
   }
   
-  // TODO: FIX
-  def currentDir = {
-    if (x > 0)
-      path((frame/sqSize) % path.size)
-    else (0,0)
-  }
+  private def pathIndex = (dist/sqSize).toInt
+  private def currentDir = path(pathIndex)
   
-  /**The algorithm by which the mobs finds its way on the path*/
+  /** The practical way the mob is moved.*/
   private def act() = {
     if (x >= sqSize*(g.arena.sizeX)) moveToStart()
     if (x < sqSize*(g.arena.sizeX - 1)) {
@@ -124,6 +89,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
       }
     } else {
       move(dir) // in the case the mob finishes the path
+      dist = 0  // reset distance for new round
     }
   }
  

@@ -4,7 +4,7 @@ import user_interface.Game
 
 class Player(g: Game) {
   val initMoney = 10
-  var money = 100
+  var money = initMoney
   var hp    = 100
   
   // assumes that there can only be one wave at once, 

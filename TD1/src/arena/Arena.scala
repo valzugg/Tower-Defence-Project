@@ -73,24 +73,20 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
     } 
   }
   
-  def testCheckDir() = {
-    println(checkDir((0,8), (1,0)))
-  }
   
-  
-  // TODO: Put into use
   /** Creates a Vector of directions which the mob uses to navigate. */
   def path: Vector[(Int,Int)] = {
     var loc = (0,start)
     var dir = right
-    val b   = Queue[(Int,Int)]()
+    val q   = Queue[(Int,Int)]()
     
-    while (loc._1 < sizeX - 2) {
-      b += checkDir(loc, dir)
-      dir = b.last
+    while (loc._1 < sizeX - 1) {
+      q += checkDir(loc, dir)
+      dir = q.last
       loc = (loc._1 + dir._1, loc._2 + dir._2)
     }
-    b.toVector
+    q += right // The path must end going right
+    q.toVector
   }
   
   

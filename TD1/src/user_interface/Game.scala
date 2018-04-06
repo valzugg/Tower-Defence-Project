@@ -55,7 +55,7 @@ class Game extends PApplet {
   }
   
   
-  val wave = new Wave(10,2,1.0, 200, "imgs/ant.png", this)
+  val wave = new Wave(10,2,2.0, 200, "imgs/ant.png", this)
   def currentWave = wave
   
   var font: PFont  = null
@@ -64,7 +64,7 @@ class Game extends PApplet {
   
   override def setup() {
     
-    frameRate(30)
+    frameRate(60)
     squares(0) = loadImage("imgs/arena0.png")
     squares(1) = loadImage("imgs/arena1.png")
     squares(2) = loadImage("imgs/tower.png")
@@ -91,7 +91,7 @@ class Game extends PApplet {
   var fps = 30
   
   def changeFPS = {
-    if (fps == 30) fps = 120 else fps = 30
+    //if (fps == 30) fps = 120 else fps = 30
   }
   
   //TODO: fps change
@@ -103,7 +103,7 @@ class Game extends PApplet {
   
   override def draw() = {
     
-    frameRate(fps)
+    //frameRate(fps)
     
     //should draw the menu background, the tiles, and the text on the top
     menu.doStuff()
