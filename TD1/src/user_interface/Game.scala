@@ -23,7 +23,7 @@ class Game extends PApplet {
   
   var fr = 0 // the current frame of the animation
   
-  var lvlN = 1 //index of the level vector
+  var lvlN = 0 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
                     
@@ -45,7 +45,7 @@ class Game extends PApplet {
   
   
   val obstacles = Array.ofDim[PImage](8)
-  val defences  = Array.ofDim[PImage](2)
+  val defences  = Array.ofDim[PImage](3)
   val squares   = Array.ofDim[PImage](4)
   val menuS     = Array.ofDim[PImage](2)
   
@@ -55,7 +55,7 @@ class Game extends PApplet {
   }
   
   
-  val wave = new Wave(10,2,1.8, 200, "imgs/ant.png", this)
+  val wave = new Wave(10,2,1.2, 200, "imgs/ant.png", this)
   def currentWave = wave
   
   var font: PFont = null

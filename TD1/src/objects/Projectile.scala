@@ -31,12 +31,17 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
   def yty = ty - y
   
   // the angle at which the projectile is shot
-  def angle = atan((ty - y)/(tx - x)).toFloat
+  lazy val angle = {
+    if (tx < x)
+      atan((ty - y)/(tx - x)).toFloat + scala.math.Pi.toFloat
+    else
+      atan((ty - y)/(tx - x)).toFloat
+  }
   
   /** direction in which the projectile should go as a vector with length 1.*/
   def dir = (xtx/hypot(xtx,yty).toFloat, yty/hypot(xtx,yty).toFloat)
   
-  def hitsTarget = {
+  def damageTarget = {
     if ((x > tx - hitboxSize && x < tx + hitboxSize) && 
         (y > ty - hitboxSize && y < ty + hitboxSize)) {
       if (!hasHit) target.damage(dam)

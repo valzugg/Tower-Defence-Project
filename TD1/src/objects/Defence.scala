@@ -75,14 +75,16 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Int,
   
   /**Takes care of drawing the shooting animation when a target is being shot.
    * Also damages the target mob accordingly.*/
-  private def shoot() = {
-    if (bullet != null) bullet.doStuff()
-    if (bullet == null || bullet.died) chooseTarget()
-    if ((bullet == null || bullet.died)) {
-      if (withinRange(targetPos))
-        bullet = new Projectile(this, speed, damage)
-    } else if (bullet != null && withinRange(targetPos)) {
-      bullet.hitsTarget
+  def shoot() = {
+    if (!g.currentWave.isComplete) {
+      if (bullet != null) bullet.doStuff()
+      if (bullet == null || bullet.died) chooseTarget()
+      if ((bullet == null || bullet.died)) {
+        if (withinRange(targetPos))
+          bullet = new Projectile(this, speed, damage)
+      } else if (bullet != null && withinRange(targetPos)) {
+        bullet.damageTarget
+      }
     }
   }
   
@@ -115,6 +117,24 @@ extends Defence(tower,range,damage,speed,cost,g) {
   
   /**Does nothing.*/
   def speciality() = {}
+  
+  override def doStuff() = {
+    if (bullet != null) {
+      game.pushMatrix()
+      game.translate(location._1,location._2)
+      game.rotate(bullet.angle)
+      game.image(g.defences(i),-sqSize/2,-sqSize/2, sqSize, sqSize)
+      game.popMatrix()
+    } else {
+      game.image(g.defences(i), location._1 - sqSize/2, 
+                 location._2 - sqSize/2, sqSize, sqSize)
+    }
+    game.noFill()
+    game.stroke(0,0,0,100)
+    //game.ellipse(location._1, location._2, range*2, range*2)
+    if (t != null) shoot()
+  }
+  
 }
 
 

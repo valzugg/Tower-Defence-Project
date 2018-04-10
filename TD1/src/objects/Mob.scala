@@ -13,7 +13,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   val hp = new HealthBar(this,hitpoints)
   val sqSize  = Square.size
   val halfPi  = (scala.math.Pi.toFloat/2)
-  val moneyValue = ((hitpoints/30)*speed).toInt
+  val moneyValue = ((hitpoints/80)*speed).toInt
   
   val path = g.arena.path
   var dist = 0.0 // keeps track of how far the mob is along the path
