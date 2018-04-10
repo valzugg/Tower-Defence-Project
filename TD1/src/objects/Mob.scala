@@ -84,8 +84,6 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
       if (x < 0) { //when at start
         move(right)
       } else {     //when in the main arena
-        println(pathIndex + " " + dist + " speed: " + speed)
-        
         move(currentDir)
         rotate()
       }

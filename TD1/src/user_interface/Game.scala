@@ -55,7 +55,7 @@ class Game extends PApplet {
   }
   
   
-  val wave = new Wave(10,2,2.4, 200, "imgs/ant.png", this)
+  val wave = new Wave(10,2,1.4, 200, "imgs/ant.png", this)
   def currentWave = wave
   
   var font: PFont  = null
@@ -103,9 +103,6 @@ class Game extends PApplet {
   
   override def draw() = {
     
-    //frameRate(fps)
-    
-    //should draw the menu background, the tiles, and the text on the top
     menu.doStuff()
 
     arena.drawArena()

@@ -133,7 +133,7 @@ class Store(m: Menu) {
   val g = m.g      //game
   def a = g.arena  //current arena
   
-  def basicDef  = new BasicDefence(m.arena.towers(m.mSqX)(m.mSqY),200,20,10,5,m.g)
+  def basicDef  = new BasicDefence(m.arena.towers(m.mSqX)(m.mSqY),200,20,7,5,m.g)
   def iceDef    = new IceDefence(m.arena.towers(m.mSqX)(m.mSqY),80,20,1,5,m.g,0.5.toFloat)
   def fireDef   = new FireDefence(m.arena.towers(m.mSqX)(m.mSqY),100,10,3,5,m.g)
   

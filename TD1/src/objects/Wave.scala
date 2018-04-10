@@ -26,6 +26,9 @@ class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, val img
   def deadMobs  = mobs.filter(_.dead)
   def aliveMobs = mobs.filter(!_.dead)
   
+  /** Returns true if the wave is complete. */
+  def isComplete = aliveMobs.isEmpty
+  
   /** Returns the index of the mob in queue.*/
   def inQueAs(m: Mob) = {
     val map = mobs.zipWithIndex.toMap

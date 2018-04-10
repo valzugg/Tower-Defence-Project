@@ -22,13 +22,13 @@ abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, va
   val sqSize = Square.size
   val location = tower.pos
   
-  // the current projectile
-  var bullet = new Projectile(this, damage, speed)
-  
-  val i: Int //the index of the sprite
-  
   /**keeps track of the target mob*/
   var t: Mob = closestMob 
+  
+  // the current projectile
+  var bullet = new Projectile(this, speed)
+  
+  val i: Int //the index of the sprite
   
   /**Determines whether the target mob is dead. */
   def deadTarget = t.dead
@@ -50,10 +50,10 @@ abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, va
   /**Returns the alive mob closest to this defence. 
    * Used when retargeting. see target().*/
   private def closestMob: Mob = {
-    if (!g.wave.aliveMobs.isEmpty)
-      g.wave.aliveMobs.sortBy(m => distance(location,(m.x,m.y))).apply(0)
-    else
+    if (g.currentWave.isComplete)
       null
+    else
+      g.currentWave.aliveMobs.minBy(m => distance(location,(m.x,m.y)))
   }
   
   /**Determines when defence is retargeted, and retargets it if necessary. 
@@ -76,13 +76,17 @@ abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, va
   /**Takes care of drawing the shooting animation when a target is being shot.
    * Also damages the target mob accordingly.*/
   private def shoot() = {
-    chooseTarget()
-    if (t != null && withinRange(targetPos)) {
+    if (t != null && !g.currentWave.isComplete) {
       bullet.doStuff()
-//    if (bullet.hitsTarget || !withinRange(bullet.x,bullet.y))
-//      bullet = new Projectile(this, damage, speed) 
+      if (bullet.died) {
+        chooseTarget()
+        bullet = new Projectile(this, speed)
+      } else if (bullet.hitsTarget) {
+          bullet.target.damage(this.damage)
+      }
     }
   }
+  
   
   /**The method which is defined differently for every defence */
   def speciality(): Unit
