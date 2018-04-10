@@ -23,7 +23,7 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   var start = 0
   var end   = 0
   
-  //keeps track of the towers in the arena
+  // keeps track of the towers in the arena
   val towers = Array.ofDim[Tower](width,height)
   
   override def toString() = {
@@ -74,7 +74,7 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   }
   
   
-  /** Creates a Vector of directions which the mob uses to navigate. */
+  /** Creates a Vector of directions of the path which the mob uses to navigate. */
   def path: Vector[(Int,Int)] = {
     var loc = (0,start)
     var dir = right

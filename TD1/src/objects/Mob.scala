@@ -16,7 +16,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   val moneyValue = ((hitpoints/30)*speed).toInt
   
   val path = g.arena.path
-  var dist = 0 // keeps track of how far the mob is along the path
+  var dist = 0.0 // keeps track of how far the mob is along the path
   
   val r = scala.util.Random.nextFloat() 
   
@@ -47,8 +47,8 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
    *  Also gives the player money if the mob dies. */
   def damage(by: Double) = {
     this.hp.damage(by)
-    if (dead) { g.player.getPaid() }
     hasBeenDamaged = true
+    if (dead) { g.player.getPaid() }
   }
   
   //the mob's current square
@@ -63,7 +63,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
     y += d._2*speed
     dir = (d._1,d._2)
     if (x > 0) // updates the distance variable
-      dist += scala.math.abs((d._1*speed + d._2*speed).toInt)
+      dist += scala.math.abs(d._1*speed + d._2*speed)
   }
   
   
@@ -84,6 +84,8 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
       if (x < 0) { //when at start
         move(right)
       } else {     //when in the main arena
+        println(pathIndex + " " + dist + " speed: " + speed)
+        
         move(currentDir)
         rotate()
       }
