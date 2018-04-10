@@ -100,7 +100,7 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   /** Sets a Tower in the given position if possible.
    *  Only possible if the position is Empty. Returns
    *  Boolean indicating if the placing was successful.*/
-  def setTower(x: Int, y: Int) = {
+  def setTower(x: Int, y: Int): Boolean = {
     if (squares(x)(y).isInstanceOf[Empty]) {
       towers(x)(y) = new Tower(x,y) 
       squares(x)(y) = towers(x)(y)
