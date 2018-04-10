@@ -3,13 +3,16 @@ package objects
 import scala.math._
 import arena.Square
 
-class Projectile(d: Defence, speed: Int) {
+class Projectile(d: Defence, speed: Int, dam: Double) {
   val g = d.game
   val sqSize = Square.size
   val hitboxSize = 10
   var hasHit = false
   var age = 0
-  val lifetime = speed * 5 // the time it takes for a new projectile to be made
+  
+  var size = 7.0.toFloat
+  
+  val lifetime = 200/speed.toFloat // the time it takes for a new projectile to be made
   def died = age > lifetime
   
   // location of the projectile
@@ -36,6 +39,7 @@ class Projectile(d: Defence, speed: Int) {
   def hitsTarget = {
     if ((x > tx - hitboxSize && x < tx + hitboxSize) && 
         (y > ty - hitboxSize && y < ty + hitboxSize)) {
+      if (!hasHit) target.damage(dam)
       hasHit = true
       true
     } else {
@@ -49,18 +53,16 @@ class Projectile(d: Defence, speed: Int) {
     y += curDir._2 * speed
   }
   
-  // TODO: Jotain pielessä tässä tai defencen puolella
-  // kaikki voisi mieluiten tapahtua yhdessä paikassa
+  
   def doStuff() = {
-    if (d.withinRange(target.pos)) {
-      age += 1
-      move()
-      if (!hasHit) {
-        curDir = dir
-        g.fill(255,255,255,255)
-        g.noStroke()
-        g.ellipse(x,y,3,3)
-      }
+    val di = dir
+    age += 1
+    move()
+    if (!hasHit && d.withinRange(x,y)) {
+      if (d.withinRange(target.pos)) curDir = di
+      g.fill(0,0,0,255)
+      g.stroke(0,0,0)
+      g.line(x + di._1*size,y + di._2*size,x,y)
     }
   }
   

@@ -17,7 +17,7 @@ import scala.math._
  *  @param cost The cost this defence has in the store
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
-abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, val cost: Int, g: Game) {
+abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Int, val cost: Int, g: Game) {
   val game = g.asInstanceOf[PApplet]
   val sqSize = Square.size
   val location = tower.pos
@@ -26,7 +26,7 @@ abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, va
   var t: Mob = closestMob 
   
   // the current projectile
-  var bullet = new Projectile(this, speed)
+  var bullet: Projectile = null
   
   val i: Int //the index of the sprite
   
@@ -76,14 +76,13 @@ abstract class Defence(val tower: Tower, range: Int, damage: Int, speed: Int, va
   /**Takes care of drawing the shooting animation when a target is being shot.
    * Also damages the target mob accordingly.*/
   private def shoot() = {
-    if (t != null && !g.currentWave.isComplete) {
-      bullet.doStuff()
-      if (bullet.died) {
-        chooseTarget()
-        bullet = new Projectile(this, speed)
-      } else if (bullet.hitsTarget) {
-          bullet.target.damage(this.damage)
-      }
+    if (bullet != null) bullet.doStuff()
+    if (bullet == null || bullet.died) chooseTarget()
+    if ((bullet == null || bullet.died)) {
+      if (withinRange(targetPos))
+        bullet = new Projectile(this, speed, damage)
+    } else if (bullet != null && withinRange(targetPos)) {
+      bullet.hitsTarget
     }
   }
   
