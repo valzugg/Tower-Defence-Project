@@ -49,6 +49,7 @@ class Game extends PApplet {
   val squares   = Array.ofDim[PImage](4)
   val menuS     = Array.ofDim[PImage](2)
   
+  val antSprites = Array.ofDim[PImage](4)
   
   def centerOfSquare(x: Int, y: Int) = {
     (sqSize*x + sqSize/2.toFloat,sqSize*y + sqSize/2.toFloat)
@@ -69,6 +70,11 @@ class Game extends PApplet {
     squares(1) = loadImage("imgs/arena1.png")
     squares(2) = loadImage("imgs/tower.png")
     squares(3) = loadImage("imgs/towerNo.png")
+    
+    antSprites(0) = loadImage("imgs/aant.png")
+    antSprites(1) = loadImage("imgs/ant.png")
+    antSprites(2) = loadImage("imgs/antt.png")
+    antSprites(3) = loadImage("imgs/ant.png")
     
     (0 to 7).foreach(o => obstacles(o) = loadImage("imgs/obs" + o + ".png"))
     

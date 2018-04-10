@@ -35,7 +35,11 @@ class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, val img
     map(m)
   }
   
+  var sc = 0
+  
   def doStuff() {
+    if (g.fr % 8 == 0) sc += 1
+    sprite = g.antSprites(sc%4)
     for (m <- mobs) {
       m.doStuff(sprite)
     }
