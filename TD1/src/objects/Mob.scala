@@ -141,7 +141,7 @@ class HealthBar(val m: Mob, fullAmount: Double) {
   def damage(by: Double) = { amount -= by }
   
   /** Drawing of the health bar when called in Game's draw().
-   *  Drawn only if mob is alive.*/
+   *  Drawn only if mob is alive and has been damaged.*/
   def doStuff() = {
     if (!m.dead && m.hasBeenDamaged) {
       m.game.noStroke()

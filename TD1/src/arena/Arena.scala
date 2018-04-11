@@ -110,6 +110,7 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
     }
   }
   
+  
   def drawArena() = {
     for (col <- 0 until g.aWidth) {
       for (row <- 0 until g.aHeight) {

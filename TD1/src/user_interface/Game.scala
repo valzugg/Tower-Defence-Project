@@ -43,7 +43,7 @@ class Game extends PApplet {
   def mSqX = mouseX.toInt/sqSize
   def mSqY = mouseY.toInt/sqSize
   
-  
+  val highlight = Array.ofDim[PImage](1)
   val obstacles = Array.ofDim[PImage](8)
   val defences  = Array.ofDim[PImage](3)
   val squares   = Array.ofDim[PImage](4)
@@ -66,6 +66,8 @@ class Game extends PApplet {
   override def setup() {
     
     frameRate(60)
+    highlight(0) = loadImage("imgs/highlight.png")
+    
     squares(0) = loadImage("imgs/arena0.png")
     squares(1) = loadImage("imgs/arena1.png")
     squares(2) = loadImage("imgs/tower.png")
@@ -109,9 +111,9 @@ class Game extends PApplet {
   
   override def draw() = {
     
-    menu.doStuff()
-
     arena.drawArena()
+    
+    menu.doStuff()
     
     menu.buyingShit()
     

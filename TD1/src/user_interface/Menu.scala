@@ -78,7 +78,7 @@ class Menu(val g: Game) {
     
     game.image(g.squares(2),sqSize*21,sqSize*3)
     
-    //println(aWidth)
+    highlight()
   }
   
   def buyingShit() = {
@@ -100,6 +100,13 @@ class Menu(val g: Game) {
     }
   }
   
+  
+  def highlight() = {
+    if (!onMenu) {
+      game.image(g.highlight(0),(mSqX)*sqSize, 
+                 (mSqY)*sqSize, sqSize, sqSize)
+    }
+  }
   
   def clickingStuff() = {
     if (game.mouseButton == leftMouse) {
