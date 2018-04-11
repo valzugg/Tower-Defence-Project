@@ -33,6 +33,9 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Int,
   /**Determines whether the target mob is dead. */
   def deadTarget = t.dead
   
+  
+  var isHighlighted = false
+  
   /**Retargets the defence, in other words, changes the target mob
    * to the closest alive mob. It makes sense to target the closest mob,
    * because that mob will stay within the range for at least some time before
@@ -119,6 +122,7 @@ extends Defence(tower,range,damage,speed,cost,g) {
   def speciality() = {}
   
   override def doStuff() = {
+    
     if (bullet != null) {
       game.pushMatrix()
       game.translate(location._1,location._2)
@@ -129,9 +133,11 @@ extends Defence(tower,range,damage,speed,cost,g) {
       game.image(g.defences(i), location._1 - sqSize/2, 
                  location._2 - sqSize/2, sqSize, sqSize)
     }
-    game.noFill()
-    game.stroke(0,0,0,100)
-    //game.ellipse(location._1, location._2, range*2, range*2)
+    if ((g.mSqX*sqSize + sqSize/2,g.mSqY*sqSize + sqSize/2) == this.location) {
+      game.noFill()
+      game.stroke(0,0,0,100)
+      game.ellipse(location._1, location._2, range*2, range*2)
+    }
     if (t != null) shoot()
   }
   

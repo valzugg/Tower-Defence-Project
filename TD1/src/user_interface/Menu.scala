@@ -102,7 +102,7 @@ class Menu(val g: Game) {
   
   
   def highlight() = {
-    if (!onMenu) {
+    if (!onMenu && !buyT) {
       game.image(g.highlight(0),(mSqX)*sqSize, 
                  (mSqY)*sqSize, sqSize, sqSize)
     }
