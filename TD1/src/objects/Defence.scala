@@ -33,9 +33,6 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Int,
   /**Determines whether the target mob is dead. */
   def deadTarget = t.dead
   
-  
-  var isHighlighted = false
-  
   /**Retargets the defence, in other words, changes the target mob
    * to the closest alive mob. It makes sense to target the closest mob,
    * because that mob will stay within the range for at least some time before
@@ -54,7 +51,7 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Int,
    * Used when retargeting. see target().*/
   private def closestMob: Mob = {
     if (g.currentWave.isComplete)
-      null
+      g.currentWave.mobs(0) // prevents defences created between waves from glitching
     else
       g.currentWave.aliveMobs.minBy(m => distance(location,(m.x,m.y)))
   }
@@ -76,15 +73,22 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Int,
     distance(location,pos) < range
   }
   
+  def playSound() = {
+    g.arrowSound.play()
+    g.arrowSound.rewind()
+  }
+  
   /**Takes care of drawing the shooting animation when a target is being shot.
    * Also damages the target mob accordingly.*/
   def shoot() = {
+    if (bullet != null) bullet.doStuff()
     if (!g.currentWave.isComplete) {
-      if (bullet != null) bullet.doStuff()
       if (bullet == null || bullet.died) chooseTarget()
       if ((bullet == null || bullet.died)) {
-        if (withinRange(targetPos))
+        if (withinRange(targetPos)) {
           bullet = new Projectile(this, speed, damage)
+          playSound()
+        }
       } else if (bullet != null && withinRange(targetPos)) {
         bullet.damageTarget
       }
@@ -122,7 +126,6 @@ extends Defence(tower,range,damage,speed,cost,g) {
   def speciality() = {}
   
   override def doStuff() = {
-    
     if (bullet != null) {
       game.pushMatrix()
       game.translate(location._1,location._2)

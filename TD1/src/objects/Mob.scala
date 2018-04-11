@@ -8,7 +8,7 @@ import processing.core.PApplet
 /** Represents an enemy in a tower defence game 
  *  
  */
-class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
+class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int, size: Float = 0.25.toFloat) {
   val game = g.asInstanceOf[PApplet]
   val hp = new HealthBar(this,hitpoints)
   val sqSize  = Square.size
@@ -48,7 +48,13 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
   def damage(by: Double) = {
     this.hp.damage(by)
     hasBeenDamaged = true
-    if (dead) { g.player.getPaid() }
+    if (dead) { 
+      g.player.getPaid()
+      
+      // TODO: Parametreiksi äänet
+      g.antDeadSound.play()
+      g.antDeadSound.rewind()
+    }
   }
   
   //the mob's current square
@@ -112,7 +118,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int) {
       game.translate(sqSize/2,sqSize/2)
       game.translate(this.x,this.y) // the 'axis' of the mob is being moved
       this.act()
-      game.image(img,-sqSize/4,-sqSize/4,sqSize/2,sqSize/2)
+      game.image(img,-sqSize*size,-sqSize*size,sqSize*2*size,sqSize*2*size)
       game.popMatrix()
     }
   }

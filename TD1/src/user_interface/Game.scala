@@ -6,6 +6,7 @@ import scala.util.Random
 import file_parser._
 import arena._
 import objects._
+import ddf.minim._
 
 // https://processing.org/reference/
 // https://www.youtube.com/thecodingtrain
@@ -20,6 +21,10 @@ object Game extends App {
 class Game extends PApplet {
   val player = new Player(this)
   val menu   = new Menu(this)
+  
+  var minim: Minim = null
+  var arrowSound: AudioPlayer = null
+  var antDeadSound: AudioPlayer = null
   
   var fr = 0 // the current frame of the animation
   
@@ -55,15 +60,25 @@ class Game extends PApplet {
     (sqSize*x + sqSize/2.toFloat,sqSize*y + sqSize/2.toFloat)
   }
   
-  
-  val wave = new Wave(10,2,1.2, 200, "imgs/ant.png", this)
-  def currentWave = wave
+  var waveIndex = 0
+  val waves = Vector(new Wave(10,2,1.2, 150, 0.25, antSprites, this),
+                     new Wave(6,2,2.0, 200, 0.20,  antSprites, this),
+                     new Wave(10,3,1.8, 200, 0.25, antSprites, this),
+                     new Wave(10,2,2.1, 300, 0.25, antSprites, this),
+                     new Wave(2,8,1.8, 10000, 0.55,antSprites, this))
+                     
+  def currentWave = waves(waveIndex)
   
   var font: PFont = null
   
   val sounds = Array.ofDim[PImage](2)
   
   override def setup() {
+    
+    minim = new Minim(this)
+    
+    arrowSound = minim.loadFile("sound/arrow.mp3")
+    antDeadSound = minim.loadFile("sound/antDead.mp3")
     
     frameRate(60)
     highlight(0) = loadImage("imgs/highlight.png")
@@ -81,8 +96,6 @@ class Game extends PApplet {
     (0 to 7).foreach(o => obstacles(o) = loadImage("imgs/obs" + o + ".png"))
     
     (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def" + d + ".png"))
-    
-    wave.sprite = loadImage(wave.img)
     
     menuS(0)  = loadImage("imgs/menu.jpg")
     menuS(1)  = loadImage("imgs/menutop.jpg")
@@ -119,7 +132,7 @@ class Game extends PApplet {
     
     arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
     
-    wave.doStuff()
+    currentWave.doStuff()
     
     fr += 1
     
@@ -134,7 +147,9 @@ class Game extends PApplet {
   
   //lol
   override def keyPressed() {
-    changeFPS
+    //changeFPS
+    if (currentWave.isComplete && waveIndex != waves.size - 1)
+      waveIndex += 1
   }
   
   

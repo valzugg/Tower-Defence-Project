@@ -9,10 +9,10 @@ import processing.core.PImage
  *  @param distance The distance between the mobs as square sizes (Int)
  *  @param speed The speed of the mobs (max 2.0) (Float)
  *  @param hp The full hp of the mobs (Int)
- *  @param img The path to the mobs sprite (String)
+ *  @param spriteArr
  *  @param g The game in which this wave belongs (Game)
  */
-class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, val img: String, g: Game) {
+class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, mobSize: Double, val spriteArr: Array[PImage], g: Game) {
   val game = g.asInstanceOf[PApplet]
   val sqSize = arena.Square.size
   
@@ -20,11 +20,13 @@ class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, val img
   
   val mobs = Array.ofDim[Mob](size)
   for (m <- 0 until size) {
-    mobs(m) = new Mob(this,speed.toFloat,hp,g,m)
+    mobs(m) = new Mob(this,speed.toFloat,hp,g,m,mobSize.toFloat)
   }
   
   def deadMobs  = mobs.filter(_.dead)
   def aliveMobs = mobs.filter(!_.dead)
+  
+  override def toString() = mobs.map(_.toString).foldLeft("")(_+_)
   
   /** Returns true if the wave is complete. */
   def isComplete = aliveMobs.isEmpty
@@ -40,7 +42,7 @@ class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, val img
   def doStuff() {
     for (m <- mobs) {
       // the sprite is changed for the animation
-      sprite = g.antSprites((m.dist/7).toInt % g.antSprites.size)
+      sprite = spriteArr((m.dist/7).toInt % spriteArr.size)
       m.doStuff(sprite)
     }
     for (m <- mobs) {

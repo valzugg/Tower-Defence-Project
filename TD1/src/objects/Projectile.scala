@@ -64,7 +64,7 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
     age += 1
     move()
     if (!hasHit && d.withinRange(x,y)) {
-      if (d.withinRange(target.pos)) curDir = di
+      if (d.withinRange(target.pos) && !target.dead) curDir = di
       g.fill(0,0,0,255)
       g.stroke(0,0,0)
       g.line(x + di._1*size,y + di._2*size,x,y)
