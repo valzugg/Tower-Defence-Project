@@ -90,7 +90,7 @@ class Game extends PApplet {
     antSprites(2) = loadImage("imgs/ant/2.png")
     antSprites(3) = loadImage("imgs/ant/3.png")
     
-    (0 to 5).foreach(o => obstacles(o) = loadImage("imgs/arena/obs" + o + ".png"))
+    (0 to 4).foreach(o => obstacles(o) = loadImage("imgs/arena/obs" + o + ".png"))
     
     (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def" + d + ".png"))
     
