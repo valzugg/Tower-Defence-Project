@@ -52,7 +52,7 @@ class Game extends PApplet {
   val highlight = Array.ofDim[PImage](1)
   val obstacles = Array.ofDim[PImage](8)
   val defences  = Array.ofDim[PImage](3)
-  val squares   = Array.ofDim[PImage](4)
+  val squares   = Array.ofDim[PImage](6)
   val menuS     = Array.ofDim[PImage](2)
   val mobSprites = Array.ofDim[PImage](1,4)
   val antSprites = Array.ofDim[PImage](4)
@@ -78,17 +78,19 @@ class Game extends PApplet {
     frameRate(60)
     highlight(0) = loadImage("imgs/highlight.png")
     
-    squares(0) = loadImage("imgs/arena0.png")
-    squares(1) = loadImage("imgs/arena1.png")
-    squares(2) = loadImage("imgs/tower.png")
-    squares(3) = loadImage("imgs/towerNo.png")
+    squares(0) = loadImage("imgs/arena/arena0.png")
+    squares(1) = loadImage("imgs/arena/arena1.png")
+    squares(2) = loadImage("imgs/arena/arena2.png")
+    squares(3) = loadImage("imgs/arena/arena3.png")
+    squares(4) = loadImage("imgs/tower.png")
+    squares(5) = loadImage("imgs/towerNo.png")
     
     antSprites(0) = loadImage("imgs/ant/0.png")
     antSprites(1) = loadImage("imgs/ant/1.png")
     antSprites(2) = loadImage("imgs/ant/2.png")
     antSprites(3) = loadImage("imgs/ant/3.png")
     
-    (0 to 7).foreach(o => obstacles(o) = loadImage("imgs/obs" + o + ".png"))
+    (0 to 5).foreach(o => obstacles(o) = loadImage("imgs/arena/obs" + o + ".png"))
     
     (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def" + d + ".png"))
     
@@ -121,13 +123,11 @@ class Game extends PApplet {
 
     arena.drawArena()
     
-    menu.doStuff()
-    
-    menu.buyingShit()
-    
     arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
     
     currentWave.doStuff()
+    
+    menu.doStuff()
     
     //if (fr%60 == 0) println(currentWave.mobs(0).moneyValue)
     

@@ -7,6 +7,7 @@ package arena
 trait Square {
   val i: Int //the index in level creation
   def doStuff(): Unit
+  val basic: Boolean
   override def toString() = i.toString
 }
 
@@ -15,11 +16,15 @@ object Square {
 }
 
 case class Empty(x: Int, y: Int) extends Square { 
-  val i = 0 ; def doStuff() = {} 
+  val i = 2 ; def doStuff() = {} 
+  val basic = true
 }
 case class Path(x: Int, y: Int)  extends Square { 
-  val i = 1 ; def doStuff() = {} 
+  val i = 3 ; def doStuff() = {} 
+  val basic = true
 }
 case class Obstacle(x: Int, y: Int) extends Square { 
-  val i = 9 ; def doStuff() = {} 
+  val i = 2 ; def doStuff() = {} 
+  val basic = false
+  val img = scala.util.Random.nextInt(6)
 } //no working implementation yet

@@ -114,12 +114,16 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   def drawArena() = {
     for (col <- 0 until g.aWidth) {
       for (row <- 0 until g.aHeight) {
-        if (!this.squares(col)(row).isInstanceOf[Tower]) {
+        val sq = this.squares(col)(row)
+        if (sq.basic) {
           g.image(g.squares(this.squares(col)(row).i), 
-                col * sqSize, row * sqSize, sqSize, sqSize)
-        } else {
-          g.image(g.squares(0), col * sqSize, row * sqSize, sqSize, sqSize)
+                  col * sqSize, row * sqSize, sqSize, sqSize)
+        } else if (this.squares(col)(row).isInstanceOf[Tower]) {
           g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
+          g.image(g.squares(4), col * sqSize, row * sqSize, sqSize, sqSize)
+        } else {
+          g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
+          g.image(g.obstacles(sq.asInstanceOf[Obstacle].img), col * sqSize, row * sqSize, sqSize, sqSize)
         }
       }
     }

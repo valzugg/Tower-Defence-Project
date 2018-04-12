@@ -31,13 +31,10 @@ class Menu(val g: Game) {
   
   
   def doStuff() = {
-    if (g.fr < 1) { 
-      game.image(g.menuS(0),sqSize*20,sqSize*3,sqSize*4,sqSize*12)
-    }
     
-    game.image(g.menuS(1),sqSize*20,0,sqSize*4,sqSize*3)
+    game.image(g.menuS(0),sqSize*20,0,sqSize*4,sqSize*15)
     
-    //TODO: Tämä koodi lyhyemmäksi
+    
     game.textFont(g.font,16)
     game.fill(0)  
     game.text("Val's Tower Defence",sqSize*aWidth+ 5,21)
@@ -67,39 +64,17 @@ class Menu(val g: Game) {
       }
     }
       
-      
-    game.fill(180,180,180,100-menuChoose)
-    for (row <- 0 until 4) {
-      for (col <- 0 until 2) {
-        game.rect(sqSize * 21 + col * sqSize, 
-             sqSize * 3 + row * sqSize, sqSize, sqSize)
-      }
-    }
     
-    game.image(g.squares(2),sqSize*21,sqSize*3)
+    game.noFill()
+    game.stroke(0,0,0)
+    game.rect(20*sqSize + sqSize/2,11*sqSize,4*sqSize - sqSize,3*sqSize)
+    game.fill(255, 0, 0)
+    game.text("Next",20*sqSize + sqSize,12*sqSize)
+    game.text("Wave",20*sqSize + sqSize,13*sqSize)
+    
     
     highlight()
   }
-  
-  def buyingShit() = {
-    if (player.money > 4) { //menu color turns off when not enough money
-      menuCol = (0, 255) //when the player has enough money, the menu turns green
-      if (!onMenu && buyT) {
-        if (arena.squares(mSqX)(mSqY).isInstanceOf[Empty]) {
-          game.image(g.squares(2),(mSqX)*sqSize, 
-                     (mSqY)*sqSize, sqSize, sqSize)
-        } else {
-          game.image(g.squares(3),(mSqX)*sqSize, 
-                     (mSqY)*sqSize, sqSize, sqSize)
-        }
-      } 
-    } else {
-      menuChoose = 0        //the color's opacity the the cursor isn't there goes to zero
-      menuCol    = (255, 0) //when the player doesnt have enough money, the menu turns red
-      buyT       = false
-    }
-  }
-  
   
   def highlight() = {
     if (!onMenu && !buyT) {
@@ -108,26 +83,13 @@ class Menu(val g: Game) {
     }
   }
   
+  
   def clickingStuff() = {
-    if (game.mouseButton == leftMouse) {
-      if (!arena.towers.isEmpty) {
-      }
-      if (!onMenu && buyT) { 
+    if (game.mouseButton == leftMouse && !onMenu) {
+      if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) 
+        store.buyDef(arena.towers(mSqX)(mSqY),store.basicDef)
+      else
         store.buyTower(mSqX,mSqY)
-        
-      } else if (mSqX == 21 && mSqY == 3) {
-        if (buyT) {
-          buyT = false 
-          menuChoose = 0
-        } else {
-          buyT = true
-          menuChoose = 100
-        }
-      }
-    } else if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) {
-      /////TÄSSÄ/////
-      store.buyDef(arena.towers(mSqX)(mSqY),store.basicDef)
-      ///////////////
     }
   }
   

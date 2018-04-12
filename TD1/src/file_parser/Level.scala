@@ -32,7 +32,7 @@ class Level(file: String, p: Game) {
     line = lineReader.readLine()
     
     // create mob waves
-    while( line != null ) { // TODO: Problem
+    while( line != null ) { 
       val l = line.split("_").map(_.trim)
       waves += new Wave(l(0).toInt,l(1).toFloat,l(2).toFloat,l(3).toInt,
                         l(4).toFloat,l(5).toInt,this,p)

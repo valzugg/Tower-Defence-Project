@@ -7,6 +7,7 @@ class Tower(x: Int, y: Int) extends Square {
   var mouse = false
   val sqSize = arena.Square.size
   val pos = (x*sqSize + sqSize.toFloat/2,y*sqSize + sqSize.toFloat/2)
+  val basic = false
   
   private var defence: Option[Defence] = None
   
