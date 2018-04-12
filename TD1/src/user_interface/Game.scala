@@ -64,6 +64,7 @@ class Game extends PApplet {
   var minim: Minim = null
   var arrowSound: AudioPlayer = null
   var antDeadSound: AudioPlayer = null
+  var buildSound: AudioPlayer = null
   var bgSound: AudioPlayer = null
   ////////////////////////////////////////////////////
   
@@ -75,6 +76,8 @@ class Game extends PApplet {
     
     arrowSound = minim.loadFile("sound/arrow.mp3")
     antDeadSound = minim.loadFile("sound/antDead.mp3")
+    bgSound = minim.loadFile("sound/wind.mp3")
+    buildSound = minim.loadFile("sound/build.mp3")
     
     frameRate(60)
     highlight(0) = loadImage("imgs/highlight.png")
@@ -122,6 +125,8 @@ class Game extends PApplet {
   
   override def draw() = {
 
+    if (fr== 0) bgSound.loop()
+    
     arena.drawArena()
     
     arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
