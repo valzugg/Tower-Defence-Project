@@ -1,6 +1,7 @@
 package objects
 
 import user_interface.Game
+import file_parser.Level
 import processing.core.PApplet
 import processing.core.PImage
 
@@ -12,7 +13,8 @@ import processing.core.PImage
  *  @param spriteArr
  *  @param g The game in which this wave belongs (Game)
  */
-class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, mobSize: Double, val spriteArr: Array[PImage], g: Game) {
+class Wave(val size: Int, val distance: Float, val speed: Double, 
+           hp: Int, mobSize: Double, val spritesIndex: Int, lvl: Level, g: Game) {
   val game = g.asInstanceOf[PApplet]
   val sqSize = arena.Square.size
   
@@ -20,7 +22,7 @@ class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, mobSize
   
   val mobs = Array.ofDim[Mob](size)
   for (m <- 0 until size) {
-    mobs(m) = new Mob(this,speed.toFloat,hp,g,m,mobSize.toFloat)
+    mobs(m) = new Mob(this,speed.toFloat,hp,g,m,mobSize.toFloat,lvl)
   }
   
   def deadMobs  = mobs.filter(_.dead)
@@ -37,12 +39,11 @@ class Wave(val size: Int, val distance: Int, val speed: Double, hp: Int, mobSize
     map(m)
   }
   
-  var sc = 0
-  
   def doStuff() {
     for (m <- mobs) {
       // the sprite is changed for the animation
-      sprite = spriteArr((m.dist/7).toInt % spriteArr.size)
+      sprite = g.mobSprites(spritesIndex)((m.dist/7).toInt % 
+               g.mobSprites(spritesIndex).size)
       m.doStuff(sprite)
     }
     for (m <- mobs) {

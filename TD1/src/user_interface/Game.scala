@@ -22,56 +22,51 @@ class Game extends PApplet {
   val player = new Player(this)
   val menu   = new Menu(this)
   
-  var minim: Minim = null
-  var arrowSound: AudioPlayer = null
-  var antDeadSound: AudioPlayer = null
-  
   var fr = 0 // the current frame of the animation
   
+  // LEVELS /////////////////////////////////////////
   var lvlN = 0 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
+  def currentLvl = lvls(lvlN)
+  //////////////////////////////////////////////////// 
                     
+  // ARENA AND SIZE /////////////////////////////////
   def arena = lvls(lvlN).arena
-  
-  // the starting line number for the mobs
-  def startPath = arena.start                
-  
+  // the starting line number for the mobs         
   val sqSize  = Square.size //square's size in pixels
-  
   val aWidth  = 20 //arena's width
   val aHeight = 15 //arena's height
-  
   val mWidth  = 4  //menu's width
-  
   //mouse's location in the grid's coodinates
   def mSqX = mouseX.toInt/sqSize
   def mSqY = mouseY.toInt/sqSize
+  ////////////////////////////////////////////////////
+    
+  // MOB WAVES ///////////////////////////////////////
+  var waveIndex = 0 // starts with the first wave
+  def currentWave = currentLvl.waves(waveIndex)
+  ////////////////////////////////////////////////////
   
+  // IMAGE ARRAYS ////////////////////////////////////
   val highlight = Array.ofDim[PImage](1)
   val obstacles = Array.ofDim[PImage](8)
   val defences  = Array.ofDim[PImage](3)
   val squares   = Array.ofDim[PImage](4)
   val menuS     = Array.ofDim[PImage](2)
-  
+  val mobSprites = Array.ofDim[PImage](1,4)
   val antSprites = Array.ofDim[PImage](4)
+  mobSprites(0) = antSprites
+  ////////////////////////////////////////////////////
   
-  def centerOfSquare(x: Int, y: Int) = {
-    (sqSize*x + sqSize/2.toFloat,sqSize*y + sqSize/2.toFloat)
-  }
-  
-  var waveIndex = 0
-  val waves = Vector(new Wave(10,2,1.2, 150, 0.25, antSprites, this),
-                     new Wave(6,2,2.0, 200, 0.20,  antSprites, this),
-                     new Wave(10,3,1.8, 200, 0.25, antSprites, this),
-                     new Wave(10,2,2.1, 300, 0.25, antSprites, this),
-                     new Wave(2,8,1.8, 10000, 0.55,antSprites, this))
-                     
-  def currentWave = waves(waveIndex)
+  // SOUND ///////////////////////////////////////////
+  var minim: Minim = null
+  var arrowSound: AudioPlayer = null
+  var antDeadSound: AudioPlayer = null
+  var bgSound: AudioPlayer = null
+  ////////////////////////////////////////////////////
   
   var font: PFont = null
-  
-  val sounds = Array.ofDim[PImage](2)
   
   override def setup() {
     
@@ -88,10 +83,10 @@ class Game extends PApplet {
     squares(2) = loadImage("imgs/tower.png")
     squares(3) = loadImage("imgs/towerNo.png")
     
-    antSprites(0) = loadImage("imgs/aant.png")
-    antSprites(1) = loadImage("imgs/ant.png")
-    antSprites(2) = loadImage("imgs/antt.png")
-    antSprites(3) = loadImage("imgs/ant.png")
+    antSprites(0) = loadImage("imgs/ant/0.png")
+    antSprites(1) = loadImage("imgs/ant/1.png")
+    antSprites(2) = loadImage("imgs/ant/2.png")
+    antSprites(3) = loadImage("imgs/ant/3.png")
     
     (0 to 7).foreach(o => obstacles(o) = loadImage("imgs/obs" + o + ".png"))
     
@@ -123,7 +118,7 @@ class Game extends PApplet {
   //////////////////////////////////////////////////////////
   
   override def draw() = {
-    
+
     arena.drawArena()
     
     menu.doStuff()
@@ -133,6 +128,8 @@ class Game extends PApplet {
     arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
     
     currentWave.doStuff()
+    
+    //if (fr%60 == 0) println(currentWave.mobs(0).moneyValue)
     
     fr += 1
     
@@ -148,7 +145,7 @@ class Game extends PApplet {
   //lol
   override def keyPressed() {
     //changeFPS
-    if (currentWave.isComplete && waveIndex != waves.size - 1)
+    if (currentWave.isComplete && waveIndex != currentLvl.waves.size - 1)
       waveIndex += 1
   }
   

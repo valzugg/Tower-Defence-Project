@@ -2,27 +2,30 @@ package objects
 
 import arena._
 import user_interface._
+import file_parser.Level
 import processing.core.PImage
 import processing.core.PApplet
 
 /** Represents an enemy in a tower defence game 
  *  
  */
-class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int, size: Float = 0.25.toFloat) {
+class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, 
+          val i: Int, size: Float = 0.25.toFloat, lvl: Level) {
   val game = g.asInstanceOf[PApplet]
   val hp = new HealthBar(this,hitpoints)
   val sqSize  = Square.size
   val halfPi  = (scala.math.Pi.toFloat/2)
   val moneyValue = ((hitpoints/80)*speed).toInt
   
-  val path = g.arena.path
+  // TODO: the mobs can only be created to work in the current arena
+  val path = lvl.path
   var dist = 0.0 // keeps track of how far the mob is along the path
   
   val r = scala.util.Random.nextFloat() 
   
   //keep track of the mob's location
   var x = (-sqSize * (i + 1) * w.distance) - (r * w.distance * 20)
-  var y = g.startPath*sqSize.toFloat
+  var y = lvl.pathStart*sqSize.toFloat // TODO: Problem
   
   def pos = (x + sqSize/2,y + sqSize/2)
   
@@ -75,7 +78,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, val i: Int, size: 
   
   private def moveToStart() = {
     this.x = -sqSize
-    this.y = sqSize*g.startPath
+    this.y = sqSize*lvl.pathStart
     // damage the player
     g.player.hp -= moneyValue * 5
   }
