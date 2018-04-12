@@ -5,16 +5,15 @@ import user_interface._
 import file_parser.Level
 import processing.core.PImage
 import processing.core.PApplet
+import general.Helper
 
 /** Represents an enemy in a tower defence game 
  *  
  */
 class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, 
-          val i: Int, size: Float = 0.25.toFloat, lvl: Level) {
+          val i: Int, size: Float = 0.25.toFloat, lvl: Level) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val hp = new HealthBar(this,hitpoints)
-  val sqSize  = Square.size
-  val halfPi  = (scala.math.Pi.toFloat/2)
   val moneyValue = ((hitpoints/80)*speed).toInt
   
   // TODO: the mobs can only be created to work in the current arena
@@ -25,17 +24,12 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   
   //keep track of the mob's location
   var x = (-sqSize * (i + 1) * w.distance) - (r * w.distance * 20)
-  var y = lvl.pathStart*sqSize.toFloat // TODO: Problem
+  var y = lvl.pathStart*sqSize.toFloat
   
   def pos = (x + sqSize/2,y + sqSize/2)
   
   //keeps track of the mob's current direction
   var dir   = (0,0)
-  
-  val right = (1, 0)
-  val up    = (0,-1)
-  val down  = (0, 1)
-  val left  = (-1,0)
   
   //returns the index of the mob in the wave
   override def toString() = i.toString
@@ -88,8 +82,8 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   
   /** The practical way the mob is moved.*/
   private def act() = {
-    if (x >= sqSize*(g.arena.sizeX)) moveToStart()
-    if (x < sqSize*(g.arena.sizeX - 1)) {
+    if (x >= sqSize*(g.arena.aWidth)) moveToStart()
+    if (x < sqSize*(g.arena.aWidth - 1)) {
       if (x < 0) { //when at start
         move(right)
       } else {     //when in the main arena

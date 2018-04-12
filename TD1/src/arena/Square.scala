@@ -24,7 +24,7 @@ case class Path(x: Int, y: Int)  extends Square {
   val basic = true
 }
 case class Obstacle(x: Int, y: Int) extends Square { 
-  val i = 2 ; def doStuff() = {} 
+  def doStuff() = {} 
   val basic = false
-  val img = scala.util.Random.nextInt(4)
+  val i = scala.util.Random.nextInt(4)
 } //no working implementation yet

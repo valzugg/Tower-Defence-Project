@@ -2,6 +2,7 @@ package objects
 
 import scala.math._
 import arena.Square
+import general.Helper
 
 class Projectile(d: Defence, speed: Int, dam: Double) {
   val g = d.game

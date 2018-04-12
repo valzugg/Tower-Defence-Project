@@ -3,21 +3,12 @@ package arena
 import processing.core.PApplet
 import user_interface._
 import scala.collection.mutable.Queue
+import general.Helper
 
-class Arena(g: Game, width: Int = 20, height: Int = 15) {
+class Arena(g: Game, width: Int = 20, height: Int = 15) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val squaresTransposed = Array.ofDim[Square](height,width)
   var squares = squaresTransposed.transpose
-  val sqSize = Square.size
-  
-  val sizeX = 20
-  val sizeY = 15
-  
-  // vector directions
-  val right = (1, 0)
-  val left  = (-1,0)
-  val down  = (0, 1)
-  val up    = (0,-1)
   
   // the start and end rows of the level
   var start = 0
@@ -28,8 +19,8 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
   
   override def toString() = {
     val s = Queue[String]()
-    for (row <- 0 until sizeY) {
-      for (col <- 0 until sizeX) {
+    for (row <- 0 until aHeight) {
+      for (col <- 0 until aWidth) {
         s += (squares(col)(row) + " ")
       }
       s += "\n"
@@ -80,7 +71,7 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
     var dir = right
     val q   = Queue[(Int,Int)]()
     
-    while (loc._1 < sizeX - 1) {
+    while (loc._1 < aWidth - 1) {
       q += checkDir(loc, dir)
       dir = q.last
       loc = (loc._1 + dir._1, loc._2 + dir._2)
@@ -116,14 +107,14 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) {
       for (row <- 0 until g.aHeight) {
         val sq = this.squares(col)(row)
         if (sq.basic) {
-          g.image(g.squares(this.squares(col)(row).i), 
+          g.image(g.squares(sq.i), 
                   col * sqSize, row * sqSize, sqSize, sqSize)
         } else if (this.squares(col)(row).isInstanceOf[Tower]) {
           g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
           g.image(g.squares(4), col * sqSize, row * sqSize, sqSize, sqSize)
         } else {
           g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
-          g.image(g.obstacles(sq.asInstanceOf[Obstacle].img), col * sqSize, row * sqSize, sqSize, sqSize)
+          g.image(g.obstacles(sq.i), col * sqSize, row * sqSize, sqSize, sqSize)
         }
       }
     }

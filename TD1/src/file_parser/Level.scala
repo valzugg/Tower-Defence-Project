@@ -5,10 +5,10 @@ import arena._
 import user_interface._
 import objects.Wave
 
-class Level(file: String, p: Game) {
+class Level(file: String, g: Game) {
   
   val waves = scala.collection.mutable.Buffer[Wave]()
-  val arena = new Arena(p)
+  val arena = new Arena(g)
   lazy val path = arena.path
   lazy val pathStart = arena.start
   
@@ -35,7 +35,7 @@ class Level(file: String, p: Game) {
     while( line != null ) { 
       val l = line.split("_").map(_.trim)
       waves += new Wave(l(0).toInt,l(1).toFloat,l(2).toFloat,l(3).toInt,
-                        l(4).toFloat,l(5).toInt,this,p)
+                        l(4).toFloat,l(5).toInt,this,g)
       line = lineReader.readLine()
     }
     

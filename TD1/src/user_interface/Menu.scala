@@ -6,27 +6,18 @@ import scala.util.Random
 import file_parser._
 import arena._
 import objects._
+import general.Helper
 
-class Menu(val g: Game) {
-  val sqSize = Square.size
+class Menu(val g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
-  def arena = g.arena
   val store = new Store(this)
   
-  //mouse's location in the grid's coodinates
-  def mSqX = game.mouseX.toInt/sqSize
-  def mSqY = game.mouseY.toInt/sqSize
   
   //determines whether the mouse is on the menu
   def onMenu = mSqX > aWidth-1
   
-  def player  = g.player
-  val aWidth  = 20
-  val aHeight = 15
-  
   var buyT = false      //keeps track of if the player is buying towers currently
   var menuCol = (0,255) //changes the menu buttons from green to red and back
-  val leftMouse = 37
   var menuChoose = 0    //transparency of the menu button
   
   
@@ -97,25 +88,23 @@ class Menu(val g: Game) {
 }
 
 
-class Store(m: Menu) {
-  val p = m.player //player
+class Store(m: Menu) extends Helper(m.g) {
   val g = m.g      //game
-  def a = g.arena  //current arena
   
   def basicDef  = new BasicDefence(m.arena.towers(m.mSqX)(m.mSqY),140,60,8,5,m.g)
   def iceDef    = new IceDefence(m.arena.towers(m.mSqX)(m.mSqY),80,20,1,5,m.g,0.5.toFloat)
   def fireDef   = new FireDefence(m.arena.towers(m.mSqX)(m.mSqY),100,10,3,5,m.g)
   
   def buyDef(t: Tower, d: Defence) = {
-    if (p.money >= d.cost)
+    if (player.money >= d.cost)
       if (t.addDefence(d))
-        p.money -= d.cost
+        player.money -= d.cost
   }
 
   def buyTower(x: Int, y: Int) = {
-    if (p.money > 4)
-      if (a.setTower(x,y)) 
-        p.money -= 5
+    if (player.money > 4)
+      if (arena.setTower(x,y)) 
+        player.money -= 5
   }
   
 }

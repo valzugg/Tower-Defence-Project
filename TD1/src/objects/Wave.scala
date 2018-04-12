@@ -4,6 +4,7 @@ import user_interface.Game
 import file_parser.Level
 import processing.core.PApplet
 import processing.core.PImage
+import general.Helper
 
 /** Represents a wave of mobs in a tower defence game.
  *  @param size The number of mobs in this wave (Int)
@@ -14,9 +15,9 @@ import processing.core.PImage
  *  @param g The game in which this wave belongs (Game)
  */
 class Wave(val size: Int, val distance: Float, val speed: Double, 
-           hp: Int, mobSize: Double, val spritesIndex: Int, lvl: Level, g: Game) {
+           hp: Int, mobSize: Double, val spritesIndex: Int, lvl: Level, 
+           g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
-  val sqSize = arena.Square.size
   
   var sprite: PImage = null
   

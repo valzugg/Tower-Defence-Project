@@ -6,6 +6,7 @@ import scala.util.Random
 import file_parser._
 import arena._
 import objects._
+import general._
 import ddf.minim._
 
 // https://processing.org/reference/

@@ -5,7 +5,7 @@ import arena._
 import objects._
 import processing.core.PApplet
 import scala.math._
-
+import general.Helper
 
 /** Represents a defence unit which has been assigned to a tower.
  *  In this abstract class only the speciality() method is undefined.
@@ -17,9 +17,9 @@ import scala.math._
  *  @param cost The cost this defence has in the store
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
-abstract class Defence(val tower: Tower, range: Int, damage: Double, speed: Int, val cost: Int, g: Game) {
+abstract class Defence(val tower: Tower, range: Int, damage: Double, 
+                       speed: Int, val cost: Int, g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
-  val sqSize = Square.size
   val location = tower.pos
   
   /**keeps track of the target mob*/
