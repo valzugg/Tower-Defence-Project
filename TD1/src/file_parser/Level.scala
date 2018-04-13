@@ -4,11 +4,12 @@ import java.io._
 import arena._
 import user_interface._
 import objects.Wave
+import general.Helper
 
 class Level(file: String, g: Game) {
   
   val waves = scala.collection.mutable.Buffer[Wave]()
-  val arena = new Arena(g)
+  val arena  = new Arena(g)
   lazy val path = arena.path
   lazy val pathStart = arena.start
   
@@ -17,15 +18,27 @@ class Level(file: String, g: Game) {
   val fileReader = new FileReader(file)
   val lineReader = new BufferedReader( fileReader )
 
+//  var width  = 0
+//  var height = 0
+  
   try {
     var line = lineReader.readLine()
 
+//    // sets the width of the arena
+//    width = line.trim.split(" ").length
+    
     while( line != "WAVES" ) {
       arena.setRow(index, line.trim.split(" "))
       line = lineReader.readLine()
       index += 1
     }
+    
+    // to be able to access the squares in 
+    // a (horizontal,vertical) - axis, needs to be transposed
     arena.squares = arena.squaresTransposed.transpose
+    
+//    // sets the height of the arena
+//    height = index
     
     // skip the line before the wave data
     line = lineReader.readLine()

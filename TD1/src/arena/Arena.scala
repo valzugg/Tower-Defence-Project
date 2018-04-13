@@ -5,9 +5,9 @@ import user_interface._
 import scala.collection.mutable.Queue
 import general.Helper
 
-class Arena(g: Game, width: Int = 20, height: Int = 15) extends Helper(g) {
+class Arena(g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
-  val squaresTransposed = Array.ofDim[Square](height,width)
+  val squaresTransposed = Array.ofDim[Square](aHeight,aWidth)
   var squares = squaresTransposed.transpose
   
   // the start and end rows of the level
@@ -15,7 +15,7 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) extends Helper(g) {
   var end   = 0
   
   // keeps track of the towers in the arena
-  val towers = Array.ofDim[Tower](width,height)
+  val towers = Array.ofDim[Tower](aWidth,aHeight)
   
   override def toString() = {
     val s = Queue[String]()

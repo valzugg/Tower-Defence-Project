@@ -6,7 +6,7 @@ import general.Helper
 
 class Projectile(d: Defence, speed: Int, dam: Double) {
   val g = d.game
-  val sqSize = Square.size
+  val sqSize = d.sqSize
   val hitboxSize = 10
   var hasHit = false
   var age = 0

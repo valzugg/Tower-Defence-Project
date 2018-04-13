@@ -13,9 +13,25 @@ class Sounds(g: Game) extends Minim(g) {
   val build    = loadFile("sound/build.wav")
   val crossbow = loadFile("sound/crossbow.wav")
   
+  val arr = Vector[AudioPlayer](arrow,antDead,bg,build,crossbow)
+  
   def play(a: AudioPlayer) = {
-    a.play()
-    a.rewind()
+    if (!muted) {
+      a.play()
+      a.rewind()
+    }
+  }
+  
+  def loop(a: AudioPlayer) = { a.loop() }
+  
+  def toggleMute() = {
+    if (muted) {
+      muted = false
+      arr.foreach(_.unmute())
+    } else {
+      muted = true
+      arr.foreach(_.mute())
+    }
   }
   
 }

@@ -19,9 +19,6 @@ object Game extends App {
 
 
 class Game extends PApplet {
-  val player = new Player(this)
-  val menu   = new Menu(this)
-  
   var fr = 0 // the current frame of the animation
   
   // LEVELS /////////////////////////////////////////
@@ -30,6 +27,9 @@ class Game extends PApplet {
                     new Level("lvls/2.lvl", this))
   def currentLvl = lvls(lvlN)
   //////////////////////////////////////////////////// 
+  
+  val player = new Player(this)
+  val menu   = new Menu(this)
                     
   // ARENA AND SIZE /////////////////////////////////
   def arena = lvls(lvlN).arena
@@ -48,8 +48,9 @@ class Game extends PApplet {
   def currentWave = currentLvl.waves(waveIndex)
   ////////////////////////////////////////////////////
   
-  // IMAGE ARRAYS ////////////////////////////////////
+  // IMAGES //////////////////////////////////////////
   val highlight = Array.ofDim[PImage](1)
+  val muteButton = Array.ofDim[PImage](2)
   val obstacles = Array.ofDim[PImage](8)
   val defences  = Array.ofDim[PImage](3)
   val squares   = Array.ofDim[PImage](6)
@@ -59,40 +60,35 @@ class Game extends PApplet {
   mobSprites(0) = antSprites
   ////////////////////////////////////////////////////
   
-  
   var sounds: Sounds = null
-  
   var font: PFont = null
   
   override def setup() {
     
     frameRate(60)
     
-    sounds = new Sounds(this)
-    
     highlight(0) = loadImage("imgs/highlight.png")
-    
+    muteButton(0) = loadImage("imgs/unmuted.png")
+    muteButton(1) = loadImage("imgs/muted.png")
     squares(0) = loadImage("imgs/arena/arena0.png")
     squares(1) = loadImage("imgs/arena/arena1.png")
     squares(2) = loadImage("imgs/arena/arena2.png")
     squares(3) = loadImage("imgs/arena/arena3.png")
     squares(4) = loadImage("imgs/tower.png")
-    squares(5) = loadImage("imgs/towerNo.png")
-    
+    squares(5) = loadImage("imgs/towerNo.png") 
     antSprites(0) = loadImage("imgs/ant/0.png")
     antSprites(1) = loadImage("imgs/ant/1.png")
     antSprites(2) = loadImage("imgs/ant/2.png")
     antSprites(3) = loadImage("imgs/ant/3.png")
-    
     (0 to 4).foreach(o => obstacles(o) = loadImage("imgs/arena/obs" + o + ".png"))
-    
     (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def" + d + ".png"))
-    
     menuS(0)  = loadImage("imgs/menu.jpg")
-    menuS(1)  = loadImage("imgs/menutop.jpg")
+    menuS(1)  = loadImage("imgs/menutop.jpg") 
+    
     font = createFont("Arial Bold",16,true)
     
-    sounds.bg.loop()
+    sounds = new Sounds(this)
+    sounds.loop(sounds.bg)
   }
   
   //sets the size of the window
@@ -106,11 +102,11 @@ class Game extends PApplet {
 //  }
   
   //TODO: fps change
-  //////////////////////////////////////////////////////////
-  //smarter way to do - make a method here 
-  //somewhere that changes the speed of the mobs,
-  //the damage made by defences, and other stuff accordingly
-  //////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////
+  //smarter way to do - make a method here                  //
+  //somewhere that changes the speed of the mobs,           //
+  //the damage made by defences, and other stuff accordingly//
+  ////////////////////////////////////////////////////////////
   
   override def draw() = {
 

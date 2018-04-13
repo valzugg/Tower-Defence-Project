@@ -1,7 +1,7 @@
 package arena
 
 /** Represents a square on the arena grid.
- *  A square can be an instance of Empty, Path or
+ *  A square can be an instance of Empty, Path, Obstacle or
  *  Tower.
  */
 trait Square {
@@ -11,9 +11,6 @@ trait Square {
   override def toString() = i.toString
 }
 
-object Square {
-  val size = 40
-}
 
 case class Empty(x: Int, y: Int) extends Square { 
   val i = 2 ; def doStuff() = {} 
@@ -27,4 +24,4 @@ case class Obstacle(x: Int, y: Int) extends Square {
   def doStuff() = {} 
   val basic = false
   val i = scala.util.Random.nextInt(4)
-} //no working implementation yet
+}

@@ -12,6 +12,7 @@ class Menu(val g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val store = new Store(this)
   
+  val fullWidth = aWidth + mWidth
   
   //determines whether the mouse is on the menu
   def onMenu = mSqX > aWidth-1
@@ -63,6 +64,15 @@ class Menu(val g: Game) extends Helper(g) {
     game.text("Next",20*sqSize + sqSize,12*sqSize)
     game.text("Wave",20*sqSize + sqSize,13*sqSize)
     
+    // MUTE BUTTON //////////////////////////////////////////////////
+    val muteLoc = (fullWidth * sqSize - sqSize + sqSize/8.0.toFloat, 
+                   aHeight * sqSize - sqSize + sqSize/8.0.toFloat)
+    
+    if (g.sounds.muted)
+      game.image(g.muteButton(1),muteLoc._1,muteLoc._2)
+    else
+      game.image(g.muteButton(0),muteLoc._1,muteLoc._2)
+    /////////////////////////////////////////////////////////////////
     
     highlight()
   }
@@ -75,12 +85,16 @@ class Menu(val g: Game) extends Helper(g) {
   }
   
   
+  def onMuteButton = (mSqX > fullWidth - sqSize) && (mSqY > aHeight - sqSize)
+  
   def clickingStuff() = {
     if (game.mouseButton == leftMouse && !onMenu) {
       if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) 
         store.buyDef(arena.squares(mSqX)(mSqY).asInstanceOf[Tower],store.basicDef)
       else
         store.buyTower(mSqX,mSqY)
+    } else if (game.mouseButton == leftMouse && onMuteButton) {
+      g.sounds.toggleMute()
     }
   }
   
