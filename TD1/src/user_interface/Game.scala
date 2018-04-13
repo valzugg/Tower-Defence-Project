@@ -65,6 +65,7 @@ class Game extends PApplet {
   var arrowSound: AudioPlayer = null
   var antDeadSound: AudioPlayer = null
   var buildSound: AudioPlayer = null
+  var crossbowSound: AudioPlayer = null
   var bgSound: AudioPlayer = null
   ////////////////////////////////////////////////////
   
@@ -72,14 +73,16 @@ class Game extends PApplet {
   
   override def setup() {
     
+    frameRate(60)
+    
     minim = new Minim(this)
     
-    arrowSound = minim.loadFile("sound/arrow.mp3")
-    antDeadSound = minim.loadFile("sound/antDead.mp3")
-    bgSound = minim.loadFile("sound/wind.mp3")
-    buildSound = minim.loadFile("sound/build.mp3")
-    
-    frameRate(60)
+    arrowSound = minim.loadFile("sound/arrow.wav")
+    antDeadSound = minim.loadFile("sound/antDead.wav")
+    bgSound = minim.loadFile("sound/wind.wav")
+    buildSound = minim.loadFile("sound/build.wav")
+    crossbowSound = minim.loadFile("sound/crossbow.wav")
+
     highlight(0) = loadImage("imgs/highlight.png")
     
     squares(0) = loadImage("imgs/arena/arena0.png")
@@ -109,12 +112,9 @@ class Game extends PApplet {
   }
   
   
-  ////pretty risky business////////////////////////////////
-  var fps = 30
-  
-  def changeFPS = {
-    //if (fps == 30) fps = 120 else fps = 30
-  }
+//  def changeFPS = {
+//    //if (fps == 30) fps = 120 else fps = 30
+//  }
   
   //TODO: fps change
   //////////////////////////////////////////////////////////

@@ -95,9 +95,6 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) extends Helper(g) {
     if (squares(x)(y).isInstanceOf[Empty]) {
       towers(x)(y) = new Tower(x,y) 
       squares(x)(y) = towers(x)(y)
-      // TODO: Äänet yhteen paikkaan?
-      g.buildSound.play()
-      g.buildSound.rewind()
       true
     } else {
       false

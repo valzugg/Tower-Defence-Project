@@ -97,14 +97,20 @@ class Store(m: Menu) extends Helper(m.g) {
   
   def buyDef(t: Tower, d: Defence) = {
     if (player.money >= d.cost)
-      if (t.addDefence(d))
+      if (t.addDefence(d)) {
+        g.crossbowSound.play()
+        g.crossbowSound.rewind()
         player.money -= d.cost
+      }
   }
 
   def buyTower(x: Int, y: Int) = {
     if (player.money > 4)
-      if (arena.setTower(x,y)) 
+      if (arena.setTower(x,y)) {
+        g.buildSound.play()
+        g.buildSound.rewind()
         player.money -= 5
+      }
   }
   
 }
