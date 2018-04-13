@@ -49,8 +49,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
       g.player.getPaid()
       
       // TODO: Parametreiksi äänet
-      g.antDeadSound.play()
-      g.antDeadSound.rewind()
+      g.sounds.play(g.sounds.antDead)
     }
   }
   

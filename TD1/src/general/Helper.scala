@@ -2,8 +2,11 @@ package general
 
 import user_interface.Game
 
+/** Contains some general references and constants.
+ *  Made to extend other classes with. */
 class Helper(g: Game) {
   val player = g.player
+  val sounds = g.sounds
   def arena  = g.arena
   val sqSize = 40
   val halfPi = (scala.math.Pi.toFloat/2)
@@ -15,6 +18,8 @@ class Helper(g: Game) {
   // arena size in squares
   val aWidth  = 20
   val aHeight = 15
+  
+  val mWidth  = 4
   
   // vector directions
   val right = (1, 0)

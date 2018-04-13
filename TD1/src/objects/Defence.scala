@@ -73,10 +73,6 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double,
     distance(location,pos) < range
   }
   
-  def playSound() = {
-    g.arrowSound.play()
-    g.arrowSound.rewind()
-  }
   
   /**Takes care of drawing the shooting animation when a target is being shot.
    * Also damages the target mob accordingly.*/
@@ -87,7 +83,7 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double,
       if ((bullet == null || bullet.died)) {
         if (withinRange(targetPos)) {
           bullet = new Projectile(this, speed, damage)
-          playSound()
+          g.sounds.play(g.sounds.arrow)
         }
       } else if (bullet != null && withinRange(targetPos)) {
         bullet.damageTarget
@@ -136,10 +132,11 @@ extends Defence(tower,range,damage,speed,cost,g) {
       game.image(g.defences(i), location._1 - sqSize/2, 
                  location._2 - sqSize/2, sqSize, sqSize)
     }
-    if ((g.mSqX*sqSize + sqSize/2,g.mSqY*sqSize + sqSize/2) == this.location) {
+    if ((mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location) {
       game.noFill()
       game.stroke(0,0,0,100)
       game.ellipse(location._1, location._2, range*2, range*2)
+      //game.ellipse(location._1, location._2, range*2, range*2)
     }
     if (t != null) shoot()
   }

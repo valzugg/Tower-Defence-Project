@@ -7,7 +7,6 @@ import file_parser._
 import arena._
 import objects._
 import general._
-import ddf.minim._
 
 // https://processing.org/reference/
 // https://www.youtube.com/thecodingtrain
@@ -35,13 +34,13 @@ class Game extends PApplet {
   // ARENA AND SIZE /////////////////////////////////
   def arena = lvls(lvlN).arena
   // the starting line number for the mobs         
-  val sqSize  = Square.size //square's size in pixels
-  val aWidth  = 20 //arena's width
-  val aHeight = 15 //arena's height
-  val mWidth  = 4  //menu's width
+  val sqSize  = menu.sqSize  //square's size in pixels
+  val aWidth  = menu.aWidth  //arena's width
+  val aHeight = menu.aHeight //arena's height
+  val mWidth  = menu.mWidth  //menu's width
   //mouse's location in the grid's coodinates
-  def mSqX = mouseX.toInt/sqSize
-  def mSqY = mouseY.toInt/sqSize
+  def mSqX = menu.mSqX
+  def mSqY = menu.mSqY
   ////////////////////////////////////////////////////
     
   // MOB WAVES ///////////////////////////////////////
@@ -60,14 +59,8 @@ class Game extends PApplet {
   mobSprites(0) = antSprites
   ////////////////////////////////////////////////////
   
-  // SOUND ///////////////////////////////////////////
-  var minim: Minim = null
-  var arrowSound: AudioPlayer = null
-  var antDeadSound: AudioPlayer = null
-  var buildSound: AudioPlayer = null
-  var crossbowSound: AudioPlayer = null
-  var bgSound: AudioPlayer = null
-  ////////////////////////////////////////////////////
+  
+  var sounds: Sounds = null
   
   var font: PFont = null
   
@@ -75,14 +68,8 @@ class Game extends PApplet {
     
     frameRate(60)
     
-    minim = new Minim(this)
+    sounds = new Sounds(this)
     
-    arrowSound = minim.loadFile("sound/arrow.wav")
-    antDeadSound = minim.loadFile("sound/antDead.wav")
-    bgSound = minim.loadFile("sound/wind.wav")
-    buildSound = minim.loadFile("sound/build.wav")
-    crossbowSound = minim.loadFile("sound/crossbow.wav")
-
     highlight(0) = loadImage("imgs/highlight.png")
     
     squares(0) = loadImage("imgs/arena/arena0.png")
@@ -104,6 +91,8 @@ class Game extends PApplet {
     menuS(0)  = loadImage("imgs/menu.jpg")
     menuS(1)  = loadImage("imgs/menutop.jpg")
     font = createFont("Arial Bold",16,true)
+    
+    sounds.bg.loop()
   }
   
   //sets the size of the window
@@ -125,8 +114,6 @@ class Game extends PApplet {
   
   override def draw() = {
 
-    if (fr== 0) bgSound.loop()
-    
     arena.drawArena()
     
     arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
@@ -134,8 +121,6 @@ class Game extends PApplet {
     currentWave.doStuff()
     
     menu.doStuff()
-    
-    //if (fr%60 == 0) println(currentWave.mobs(0).moneyValue)
     
     fr += 1
     

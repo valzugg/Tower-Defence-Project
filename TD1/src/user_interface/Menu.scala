@@ -78,7 +78,7 @@ class Menu(val g: Game) extends Helper(g) {
   def clickingStuff() = {
     if (game.mouseButton == leftMouse && !onMenu) {
       if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) 
-        store.buyDef(arena.towers(mSqX)(mSqY),store.basicDef)
+        store.buyDef(arena.squares(mSqX)(mSqY).asInstanceOf[Tower],store.basicDef)
       else
         store.buyTower(mSqX,mSqY)
     }
@@ -91,15 +91,14 @@ class Menu(val g: Game) extends Helper(g) {
 class Store(m: Menu) extends Helper(m.g) {
   val g = m.g      //game
   
-  def basicDef  = new BasicDefence(m.arena.towers(m.mSqX)(m.mSqY),140,60,8,5,m.g)
-  def iceDef    = new IceDefence(m.arena.towers(m.mSqX)(m.mSqY),80,20,1,5,m.g,0.5.toFloat)
-  def fireDef   = new FireDefence(m.arena.towers(m.mSqX)(m.mSqY),100,10,3,5,m.g)
+  def basicDef  = new BasicDefence(m.arena.towers(mSqX)(mSqY),140,60,3,5,m.g)
+  def iceDef    = new IceDefence(m.arena.towers(mSqX)(mSqY),80,20,1,5,m.g,0.5.toFloat)
+  def fireDef   = new FireDefence(m.arena.towers(mSqX)(mSqY),100,10,3,5,m.g)
   
   def buyDef(t: Tower, d: Defence) = {
     if (player.money >= d.cost)
       if (t.addDefence(d)) {
-        g.crossbowSound.play()
-        g.crossbowSound.rewind()
+        g.sounds.play(g.sounds.crossbow)
         player.money -= d.cost
       }
   }
@@ -107,8 +106,7 @@ class Store(m: Menu) extends Helper(m.g) {
   def buyTower(x: Int, y: Int) = {
     if (player.money > 4)
       if (arena.setTower(x,y)) {
-        g.buildSound.play()
-        g.buildSound.rewind()
+        g.sounds.play(g.sounds.build)
         player.money -= 5
       }
   }

@@ -33,7 +33,10 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) extends Helper(g) {
       case "0" => new Empty(col,row)
       case "1" => new Path( col,row)
       case "x" => new Obstacle(col,row)
-      case  _  => new Tower(col,row)
+      case "t"  => {
+        towers(col)(row) = new Tower(col,row)
+        towers(col)(row)
+      }
     }
   }
   
@@ -107,14 +110,14 @@ class Arena(g: Game, width: Int = 20, height: Int = 15) extends Helper(g) {
       for (row <- 0 until g.aHeight) {
         val sq = this.squares(col)(row)
         if (sq.basic) {
-          g.image(g.squares(sq.i), 
-                  col * sqSize, row * sqSize, sqSize, sqSize)
-        } else if (this.squares(col)(row).isInstanceOf[Tower]) {
-          g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
-          g.image(g.squares(4), col * sqSize, row * sqSize, sqSize, sqSize)
-        } else {
+          g.image(g.squares(sq.i), col * sqSize, row * sqSize, sqSize, sqSize)
+        } else if (sq.isInstanceOf[Obstacle]) {
           g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
           g.image(g.obstacles(sq.i), col * sqSize, row * sqSize, sqSize, sqSize)
+        } else {
+          g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
+          g.image(g.squares(4), col * sqSize, row * sqSize, sqSize, sqSize)
+          sq.asInstanceOf[Tower].doStuff()
         }
       }
     }
