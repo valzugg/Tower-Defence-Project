@@ -21,6 +21,7 @@ class Menu(val g: Game) extends Helper(g) {
   var menuCol = (0,255) //changes the menu buttons from green to red and back
   var menuChoose = 0    //transparency of the menu button
   
+  var storeMenu: StoreMenu = null
   
   def doStuff() = {
     
@@ -74,6 +75,12 @@ class Menu(val g: Game) extends Helper(g) {
       game.image(g.muteButton(0),muteLoc._1,muteLoc._2)
     /////////////////////////////////////////////////////////////////
     
+      
+
+    if (storeMenu != null && storeMenu.toggled)
+      storeMenu.doStuff()
+      
+      
     highlight()
   }
   
@@ -85,14 +92,32 @@ class Menu(val g: Game) extends Helper(g) {
   }
   
   
-  def onMuteButton = (mSqX > fullWidth - sqSize) && (mSqY > aHeight - sqSize)
+  def onMuteButton = (mSqX > fullWidth - 2) && (mSqY > aHeight - 2)
+  
   
   def clickingStuff() = {
     if (game.mouseButton == leftMouse && !onMenu) {
-      if (arena.squares(mSqX)(mSqY).isInstanceOf[Tower]) 
-        store.buyDef(arena.squares(mSqX)(mSqY).asInstanceOf[Tower],store.basicDef)
-      else
-        store.buyTower(mSqX,mSqY)
+      val sq = arena.squares(mSqX)(mSqY)
+      if (sq.isInstanceOf[Tower]) {
+        val t = sq.asInstanceOf[Tower]
+        if (storeMenu == null || storeMenu.t != t)
+          storeMenu = new StoreMenu(t,store)
+        else
+          storeMenu.toggle()
+      } else if (storeMenu != null) {
+        if (storeMenu.mouseOn) {
+          if (storeMenu.mouseOn(1)) {
+            if (store.buyDef(storeMenu.t,store.basicDef(storeMenu.t)))
+              storeMenu.toggle()
+          } else if (storeMenu.mouseOn(2)) {
+            if (store.buyDef(storeMenu.t,store.iceDef(storeMenu.t)))
+              storeMenu.toggle()
+          }
+        } else if (storeMenu.toggled)
+          storeMenu.toggle()
+        else
+          store.buyTower(mSqX,mSqY)
+      }
     } else if (game.mouseButton == leftMouse && onMuteButton) {
       g.sounds.toggleMute()
     }
@@ -101,20 +126,58 @@ class Menu(val g: Game) extends Helper(g) {
   
 }
 
+/** A menu which is created whenever a tower is clicked. */
+class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
+  val pos = (t.pos._1 + sqSize/2,t.pos._2 - sqSize/2)
+  var toggled = true
+  
+  val size = 2
+  
+  def toggle() = {
+    if (toggled)
+      toggled = false
+    else
+      toggled = true
+  }
+  
+  def mouseOn(n: Int) = {
+    toggled &&
+    (mouseX > pos._1 && mouseY > pos._2 + (n - 1) * sqSize) &&
+    (mouseX < pos._1 + sqSize && mouseY < pos._2  + n * sqSize)
+  }
+  
+  def mouseOn = {
+    toggled &&
+    (mouseX > pos._1 && mouseY > pos._2) &&
+    (mouseX < pos._1 + sqSize && mouseY < pos._2  + size * sqSize)
+  }
+  
+  def doStuff() = {
+    s.g.fill(150,150,150,100)
+    s.g.rect(pos._1,pos._2,sqSize,size*sqSize)
+  }
+  
+}
+
 
 class Store(m: Menu) extends Helper(m.g) {
   val g = m.g      //game
   
-  def basicDef  = new BasicDefence(m.arena.towers(mSqX)(mSqY),140,60,3,5,m.g)
-  def iceDef    = new IceDefence(m.arena.towers(mSqX)(mSqY),80,20,1,5,m.g,0.5.toFloat)
+  def basicDef(t: Tower) = new BasicDefence(t,110,60,3,5,m.g)
+  def iceDef(t: Tower)   = new IceDefence(t,110,20,2,5,m.g,0.8.toFloat)
   def fireDef   = new FireDefence(m.arena.towers(mSqX)(mSqY),100,10,3,5,m.g)
   
-  def buyDef(t: Tower, d: Defence) = {
+  def buyDef(t: Tower, d: Defence): Boolean = {
     if (player.money >= d.cost)
       if (t.addDefence(d)) {
         g.sounds.play(g.sounds.crossbow)
         player.money -= d.cost
+        true
+      } else {
+        false
       }
+    else 
+      false
   }
 
   def buyTower(x: Int, y: Int) = {

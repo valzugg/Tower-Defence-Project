@@ -120,6 +120,9 @@ class Game extends PApplet {
     
     fr += 1
     
+    if (this.exitCalled()) {
+      sounds.stop()
+    }
   }
   
   

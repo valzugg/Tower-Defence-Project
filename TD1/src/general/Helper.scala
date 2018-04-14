@@ -11,9 +11,12 @@ class Helper(g: Game) {
   val sqSize = 40
   val halfPi = (scala.math.Pi.toFloat/2)
   
+  def mouseX = g.mouseX
+  def mouseY = g.mouseY
+  
   // mouse position in squares
-  def mSqX = g.mouseX.toInt/sqSize
-  def mSqY = g.mouseY.toInt/sqSize
+  def mSqX = mouseX/sqSize
+  def mSqY = mouseY/sqSize
   
   // arena size in squares
   val aWidth  = 20

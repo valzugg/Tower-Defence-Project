@@ -102,9 +102,11 @@ abstract class Defence(val tower: Tower, range: Int, damage: Double,
   def doStuff() = {
     game.image(g.defences(i), location._1 - sqSize/2, 
                location._2 - sqSize/2, sqSize, sqSize)
-    game.noFill()
-    game.stroke(0,0,0,100)
-    game.ellipse(location._1, location._2, range*2, range*2)
+    if ((mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location) {
+      game.noFill()
+      game.stroke(0,0,0,100)
+      game.ellipse(location._1, location._2, range*2, range*2)
+    }
     if (t != null) {
       speciality()
       shoot()
@@ -147,10 +149,10 @@ extends Defence(tower,range,damage,speed,cost,g) {
 /**Defence which slow the opponent down by the given ratio of slowBy when being shot at. */
 class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game, slowBy: Float) 
 extends Defence(tower,range,damage,speed,cost,g) {
-  val i = 0
+  val i = 1
   
   //the original speed of the mob
-  val tSpeed = g.currentWave.speed
+  def tSpeed = g.currentWave.speed
 
   /**Slows the mob down while it is being shot.*/
   def speciality() = {
