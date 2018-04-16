@@ -152,9 +152,15 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
     (mouseX < pos._1 + sqSize && mouseY < pos._2  + size * sqSize)
   }
   
+  def setImg(img: PImage, spot: Int) = {
+    s.g.image(img,pos._1,pos._2 + (sqSize* spot),sqSize,sqSize)
+  }
+  
   def doStuff() = {
     s.g.fill(150,150,150,100)
     s.g.rect(pos._1,pos._2,sqSize,size*sqSize)
+    setImg(s.g.defences(0),0)
+    setImg(s.g.defences(1),1)
   }
   
 }

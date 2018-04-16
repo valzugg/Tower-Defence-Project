@@ -154,6 +154,7 @@ extends Defence(tower,range,damage,speed,cost,g) {
   //the original speed of the mob
   def tSpeed = g.currentWave.speed
 
+  
   /**Slows the mob down while it is being shot.*/
   def speciality() = {
     if (withinRange(targetPos)) {
