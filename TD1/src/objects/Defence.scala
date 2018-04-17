@@ -138,7 +138,6 @@ extends Defence(tower,range,damage,speed,cost,g) {
       game.noFill()
       game.stroke(0,0,0,100)
       game.ellipse(location._1, location._2, range*2, range*2)
-      //game.ellipse(location._1, location._2, range*2, range*2)
     }
     if (t != null) shoot()
   }
@@ -154,17 +153,30 @@ extends Defence(tower,range,damage,speed,cost,g) {
   //the original speed of the mob
   def tSpeed = g.currentWave.speed
 
+  def mobsInRange =  g.currentWave.aliveMobs.filter(m => this.withinRange(m.x + sqSize/2,m.y + sqSize/2))
   
-  /**Slows the mob down while it is being shot.*/
+  // the changing circle size
+  private var circleSize = 0
+    
+  /**Slows all the mobs within range down.*/
   def speciality() = {
-    if (withinRange(targetPos)) {
-      if (tSpeed < 2*t.speed) {
-        t.speed = t.speed * (1 - slowBy)
-      }
+    if (!mobsInRange.isEmpty) {
+      circleSize += 2
+      g.currentWave.aliveMobs.foreach(_.speed = tSpeed.toFloat)
+      mobsInRange.foreach(_.speed = tSpeed.toFloat * (1 - slowBy))
+      game.noFill()
+      game.stroke(0,0,250,200 - circleSize%range*2)
+      game.ellipse(location._1, location._2, circleSize%range*2, circleSize%range*2)
     } else {
-      t.speed = tSpeed.toFloat
+      if (g.currentWave.aliveMobs.exists(_.speed != tSpeed.toFloat))
+        g.currentWave.aliveMobs.foreach(_.speed = tSpeed.toFloat)
+      circleSize = 0
     }
+    
   }
+  
+  override def shoot() = {}
+  
 }
 
 

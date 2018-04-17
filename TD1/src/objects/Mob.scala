@@ -23,7 +23,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   val r = scala.util.Random.nextFloat() 
   
   //keep track of the mob's location
-  var x = (-sqSize * (i + 1) * w.distance) - (r * w.distance * 20)
+  var x = (-sqSize * (i + 1) * w.distance) - (r * w.distance * 20) 
   var y = lvl.pathStart*sqSize.toFloat
   
   def pos = (x + sqSize/2,y + sqSize/2)

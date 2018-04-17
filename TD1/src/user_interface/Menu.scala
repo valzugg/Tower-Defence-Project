@@ -22,6 +22,7 @@ class Menu(val g: Game) extends Helper(g) {
   var menuChoose = 0    //transparency of the menu button
   
   var storeMenu: StoreMenu = null
+  val infoScreen = new InfoScreen(this)
   
   def doStuff() = {
     
@@ -47,15 +48,8 @@ class Menu(val g: Game) extends Helper(g) {
     
     game.stroke(1)
     
-    for (row <- 0 until 4) {
-      for (col <- 0 until 2) {
-        if (game.mouseX > sqSize*21 + col*sqSize && game.mouseX < sqSize*22 + col*sqSize &&
-          game.mouseY > sqSize*3 + row*sqSize && game.mouseY < sqSize*4 + row*sqSize) {
-          game.fill(menuCol._1,menuCol._2, 0,menuChoose + 80)
-          game.rect((mSqX)*sqSize,(mSqY)*sqSize,sqSize,sqSize)
-        }
-      }
-    }
+    
+    infoScreen.doStuff()
       
     
     game.noFill()
@@ -170,7 +164,7 @@ class Store(m: Menu) extends Helper(m.g) {
   val g = m.g      //game
   
   def basicDef(t: Tower) = new BasicDefence(t,110,60,3,5,m.g)
-  def iceDef(t: Tower)   = new IceDefence(t,110,20,2,5,m.g,0.8.toFloat)
+  def iceDef(t: Tower)   = new IceDefence(t,150,20,2,5,m.g,0.5.toFloat)
   def fireDef   = new FireDefence(m.arena.towers(mSqX)(mSqY),100,10,3,5,m.g)
   
   def buyDef(t: Tower, d: Defence): Boolean = {
