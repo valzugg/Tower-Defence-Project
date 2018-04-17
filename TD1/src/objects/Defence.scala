@@ -17,8 +17,8 @@ import general.Helper
  *  @param cost The cost this defence has in the store
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
-abstract class Defence(val tower: Tower, range: Int, damage: Double, 
-                       speed: Int, val cost: Int, g: Game) extends Helper(g) {
+abstract class Defence(val tower: Tower, val range: Int, val damage: Double, 
+                       val speed: Int, val cost: Int, g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val location = tower.pos
   
@@ -146,7 +146,7 @@ extends Defence(tower,range,damage,speed,cost,g) {
 
 
 /**Defence which slow the opponent down by the given ratio of slowBy when being shot at. */
-class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game, slowBy: Float) 
+class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game, val slowBy: Float) 
 extends Defence(tower,range,damage,speed,cost,g) {
   val i = 1
   
@@ -167,6 +167,9 @@ extends Defence(tower,range,damage,speed,cost,g) {
       game.noFill()
       game.stroke(0,0,250,200 - circleSize%range*2)
       game.ellipse(location._1, location._2, circleSize%range*2, circleSize%range*2)
+      // sound
+      if (circleSize%range*2 == 0) g.sounds.play(g.sounds.woop)
+      
     } else {
       if (g.currentWave.aliveMobs.exists(_.speed != tSpeed.toFloat))
         g.currentWave.aliveMobs.foreach(_.speed = tSpeed.toFloat)

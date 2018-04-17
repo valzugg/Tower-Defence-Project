@@ -12,8 +12,9 @@ class Sounds(g: Game) extends Minim(g) {
   val bg       = loadFile("sound/wind.wav")
   val build    = loadFile("sound/build.wav")
   val crossbow = loadFile("sound/crossbow.wav")
+  val woop     = loadFile("sound/woop.wav")
   
-  val arr = Vector[AudioPlayer](arrow,antDead,bg,build,crossbow)
+  val arr = Vector[AudioPlayer](arrow,antDead,bg,build,crossbow,woop)
   
   def play(a: AudioPlayer) = {
     if (!muted) {

@@ -86,17 +86,71 @@ class Menu(val g: Game) extends Helper(g) {
   
   def onMuteButton = (mSqX > fullWidth - 2) && (mSqY > aHeight - 2)
   
+  def mouseSq = {
+    arena.squares(mSqX)(mSqY)
+  }
   
+  
+  /** What happens when the mouse is over a tower on the arena. */
+  def mouseTower() = {
+    if (!onMenu && mouseSq.isInstanceOf[Tower]) {
+      val t = mouseSq.asInstanceOf[Tower]
+      if (!t.hasDef)
+        infoScreen.write("Empty Tower",
+                         "Click to see Defences")
+      else if (t.getDef.isInstanceOf[BasicDefence]) {
+        val d = t.getDef.asInstanceOf[BasicDefence]
+        infoScreen.write("Crossbow Defence",
+                         "No speciality", 
+                         "Range: " + d.range, 
+                         "Damage: " + d.damage, 
+                         "Speed: " + d.speed)
+      } else if (t.getDef.isInstanceOf[IceDefence]) {
+        val d = t.getDef.asInstanceOf[IceDefence]
+        infoScreen.write("Ice Defence",
+                         "Slows the enemies within range.", 
+                         "Range: " + d.range, 
+                         "Slows by: " + d.slowBy)
+      }
+        
+    }
+  }
+  
+  
+  def mouseEmpty() = {
+    if (!onMenu && mouseSq.isInstanceOf[Empty]) {
+      infoScreen.write("Empty Tile", "Click to Buy Tower")
+    }
+  }
+  
+  def mousePath() = {
+    if (!onMenu && mouseSq.isInstanceOf[Path]) {
+      infoScreen.write("Path", "Click to Buy Trap")
+    }
+  }
+  
+  def mouseObs() = {
+    if (!onMenu && mouseSq.isInstanceOf[Obstacle]) {
+      infoScreen.write("Obstacle", "Cannot Buy Anything Here")
+    }
+  }
+  
+  
+  def infoScreenText() = {
+    mouseTower()
+    mouseEmpty()
+    mousePath()
+    mouseObs()
+  }
+  
+ 
   def clickingStuff() = {
+    
+    // when the mouse is on the arena
     if (game.mouseButton == leftMouse && !onMenu) {
       val sq = arena.squares(mSqX)(mSqY)
-      if (sq.isInstanceOf[Tower]) {
-        val t = sq.asInstanceOf[Tower]
-        if (storeMenu == null || storeMenu.t != t)
-          storeMenu = new StoreMenu(t,store)
-        else
-          storeMenu.toggle()
-      } else if (storeMenu != null) {
+      
+      if (storeMenu != null) {
         if (storeMenu.mouseOn) {
           if (storeMenu.mouseOn(1)) {
             if (store.buyDef(storeMenu.t,store.basicDef(storeMenu.t)))
@@ -105,18 +159,33 @@ class Menu(val g: Game) extends Helper(g) {
             if (store.buyDef(storeMenu.t,store.iceDef(storeMenu.t)))
               storeMenu.toggle()
           }
-        } else if (storeMenu.toggled)
-          storeMenu.toggle()
-        else
-          store.buyTower(mSqX,mSqY)
-      } else {
+        } else {
+          if (sq.isInstanceOf[Tower]) {
+            val t = sq.asInstanceOf[Tower]
+            if (storeMenu.t != t) 
+              storeMenu = new StoreMenu(t,store)
+            else
+              storeMenu.toggle()
+          } else if (!sq.isInstanceOf[Tower] && !storeMenu.toggled) {
+            store.buyTower(mSqX,mSqY)
+          } else {
+            storeMenu.toggle()
+          }
+        }
+      } else if (sq.isInstanceOf[Tower]) {
+        val t = sq.asInstanceOf[Tower]
+        storeMenu = new StoreMenu(t,store)
+      } else if (sq.isInstanceOf[Empty]) {
         store.buyTower(mSqX,mSqY)
       }
-    } else if (game.mouseButton == leftMouse && onMuteButton) {
+    }
+    
+    // mute button
+    if (onMuteButton) {
       g.sounds.toggleMute()
     }
+    
   }
-  
   
 }
 

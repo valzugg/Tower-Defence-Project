@@ -28,7 +28,7 @@ class Game extends PApplet {
   def currentLvl = lvls(lvlN)
   //////////////////////////////////////////////////// 
   
-  val player = new Player(this)
+  def player = currentLvl.player
   val menu   = new Menu(this)
   
   // ARENA AND SIZE /////////////////////////////////
@@ -97,9 +97,6 @@ class Game extends PApplet {
   }
   
   
-//  def changeFPS = {
-//    //if (fps == 30) fps = 120 else fps = 30
-//  }
   
   //TODO: fps change
   ////////////////////////////////////////////////////////////
@@ -110,9 +107,9 @@ class Game extends PApplet {
   
   override def draw() = {
     
-    if (fr%1000 == 999) {
-      if (lvlN < 1) lvlN += 1
-    }
+//    if (fr%1000 == 999) {
+//      if (lvlN < 1) lvlN += 1
+//    }
     
     arena.drawArena()
     

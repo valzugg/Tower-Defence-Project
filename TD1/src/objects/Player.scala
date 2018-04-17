@@ -2,8 +2,7 @@ package objects
 
 import user_interface.Game
 
-class Player(g: Game) {
-  val initMoney = 10
+class Player(g: Game, initMoney: Int) {
   var money = initMoney
   var hp    = 100
   
