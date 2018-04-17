@@ -16,8 +16,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   val hp = new HealthBar(this,hitpoints)
   val moneyValue = ((hitpoints/80)*speed).toInt
   
-  // TODO: the mobs can only be created to work in the current arena
-  val path = lvl.path
+  lazy val path = lvl.path // the path of this mob
   var dist = 0.0 // keeps track of how far the mob is along the path
   
   val r = scala.util.Random.nextFloat() 
@@ -55,7 +54,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   
   //the mob's current square
   def square = {
-    g.arena.squares(x.toInt/sqSize)(y.toInt/sqSize)
+    g.arena(x.toInt/sqSize,y.toInt/sqSize)
   }
   
   /** Moves the mob in the given direction and sets 

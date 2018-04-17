@@ -9,6 +9,13 @@ class Tower(x: Int, y: Int) extends Square {
   val pos = (x*sqSize + sqSize.toFloat/2,y*sqSize + sqSize.toFloat/2)
   val basic = false
   
+  // TODO: tower upgrading
+  private var version = 0
+  
+  def upgrade() = {
+    version += 1
+  }
+  
   private var defence: Option[Defence] = None
   
   /** Adds a defence to this tower if one doesn't already exist.

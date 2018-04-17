@@ -2,26 +2,36 @@ package arena
 
 import processing.core.PApplet
 import user_interface._
+import file_parser._
 import scala.collection.mutable.Queue
 import general.Helper
 
-class Arena(g: Game) extends Helper(g) {
+class Arena(g: Game, l: Level) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
-  val squaresTransposed = Array.ofDim[Square](aHeight,aWidth)
-  var squares = squaresTransposed.transpose
+  val dims = (l.width,l.height)
+  
+  lazy val squaresTransposed = Array.ofDim[Square](dims._2,dims._1)
+  lazy val squares = squaresTransposed.transpose
   
   // the start and end rows of the level
   var start = 0
   var end   = 0
   
   // keeps track of the towers in the arena
-  val towers = Array.ofDim[Tower](aWidth,aHeight)
+  lazy val towers = Array.ofDim[Tower](dims._1,dims._2)
+  
+  
+  def apply(x: Int, y: Int) = {
+    require(x >= 0 && x < aWidth)
+    require(y >= 0 && y < aHeight)
+    this.squares(x)(y)
+  }
   
   override def toString() = {
     val s = Queue[String]()
     for (row <- 0 until aHeight) {
       for (col <- 0 until aWidth) {
-        s += (squares(col)(row) + " ")
+        s += (this(col,row) + " ")
       }
       s += "\n"
     }
@@ -52,7 +62,7 @@ class Arena(g: Game) extends Helper(g) {
   
   //a square of given arena coordinates relative to the mob
   private def nextSq(loc : (Int, Int), d: (Int, Int)) = {
-    squares(loc._1 + d._1)(loc._2 + d._2)
+    this(loc._1 + d._1,loc._2 + d._2)
   }
   
   /** 
@@ -87,7 +97,7 @@ class Arena(g: Game) extends Helper(g) {
   //adds a given row of squares in the Array
   //also sets the start row correctly for the mobs
   def setRow(row: Int, line: Array[String]) = {
-    if (line(0) == "1")     { start = row } //start row set
+    if (line(0) == "1") { start = row } //start row set
     squaresTransposed(row) = line.zipWithIndex.map(x => makeSquare(x._1,x._2,row))
   }
   

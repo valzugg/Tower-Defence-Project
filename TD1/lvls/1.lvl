@@ -1,18 +1,25 @@
-0 0 0 0 0 0 0 0 0 0 0 0 0 x 0 0 0 0 0 0 
-0 0 0 1 1 1 1 0 0 x 0 0 0 0 0 0 x 0 0 0 
-x 0 0 1 0 0 1 0 0 0 0 1 1 1 1 0 0 0 0 0 
-0 0 0 1 x 0 1 1 1 0 0 1 0 0 1 0 0 0 0 0 
-0 1 1 1 0 0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 
-0 1 0 t x x 0 0 1 0 0 1 x 0 1 0 0 0 0 0 
-0 1 1 1 0 0 0 0 1 0 x 1 0 0 1 1 1 1 0 0 
-0 0 0 1 0 0 0 0 1 0 0 1 0 0 0 0 0 1 0 0 
-1 1 0 1 0 1 1 1 1 0 0 1 0 x 0 0 0 1 0 0 
-0 1 0 1 x 1 0 x 0 0 0 1 0 0 0 0 0 1 0 0 
-0 1 0 1 0 1 0 0 0 0 0 1 0 0 1 1 1 1 x 0 
-0 1 t 1 0 1 1 1 1 1 1 1 0 0 1 0 0 0 0 0 
-0 1 0 1 0 0 x 0 0 0 0 0 0 0 1 1 1 1 1 1 
-0 1 1 1 0 x 0 0 0 0 0 x 0 0 0 0 0 0 0 0 
-x 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+EASY
+10x14
+x x x x x x x x x x
+x 1 1 1 1 1 1 x 0 x
+x t 1 x x x 1 1 x x
+x 1 1 x x x x 1 0 x
+1 1 x 0 x x 0 1 x x
+x x x x 0 x x 1 x x
+x 0 x x x 0 x 1 x x
+x 0 x x x x x 1 x x
+x 0 x x x 0 x 1 x x
+x 0 x x x x x 1 x x
+x x x x x x x 1 x x
+x x x x x x x 1 1 1
+x x x x x x x x x x
+x x x x x x x x x x
+MONEY
+20
+DEFENCES
+type range damage speed cost special
+0_   100_  60_    3_    5
+1_   90_   0_     0_    5_   0.5
 WAVES
 size dist speed  hp    mSize  sprites
 5_   1.8_ 2.3_   100_  0.25_  0

@@ -30,13 +30,13 @@ class Game extends PApplet {
   
   val player = new Player(this)
   val menu   = new Menu(this)
-                    
+  
   // ARENA AND SIZE /////////////////////////////////
   def arena = lvls(lvlN).arena
   // the starting line number for the mobs         
   val sqSize  = menu.sqSize  //square's size in pixels
-  val aWidth  = menu.aWidth  //arena's width
-  val aHeight = menu.aHeight //arena's height
+  def aWidth  = menu.aWidth  //arena's width
+  def aHeight = menu.aHeight //arena's height
   val mWidth  = menu.mWidth  //menu's width
   //mouse's location in the grid's coodinates
   def mSqX = menu.mSqX
@@ -109,7 +109,11 @@ class Game extends PApplet {
   ////////////////////////////////////////////////////////////
   
   override def draw() = {
-
+    
+    if (fr%1000 == 999) {
+      if (lvlN < 1) lvlN += 1
+    }
+    
     arena.drawArena()
     
     arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
@@ -123,6 +127,7 @@ class Game extends PApplet {
     if (this.exitCalled()) {
       sounds.stop()
     }
+    
   }
   
   

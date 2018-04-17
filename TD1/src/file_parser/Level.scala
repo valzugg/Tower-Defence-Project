@@ -9,39 +9,42 @@ import general.Helper
 class Level(file: String, g: Game) {
   
   val waves = scala.collection.mutable.Buffer[Wave]()
-  val arena  = new Arena(g)
-  lazy val path = arena.path
+  lazy val arena  = new Arena(g,this)
+  lazy val path   = arena.path
   lazy val pathStart = arena.start
   
   private var index = 0
   
   val fileReader = new FileReader(file)
-  val lineReader = new BufferedReader( fileReader )
+  val lineReader = new BufferedReader(fileReader)
 
-//  var width  = 0
-//  var height = 0
+  var width  = 0
+  var height = 0
   
   try {
-    var line = lineReader.readLine()
-
-//    // sets the width of the arena
-//    width = line.trim.split(" ").length
+    lineReader.readLine() // read the difficulty
     
-    while( line != "WAVES" ) {
+    var line = lineReader.readLine() // read the size of arena
+
+    // sets the dimensions of the arena
+    width  = line.trim.split("x")(0).toInt
+    height = line.trim.split("x")(1).toInt
+    
+    line = lineReader.readLine()
+
+    while( line != "MONEY" ) {
       arena.setRow(index, line.trim.split(" "))
       line = lineReader.readLine()
       index += 1
     }
     
-    // to be able to access the squares in 
-    // a (horizontal,vertical) - axis, needs to be transposed
-    arena.squares = arena.squaresTransposed.transpose
+    while( line != "WAVES" ) {
+      line = lineReader.readLine()
+    }
     
-//    // sets the height of the arena
-//    height = index
     
     // skip the line before the wave data
-    line = lineReader.readLine()
+    lineReader.readLine()
     line = lineReader.readLine()
     
     // create mob waves

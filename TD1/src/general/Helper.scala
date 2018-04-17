@@ -19,8 +19,8 @@ class Helper(g: Game) {
   def mSqY = mouseY/sqSize
   
   // arena size in squares
-  val aWidth  = 20
-  val aHeight = 15
+  def aWidth  = g.arena.dims._1
+  def aHeight = g.arena.dims._2
   
   val mWidth  = 4
   

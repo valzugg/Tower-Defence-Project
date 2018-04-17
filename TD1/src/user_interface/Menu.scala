@@ -26,7 +26,7 @@ class Menu(val g: Game) extends Helper(g) {
   
   def doStuff() = {
     
-    game.image(g.menuS(0),sqSize*20,0,sqSize*4,sqSize*15)
+    game.image(g.menuS(0),sqSize*aWidth,0,sqSize*mWidth,sqSize*aHeight)
     
     
     game.textFont(g.font,16)
@@ -69,8 +69,6 @@ class Menu(val g: Game) extends Helper(g) {
       game.image(g.muteButton(0),muteLoc._1,muteLoc._2)
     /////////////////////////////////////////////////////////////////
     
-      
-
     if (storeMenu != null && storeMenu.toggled)
       storeMenu.doStuff()
       
@@ -111,6 +109,8 @@ class Menu(val g: Game) extends Helper(g) {
           storeMenu.toggle()
         else
           store.buyTower(mSqX,mSqY)
+      } else {
+        store.buyTower(mSqX,mSqY)
       }
     } else if (game.mouseButton == leftMouse && onMuteButton) {
       g.sounds.toggleMute()
