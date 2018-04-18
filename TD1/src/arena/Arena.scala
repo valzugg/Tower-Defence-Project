@@ -23,7 +23,7 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   
   def apply(x: Int, y: Int) = {
     require(x >= 0 && x < aWidth)
-    require(y >= 0 && y < aHeight)
+ 
     this.squares(x)(y)
   }
   
@@ -82,15 +82,26 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   def path: Vector[(Int,Int)] = {
     var loc = (0,start)
     var dir = right
+    var steps = 0
     val q   = Queue[(Int,Int)]()
     
     while (loc._1 < aWidth - 1) {
+      require(steps < 2000, "The path goes in an infinite loop or exceeds the length of 2000 steps.")
+      require(if (loc._1 == 0) 
+                dir != left 
+              else if (loc._2 == aHeight) 
+                dir != down
+              else if (loc._2 == 0) 
+                dir != up
+              else true, "The path doesnt follow specifications.")
       q += checkDir(loc, dir)
       dir = q.last
       loc = (loc._1 + dir._1, loc._2 + dir._2)
+      steps += 1
     }
     q += right // The path must end going right
     q.toVector
+    
   }
   
   

@@ -97,20 +97,20 @@ class Menu(val g: Game) extends Helper(g) {
       val t = mouseSq.asInstanceOf[Tower]
       if (!t.hasDef)
         infoScreen.write("Empty Tower",
-                         "Click to see Defences")
+                  Vector("Click to see Defences") )
       else if (t.getDef.isInstanceOf[BasicDefence]) {
         val d = t.getDef.asInstanceOf[BasicDefence]
         infoScreen.write("Crossbow Defence",
-                         "No speciality", 
+                  Vector("No speciality", 
                          "Range: " + d.range, 
                          "Damage: " + d.damage, 
-                         "Speed: " + d.speed)
+                         "Speed: " + d.speed) )
       } else if (t.getDef.isInstanceOf[IceDefence]) {
         val d = t.getDef.asInstanceOf[IceDefence]
         infoScreen.write("Ice Defence",
-                         "Slows the enemies within range.", 
+                  Vector("Slows the enemies within range.", 
                          "Range: " + d.range, 
-                         "Slows by: " + d.slowBy)
+                         "Slows by: " + d.slowBy) )
       }
         
     }
@@ -119,7 +119,7 @@ class Menu(val g: Game) extends Helper(g) {
   
   def mouseEmpty() = {
     if (!onMenu && mouseSq.isInstanceOf[Empty]) {
-      infoScreen.write("Empty Tile", "Click to Buy Tower")
+      infoScreen.write("Empty Tile", "Click to \nBuy Tower")
     }
   }
   
@@ -131,7 +131,7 @@ class Menu(val g: Game) extends Helper(g) {
   
   def mouseObs() = {
     if (!onMenu && mouseSq.isInstanceOf[Obstacle]) {
-      infoScreen.write("Obstacle", "Cannot Buy Anything Here")
+      infoScreen.write("Obstacle", "Cannot Buy \nAnything Here")
     }
   }
   

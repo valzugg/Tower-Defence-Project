@@ -16,7 +16,6 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   val hp = new HealthBar(this,hitpoints)
   val moneyValue = ((hitpoints/80)*speed).toInt
   
-  lazy val path = lvl.path // the path of this mob
   var dist = 0.0 // keeps track of how far the mob is along the path
   
   val r = scala.util.Random.nextFloat() 
@@ -76,7 +75,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   }
   
   private def pathIndex = (dist/sqSize).toInt
-  private def currentDir = path(pathIndex)
+  private def currentDir = lvl.path(pathIndex)
   
   /** The practical way the mob is moved.*/
   private def act() = {
