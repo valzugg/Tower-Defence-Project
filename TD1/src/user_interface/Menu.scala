@@ -51,14 +51,6 @@ class Menu(val g: Game) extends Helper(g) {
     
     infoScreen.doStuff()
       
-    
-    game.noFill()
-    game.stroke(0,0,0)
-    game.rect(20*sqSize + sqSize/2,11*sqSize,4*sqSize - sqSize,3*sqSize)
-    game.fill(255, 0, 0)
-    game.text("Next",20*sqSize + sqSize,12*sqSize)
-    game.text("Wave",20*sqSize + sqSize,13*sqSize)
-    
     // WAVE BUTTON //////////////////////////////////////////////////
     drawWaveButton()
     /////////////////////////////////////////////////////////////////
