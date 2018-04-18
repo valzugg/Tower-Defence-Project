@@ -1,7 +1,8 @@
-package file_parser
+package files
 
 import java.io._
-import arena._
+import processing.core.PApplet
+import map._
 import user_interface._
 import objects.Wave
 import objects.Player
@@ -43,10 +44,13 @@ class Level(file: String, g: Game) {
     line = lineReader.readLine()
 
     while( line != "WAVES" ) {
-      arena.setRow(index, line.trim.split(" "))
+      val row = line.trim.split(" ")
+      require(row.length == width, "The arena's width isnt of the given dimensions.")
+      arena.setRow(index, row)
       line = lineReader.readLine()
       index += 1
     }
+    require(index == height, "The arena's height isnt of the given dimensions.")
     
     // skip the line before the wave data
     lineReader.readLine()
@@ -61,8 +65,13 @@ class Level(file: String, g: Game) {
     }
     
   } catch {
-    case e:IOException =>
-      println( "File doesnt follow expected format." )
+    case r: IllegalArgumentException => {
+      println(r.getMessage)
+    }
+    case e: Exception => {
+      println( " ======== File doesnt follow expected format ======== " )
+      g.asInstanceOf[PApplet].exit()
+    }
   }
   
   

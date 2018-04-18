@@ -1,8 +1,8 @@
-package arena
+package map
 
 import processing.core.PApplet
 import user_interface._
-import file_parser._
+import files.Level
 import scala.collection.mutable.Queue
 import general.Helper
 
@@ -39,6 +39,7 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   }
   
   private def makeSquare(x: String, col: Int, row: Int) = {
+    
     x match {
       case "0" => new Empty(col,row)
       case "1" => new Path( col,row)

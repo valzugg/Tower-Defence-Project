@@ -1,4 +1,4 @@
-package arena
+package map
 
 /** Represents a square on the arena grid.
  *  A square can be an instance of Empty, Path, Obstacle or

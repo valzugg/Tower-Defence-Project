@@ -3,8 +3,8 @@ package user_interface
 import processing._
 import processing.core._
 import scala.util.Random
-import file_parser._
-import arena._
+import files._
+import map._
 import objects._
 import general._
 
@@ -21,8 +21,13 @@ object Game extends App {
 class Game extends PApplet {
   var fr = 0 // the current frame of the animation
   
+  def changeLevel = {
+    ???
+  }
+  
+  
   // LEVELS /////////////////////////////////////////
-  var lvlN = 0 //index of the level vector
+  private var lvlN = 0 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
   def currentLvl = lvls(lvlN)
@@ -44,8 +49,14 @@ class Game extends PApplet {
   ////////////////////////////////////////////////////
     
   // MOB WAVES ///////////////////////////////////////
-  var waveIndex = 0 // starts with the first wave
-  def currentWave = currentLvl.waves(waveIndex)
+  var waveIndex = -1 // starts with the first wave
+  def emptyWave = new Wave(1,0,0,0,0,0,currentLvl,this)
+  def currentWave = {
+    if (waveIndex >= 0) 
+      currentLvl.waves(waveIndex)
+    else 
+      emptyWave
+  }
   ////////////////////////////////////////////////////
   
   // IMAGES //////////////////////////////////////////
@@ -64,6 +75,8 @@ class Game extends PApplet {
   var font: PFont = null
   
   override def setup() {
+    
+    
     
     frameRate(60)
     
@@ -137,7 +150,7 @@ class Game extends PApplet {
   //lol
   override def keyPressed() {
     //changeFPS
-    if (currentWave.isComplete && waveIndex != currentLvl.waves.size - 1)
+    if (currentWave.isComplete)
       waveIndex += 1
   }
   

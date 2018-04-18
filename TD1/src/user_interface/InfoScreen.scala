@@ -9,25 +9,34 @@ class InfoScreen(m: Menu) extends Helper(m.g) {
 
   // write method for multiple lines
   def write(title: String, content: Vector[String]) = {
-    m.g.textFont(m.g.font,13)
+    m.g.textFont(m.g.font,14)
     m.g.fill(0)  
+    m.g.text(title,pos._1 + sqSize/2 + 2,pos._2+sqSize + 2)
+    m.g.fill(255) 
     m.g.text(title,pos._1 + sqSize/2,pos._2+sqSize)
-    m.g.textFont(m.g.font,10)
+    m.g.textFont(m.g.font,11)
     
     for (i <- 0 until content.size) {
-       m.g.text(content(i),pos._1 + sqSize/2,pos._2 + 2*sqSize + sqSize*i/2)
+      m.g.fill(0)  
+      m.g.text(content(i),pos._1 + sqSize/2 + 2,pos._2 + 2*sqSize + sqSize*i/2 + 2)
+      m.g.fill(255) 
+      m.g.text(content(i),pos._1 + sqSize/2,pos._2 + 2*sqSize + sqSize*i/2)
     }
     
   }
   
   // write method for two lines
   def write(title: String, content: String) = {
-    m.g.textFont(m.g.font,13)
+    m.g.textFont(m.g.font,14)
     m.g.fill(0)  
+    m.g.text(title,pos._1 + sqSize/2 + 2,pos._2+sqSize + 2)
+    m.g.fill(255) 
     m.g.text(title,pos._1 + sqSize/2,pos._2+sqSize)
-    m.g.textFont(m.g.font,10)
-    
-    m.g.text(content,pos._1 + sqSize/2,pos._2+sqSize + sqSize)
+    m.g.textFont(m.g.font,11)
+    m.g.fill(0)
+    m.g.text(content,pos._1 + sqSize/2+2,pos._2+2*sqSize+2)
+    m.g.fill(255)
+    m.g.text(content,pos._1 + sqSize/2,pos._2+2*sqSize)
     
   }
   

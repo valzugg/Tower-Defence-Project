@@ -1,11 +1,12 @@
 package objects
 
-import arena._
+import map._
 import user_interface._
-import file_parser.Level
+import files.Level
 import processing.core.PImage
 import processing.core.PApplet
 import general.Helper
+import scala.math.abs
 
 /** Represents an enemy in a tower defence game 
  *  
@@ -16,7 +17,8 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   val hp = new HealthBar(this,hitpoints)
   val moneyValue = ((hitpoints/80)*speed).toInt
   
-  var dist = 0.0 // keeps track of how far the mob is along the path
+  private var dist = -sqSize.toFloat // keeps track of how far the mob is along the path
+  def distance = abs(dist)
   
   val r = scala.util.Random.nextFloat() 
   
@@ -62,8 +64,8 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
     x += d._1*speed
     y += d._2*speed
     dir = (d._1,d._2)
-    if (x > 0) // updates the distance variable
-      dist += scala.math.abs(d._1*speed + d._2*speed)
+    if (x > -sqSize) // updates the distance variable
+      dist += abs(d._1*speed + d._2*speed)
   }
   
   
@@ -74,7 +76,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
     g.player.hp -= moneyValue * 5
   }
   
-  private def pathIndex = (dist/sqSize).toInt
+  private def pathIndex = ((dist)/sqSize).toInt
   private def currentDir = lvl.path(pathIndex)
   
   /** The practical way the mob is moved.*/
@@ -89,7 +91,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
       }
     } else {
       move(dir) // in the case the mob finishes the path
-      dist = 0  // reset distance for new round
+      dist = -sqSize  // reset distance for new round
     }
   }
  

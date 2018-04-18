@@ -1,7 +1,7 @@
 package objects
 
 import user_interface.Game
-import file_parser.Level
+import files.Level
 import processing.core.PApplet
 import processing.core.PImage
 import general.Helper
@@ -43,7 +43,7 @@ class Wave(val size: Int, val distance: Float, val speed: Double,
   def doStuff() {
     for (m <- mobs) {
       // the sprite is changed for the animation
-      sprite = g.mobSprites(spritesIndex)((m.dist/7).toInt % 
+      sprite = g.mobSprites(spritesIndex)((m.distance/7).toInt % 
                g.mobSprites(spritesIndex).size)
       m.doStuff(sprite)
     }

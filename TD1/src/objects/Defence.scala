@@ -1,7 +1,7 @@
 package objects
 
 import user_interface.Game
-import arena._
+import map._
 import objects._
 import processing.core.PApplet
 import scala.math._

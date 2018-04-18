@@ -1,6 +1,6 @@
 package objects
 
-import arena._
+import map._
 
 class Trap(val p: Path) {
   

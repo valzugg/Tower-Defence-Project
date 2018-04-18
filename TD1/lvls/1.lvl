@@ -10,7 +10,7 @@ ARENA
 x x x x x x x 0 x x x x
 x 0 1 1 1 1 1 x 0 x x x
 x t 1 x x x 1 1 x x 0 x
-x 1 1 x 0 x x 1 0 x x x
+x 1 1 x 0 0 x 1 0 x x x
 1 1 x 0 x x 0 1 x x x x
 x x x x 0 x x 1 x x x x
 x 0 x x x 0 x 1 x 0 x x
@@ -19,10 +19,10 @@ x 0 x 0 x 0 x 1 0 x x x
 x 0 x x x x x 1 x x 1 1
 x x x x x 0 x 1 x x 1 x
 x x x 0 x x 0 1 1 1 1 x
-x x x x x x x x x x x x
+x x x x x x 0 x x x x x
 WAVES
 size dist speed  hp    mSize  sprites
-5_   1.8_ 2.3_   100_  0.25_  0
+5_   1.8_ 2.0_   100_  0.25_  0
 40_  1_   2.0_   100_  0.20_  0
 3_   3_   1.0_   2000_ 0.30_  0
 3_   3_   1.0_   3000_ 0.35_  0

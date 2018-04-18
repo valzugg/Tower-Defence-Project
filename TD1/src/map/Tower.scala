@@ -1,4 +1,4 @@
-package arena
+package map
 
 import objects.Defence
 

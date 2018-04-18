@@ -1,7 +1,7 @@
 package objects
 
 import scala.math._
-import arena.Square
+import map.Square
 import general.Helper
 
 class Projectile(d: Defence, speed: Int, dam: Double) {

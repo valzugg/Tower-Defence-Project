@@ -6,6 +6,7 @@ import user_interface.Game
  *  Made to extend other classes with. */
 class Helper(g: Game) {
   lazy val player = g.player
+  def gameOver = player.hp <= 0
   val sounds = g.sounds
   def arena  = g.arena
   val sqSize = 40
