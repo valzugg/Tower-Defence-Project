@@ -21,13 +21,17 @@ object Game extends App {
 class Game extends PApplet {
   var fr = 0 // the current frame of the animation
   
-  def changeLevel = {
+  def nextLevel() = {
     ???
   }
   
+  def nextWave()= {
+    if (currentWave.isComplete)
+      waveIndex += 1
+  }
   
   // LEVELS /////////////////////////////////////////
-  private var lvlN = 0 //index of the level vector
+  private var lvlN = 1 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
   def currentLvl = lvls(lvlN)
@@ -150,8 +154,8 @@ class Game extends PApplet {
   //lol
   override def keyPressed() {
     //changeFPS
-    if (currentWave.isComplete)
-      waveIndex += 1
+//    if (currentWave.isComplete)
+//      waveIndex += 1
   }
   
   

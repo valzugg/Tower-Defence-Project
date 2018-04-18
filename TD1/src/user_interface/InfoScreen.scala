@@ -3,9 +3,9 @@ package user_interface
 import general.Helper
 
 class InfoScreen(m: Menu) extends Helper(m.g) {
-  val pos = (aWidth*sqSize + sqSize/2, aHeight*sqSize/4) 
+  val pos = (aWidth*sqSize + sqSize/2, 3*sqSize) 
   val sizeX = sqSize * mWidth - sqSize
-  val sizeY = sqSize *6
+  val sizeY = sqSize * 6
 
   // write method for multiple lines
   def write(title: String, content: Vector[String]) = {

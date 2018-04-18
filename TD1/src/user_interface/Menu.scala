@@ -3,7 +3,7 @@ package user_interface
 import processing._
 import processing.core._
 import scala.util.Random
-import file_parser._
+import files._
 import map._
 import objects._
 import general.Helper
@@ -59,6 +59,10 @@ class Menu(val g: Game) extends Helper(g) {
     game.text("Next",20*sqSize + sqSize,12*sqSize)
     game.text("Wave",20*sqSize + sqSize,13*sqSize)
     
+    // WAVE BUTTON //////////////////////////////////////////////////
+    drawWaveButton()
+    /////////////////////////////////////////////////////////////////
+    
     // MUTE BUTTON //////////////////////////////////////////////////
     val muteLoc = (fullWidth * sqSize - sqSize + sqSize/8.0.toFloat, 
                    aHeight * sqSize - sqSize + sqSize/8.0.toFloat)
@@ -85,6 +89,43 @@ class Menu(val g: Game) extends Helper(g) {
   
   
   def onMuteButton = (mSqX > fullWidth - 2) && (mSqY > aHeight - 2)
+  
+  
+  // WAVE BUTTON /////////////////////////////////////////////////////////////////////////
+  val waveButtonPos = (aWidth*sqSize + sqSize/2,sqSize*9 + sqSize/2)
+  val waveButtonSize = (sqSize*3,sqSize*2)
+  
+  def onWaveButton = (mouseX > waveButtonPos._1) && (mouseY > waveButtonPos._2) &&
+                     (mouseX < waveButtonPos._1 + waveButtonSize._1) && 
+                     (mouseY < waveButtonPos._2 + waveButtonSize._2)
+                
+  def drawWaveButton() = {
+    var color = (150,0,0)
+    var text  = "  Wave In\n Progress"
+    if (g.currentWave.isComplete) {
+      color = (0,150,0)
+      text  = "Start Next\n    Wave"
+    }
+      
+    def stuff = {
+      game.rect(waveButtonPos._1,waveButtonPos._2,waveButtonSize._1,waveButtonSize._2)
+      game.textFont(g.font,12)
+      game.fill(0) 
+      game.text(text,waveButtonPos._1 + sqSize*3/4 +2,waveButtonPos._2 + sqSize*7/8 + 2)
+      game.fill(250) 
+      game.text(text,waveButtonPos._1 + sqSize*3/4,waveButtonPos._2 + sqSize*7/8)
+    }
+    
+    if (onWaveButton) {
+      game.fill(color._1,color._2,color._3,160)
+      stuff
+    } else {
+      game.fill(color._1,color._2,color._3,100)
+      stuff
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////
+  
   
   def mouseSq = {
     arena.squares(mSqX)(mSqY)
@@ -184,6 +225,10 @@ class Menu(val g: Game) extends Helper(g) {
     // mute button
     if (onMuteButton) {
       g.sounds.toggleMute()
+    }
+    
+    if (onWaveButton) {
+      g.nextWave()
     }
     
   }
