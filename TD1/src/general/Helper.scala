@@ -25,6 +25,10 @@ class Helper(g: Game) {
   
   val mWidth  = 4
   
+  
+  
+  
+  
   // vector directions
   val right = (1, 0)
   val up    = (0,-1)

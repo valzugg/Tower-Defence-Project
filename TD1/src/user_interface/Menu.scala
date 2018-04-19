@@ -51,19 +51,10 @@ class Menu(val g: Game) extends Helper(g) {
     
     infoScreen.doStuff()
       
-    // WAVE BUTTON //////////////////////////////////////////////////
+    
     drawWaveButton()
-    /////////////////////////////////////////////////////////////////
     
-    // MUTE BUTTON //////////////////////////////////////////////////
-    val muteLoc = (fullWidth * sqSize - sqSize + sqSize/8.0.toFloat, 
-                   aHeight * sqSize - sqSize + sqSize/8.0.toFloat)
-    
-    if (g.sounds.muted)
-      game.image(g.muteButton(1),muteLoc._1,muteLoc._2)
-    else
-      game.image(g.muteButton(0),muteLoc._1,muteLoc._2)
-    /////////////////////////////////////////////////////////////////
+    drawMuteButton()
     
     if (storeMenu != null && storeMenu.toggled)
       storeMenu.doStuff()
@@ -79,9 +70,19 @@ class Menu(val g: Game) extends Helper(g) {
     }
   }
   
+  // MUTE BUTTON ///////////////////////////////////////////////////
+  val muteLoc = (fullWidth * sqSize - sqSize + sqSize/8.0.toFloat, 
+                   aHeight * sqSize - sqSize + sqSize/8.0.toFloat)
+  
+  def drawMuteButton() = {
+    if (g.sounds.muted)
+      game.image(g.muteButton(1),muteLoc._1,muteLoc._2)
+    else
+      game.image(g.muteButton(0),muteLoc._1,muteLoc._2)
+  }
   
   def onMuteButton = (mSqX > fullWidth - 2) && (mSqY > aHeight - 2)
-  
+  ///////////////////////////////////////////////////////////////////
   
   // WAVE BUTTON /////////////////////////////////////////////////////////////////////////
   val waveButtonPos = (aWidth*sqSize + sqSize/2,sqSize*9 + sqSize/2)
@@ -180,47 +181,46 @@ class Menu(val g: Game) extends Helper(g) {
  
   def clickingStuff() = {
     
-    // when the mouse is on the arena
-    if (game.mouseButton == leftMouse && !onMenu) {
-      val sq = arena.squares(mSqX)(mSqY)
-      
-      if (storeMenu != null) {
-        if (storeMenu.mouseOn) {
-          if (storeMenu.mouseOn(1)) {
-            if (store.buyDef(storeMenu.t,store.basicDef(storeMenu.t)))
-              storeMenu.toggle()
-          } else if (storeMenu.mouseOn(2)) {
-            if (store.buyDef(storeMenu.t,store.iceDef(storeMenu.t)))
-              storeMenu.toggle()
-          }
-        } else {
-          if (sq.isInstanceOf[Tower]) {
-            val t = sq.asInstanceOf[Tower]
-            if (storeMenu.t != t) 
-              storeMenu = new StoreMenu(t,store)
-            else
-              storeMenu.toggle()
-          } else if (!sq.isInstanceOf[Tower] && !storeMenu.toggled) {
-            store.buyTower(mSqX,mSqY)
+    if (game.mouseButton == leftMouse) {
+    
+      // when the mouse is on the arena
+      if (!onMenu) {
+        val sq = arena.squares(mSqX)(mSqY)
+        
+        if (storeMenu != null) {
+          if (storeMenu.mouseOn) {
+            storeMenu.whenClicked()
           } else {
-            storeMenu.toggle()
+            if (sq.isInstanceOf[Tower]) {
+              val t = sq.asInstanceOf[Tower]
+              if (storeMenu.t != t) 
+                storeMenu = new StoreMenu(t,store)
+              else
+                storeMenu.toggle()
+            } else if (!sq.isInstanceOf[Tower] && !storeMenu.toggled) {
+              store.buyTower(mSqX,mSqY)
+            } else {
+              storeMenu.toggle()
+            }
           }
+        } else if (sq.isInstanceOf[Tower]) {
+          val t = sq.asInstanceOf[Tower]
+          storeMenu = new StoreMenu(t,store)
+        } else if (sq.isInstanceOf[Empty]) {
+          store.buyTower(mSqX,mSqY)
         }
-      } else if (sq.isInstanceOf[Tower]) {
-        val t = sq.asInstanceOf[Tower]
-        storeMenu = new StoreMenu(t,store)
-      } else if (sq.isInstanceOf[Empty]) {
-        store.buyTower(mSqX,mSqY)
+        // when the mouse is on the menu
+      } else {
+        // mute button
+        if (onMuteButton) {
+          g.sounds.toggleMute()
+        }
+        // wave button
+        if (onWaveButton) {
+          g.nextWave()
+        } 
       }
-    }
-    
-    // mute button
-    if (onMuteButton) {
-      g.sounds.toggleMute()
-    }
-    
-    if (onWaveButton) {
-      g.nextWave()
+      
     }
     
   }

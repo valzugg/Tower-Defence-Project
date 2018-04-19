@@ -45,7 +45,7 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
   def damageTarget = {
     if ((x > tx - hitboxSize && x < tx + hitboxSize) && 
         (y > ty - hitboxSize && y < ty + hitboxSize)) {
-      if (!hasHit) target.damage(dam)
+      if (!hasHit) target.damage(dam/4 + scala.util.Random.nextInt(dam.toInt))
       hasHit = true
       true
     } else {

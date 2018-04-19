@@ -42,6 +42,17 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
     setImg(s.g.defences(1),1)
   }
   
+  def whenClicked() = {
+    if (this.mouseOn(1)) {
+      if (s.buyDef(this.t,s.basicDef(this.t)))
+        this.toggle()
+    } else if (this.mouseOn(2)) {
+      if (s.buyDef(this.t,s.iceDef(this.t)))
+        this.toggle()
+    }
+  }
+  
+  
 }
 
 

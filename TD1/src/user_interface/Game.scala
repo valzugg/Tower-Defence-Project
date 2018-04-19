@@ -21,7 +21,7 @@ object Game extends App {
 class Game extends PApplet {
   var fr = 0 // the current frame of the animation
   
-  def nextLevel() = {
+  def chooseLevel(i: Int) = {
     ???
   }
   
@@ -30,8 +30,12 @@ class Game extends PApplet {
       waveIndex += 1
   }
   
+  
+  val progress = new Progress
+  val introMenu = new IntroMenu(this,progress)
+  
   // LEVELS /////////////////////////////////////////
-  private var lvlN = 1 //index of the level vector
+  private var lvlN = 0 //index of the level vector
   val lvls = Vector(new Level("lvls/1.lvl", this),
                     new Level("lvls/2.lvl", this))
   def currentLvl = lvls(lvlN)
@@ -53,7 +57,7 @@ class Game extends PApplet {
   ////////////////////////////////////////////////////
     
   // MOB WAVES ///////////////////////////////////////
-  var waveIndex = -1 // starts with the first wave
+  var waveIndex = -1 // starts with the empty Wave
   def emptyWave = new Wave(1,0,0,0,0,0,currentLvl,this)
   def currentWave = {
     if (waveIndex >= 0) 
@@ -64,15 +68,20 @@ class Game extends PApplet {
   ////////////////////////////////////////////////////
   
   // IMAGES //////////////////////////////////////////
-  val highlight = Array.ofDim[PImage](1)
+  val introImg   = Array.ofDim[PImage](1)
+  val highlight  = Array.ofDim[PImage](1)
   val muteButton = Array.ofDim[PImage](2)
   val obstacles = Array.ofDim[PImage](8)
   val defences  = Array.ofDim[PImage](3)
   val squares   = Array.ofDim[PImage](6)
   val menuS     = Array.ofDim[PImage](2)
-  val mobSprites = Array.ofDim[PImage](1,4)
+  val mobSprites = Array.ofDim[PImage](3,4)
   val antSprites = Array.ofDim[PImage](4)
+  val beetleSprites = Array.ofDim[PImage](4)
+  val spiderSprites = Array.ofDim[PImage](4)
   mobSprites(0) = antSprites
+  mobSprites(1) = beetleSprites
+  mobSprites(2) = spiderSprites
   ////////////////////////////////////////////////////
   
   var sounds: Sounds = null
@@ -84,6 +93,7 @@ class Game extends PApplet {
     
     frameRate(60)
     
+    introImg(0)  = loadImage("imgs/intro.png")
     highlight(0) = loadImage("imgs/highlight.png")
     muteButton(0) = loadImage("imgs/unmuted.png")
     muteButton(1) = loadImage("imgs/muted.png")
@@ -93,14 +103,14 @@ class Game extends PApplet {
     squares(3) = loadImage("imgs/arena/arena3.png")
     squares(4) = loadImage("imgs/tower.png")
     squares(5) = loadImage("imgs/towerNo.png") 
-    antSprites(0) = loadImage("imgs/ant/0.png")
-    antSprites(1) = loadImage("imgs/ant/1.png")
-    antSprites(2) = loadImage("imgs/ant/2.png")
-    antSprites(3) = loadImage("imgs/ant/3.png")
+    
+    (0 to 3).foreach(s => antSprites(s)    = loadImage("imgs/ant/" + s + ".png"))
+    (0 to 3).foreach(s => beetleSprites(s) = loadImage("imgs/beetle/" + s + ".png"))
+    (0 to 3).foreach(s => spiderSprites(s) = loadImage("imgs/spider/" + s + ".png"))
+    
     (0 to 4).foreach(o => obstacles(o) = loadImage("imgs/arena/obs" + o + ".png"))
     (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def" + d + ".png"))
-    menuS(0)  = loadImage("imgs/menu.jpg")
-    menuS(1)  = loadImage("imgs/menutop.jpg") 
+    menuS(0)  = loadImage("imgs/menu.png")
     
     font = createFont("Arial Bold",16,true)
     
@@ -113,7 +123,8 @@ class Game extends PApplet {
     size(aWidth * sqSize + sqSize * mWidth, aHeight * sqSize)
   }
   
-  
+  var intro = true
+  def gameOver = player.hp <= 0
   
   //TODO: fps change
   ////////////////////////////////////////////////////////////
@@ -124,19 +135,25 @@ class Game extends PApplet {
   
   override def draw() = {
     
-//    if (fr%1000 == 999) {
-//      if (lvlN < 1) lvlN += 1
-//    }
+    if (intro) {
+      image(introImg(0), 0, 0, aWidth*sqSize+mWidth*sqSize, aHeight*sqSize)
+      introMenu.doStuff()
+      
+    } else if (!gameOver) {
+      arena.drawArena()
     
-    arena.drawArena()
-    
-    arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
-    
-    currentWave.doStuff()
-    
-    menu.doStuff()
-    
-    fr += 1
+      arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
+      
+      currentWave.doStuff()
+      
+      menu.doStuff()
+      
+      fr += 1
+    } else {
+      fill(0)
+      textFont(font,44)
+      text("GAME OVER", aWidth*sqSize/2, aHeight*sqSize/2)
+    }
     
     if (this.exitCalled()) {
       sounds.stop()
@@ -145,9 +162,18 @@ class Game extends PApplet {
   }
   
   
-  //korjattavaa
+  
+  
   override def mousePressed() {
-    menu.clickingStuff()
+    if (intro) {
+        intro = false
+      if (mouseButton == menu.leftMouse)
+        lvlN = 0
+      else
+        lvlN = 1
+    } else {
+      menu.clickingStuff()
+    }
   }
   
   

@@ -170,7 +170,7 @@ extends Defence(tower,range,damage,speed,cost,g) {
       // sound
       if (circleSize%range*2 == 0) g.sounds.play(g.sounds.woop)
       
-    } else {
+    } else { // TODO: Toimii vain viimeisimmällä for some reason
       if (g.currentWave.aliveMobs.exists(_.speed != tSpeed.toFloat))
         g.currentWave.aliveMobs.foreach(_.speed = tSpeed.toFloat)
       circleSize = 0
