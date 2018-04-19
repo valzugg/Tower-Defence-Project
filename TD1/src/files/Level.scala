@@ -16,6 +16,8 @@ class Level(file: String, g: Game) {
   lazy val path   = arena.path
   lazy val pathStart = arena.start
   
+  def isComplete = waves.forall(_.isComplete)
+  
   private var initMoney = 10
   private var index = 0
   

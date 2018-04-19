@@ -2,10 +2,17 @@ package user_interface
 
 import general.Helper
 import files.Progress
+import files.Level
 import processing.core.PApplet
 
 class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
+  
+  var isOn = true
+  
+  def clickingStuff() = {
+    ???
+  }
   
   def onEasy = ???
   def onNormal = ???
@@ -15,6 +22,7 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   def onCredits = ???
   
   def doStuff() = {
+    g.image(g.introImg(0), 0, 0, aWidth*sqSize+mWidth*sqSize, aHeight*sqSize)
     g.textFont(g.font,24)
     g.noStroke()
     g.fill(0)

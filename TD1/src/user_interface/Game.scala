@@ -21,31 +21,35 @@ object Game extends App {
 class Game extends PApplet {
   var fr = 0 // the current frame of the animation
   
-  def chooseLevel(i: Int) = {
-    ???
-  }
-  
-  def nextWave()= {
-    if (currentWave.isComplete)
-      waveIndex += 1
-  }
-  
-  
   val progress = new Progress
   val introMenu = new IntroMenu(this,progress)
   
   // LEVELS /////////////////////////////////////////
-  private var lvlN = 0 //index of the level vector
-  val lvls = Vector(new Level("lvls/1.lvl", this),
-                    new Level("lvls/2.lvl", this))
-  def currentLvl = lvls(lvlN)
+  val easyLvls   = Vector(new Level("lvls/1.lvl", this),
+                          new Level("lvls/2.lvl", this),
+                          new Level("lvls/3.lvl", this))
+  val normalLvls = Vector(new Level("lvls/1.lvl", this),
+                          new Level("lvls/2.lvl", this),
+                          new Level("lvls/3.lvl", this))
+  val hardLvls   = Vector(new Level("lvls/1.lvl", this),
+                          new Level("lvls/2.lvl", this),
+                          new Level("lvls/3.lvl", this))
+  val insaneLvls = Vector(new Level("lvls/1.lvl", this),
+                          new Level("lvls/2.lvl", this),
+                          new Level("lvls/3.lvl", this))
+  var currentLvl = easyLvls(0)
+  
+  def startLevel(l: Level) = {
+    introMenu.isOn = false
+    currentLvl = l
+  }
   //////////////////////////////////////////////////// 
   
   def player = currentLvl.player
   val menu   = new Menu(this)
   
   // ARENA AND SIZE /////////////////////////////////
-  def arena = lvls(lvlN).arena
+  def arena = currentLvl.arena
   // the starting line number for the mobs         
   val sqSize  = menu.sqSize  //square's size in pixels
   def aWidth  = menu.aWidth  //arena's width
@@ -64,6 +68,10 @@ class Game extends PApplet {
       currentLvl.waves(waveIndex)
     else 
       emptyWave
+  }
+  def nextWave()= {
+    if (currentWave.isComplete)
+      waveIndex += 1
   }
   ////////////////////////////////////////////////////
   
@@ -88,8 +96,6 @@ class Game extends PApplet {
   var font: PFont = null
   
   override def setup() {
-    
-    
     
     frameRate(60)
     
@@ -135,8 +141,7 @@ class Game extends PApplet {
   
   override def draw() = {
     
-    if (intro) {
-      image(introImg(0), 0, 0, aWidth*sqSize+mWidth*sqSize, aHeight*sqSize)
+    if (introMenu.isOn || currentLvl.isComplete) {
       introMenu.doStuff()
       
     } else if (!gameOver) {
@@ -165,23 +170,19 @@ class Game extends PApplet {
   
   
   override def mousePressed() {
-    if (intro) {
+    if (introMenu.isOn) {
         intro = false
       if (mouseButton == menu.leftMouse)
-        lvlN = 0
+        startLevel(easyLvls(0))
       else
-        lvlN = 1
+        startLevel(easyLvls(2))
     } else {
       menu.clickingStuff()
     }
   }
   
   
-  //lol
   override def keyPressed() {
-    //changeFPS
-//    if (currentWave.isComplete)
-//      waveIndex += 1
   }
   
   
