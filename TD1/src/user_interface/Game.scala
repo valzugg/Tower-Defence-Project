@@ -37,8 +37,8 @@ class Game extends PApplet {
   val insaneLvls = Vector(new Level("lvls/1.lvl", this),
                           new Level("lvls/2.lvl", this),
                           new Level("lvls/3.lvl", this))
-  var currentLvl = easyLvls(0)
-  
+  private var currentLvl = easyLvls(0)
+  def level = currentLvl
   def startLevel(l: Level) = {
     introMenu.isOn = false
     currentLvl = l

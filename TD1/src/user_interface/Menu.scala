@@ -221,7 +221,7 @@ class Menu(val g: Game) extends Helper(g) {
         } 
       }
       
-      if (g.currentLvl.isComplete) {
+      if (g.level.isComplete) {
         
       }
       
