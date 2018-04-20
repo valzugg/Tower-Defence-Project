@@ -18,7 +18,7 @@ import general.Helper
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
 abstract class Defence(val tower: Tower, val range: Int, val damage: Double, 
-                       val speed: Int, val cost: Int, g: Game) extends Helper(g) {
+                       val speed: Int, val cost: Int, val g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val location = tower.pos
   
@@ -161,7 +161,7 @@ extends Defence(tower,range,damage,speed,cost,g) {
   /**Slows all the mobs within range down.*/
   def speciality() = {
     if (!mobsInRange.isEmpty) {
-      circleSize += 2
+      circleSize += 2 * g.runSpeed
       g.currentWave.aliveMobs.foreach(_.speed = tSpeed.toFloat)
       mobsInRange.foreach(_.speed = tSpeed.toFloat * (1 - slowBy))
       game.noFill()

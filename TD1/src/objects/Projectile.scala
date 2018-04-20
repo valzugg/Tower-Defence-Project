@@ -13,8 +13,9 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
   
   var size = 7.0.toFloat
   
-  val lifetime = 200/speed.toFloat // the time it takes for a new projectile to be made
-  def died = age > lifetime
+  // the time it takes for a new projectile to be made
+  val lifetime = 200/speed.toFloat
+  def died = age > lifetime/d.g.runSpeed
   
   // location of the projectile
   var x = d.location._1
@@ -55,8 +56,8 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
                    
   
   def move() = {
-    x += curDir._1 * speed
-    y += curDir._2 * speed
+    x += curDir._1 * speed * d.g.runSpeed
+    y += curDir._2 * speed * d.g.runSpeed
   }
   
   

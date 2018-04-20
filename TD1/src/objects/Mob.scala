@@ -20,11 +20,11 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   private var dist = -sqSize.toFloat // keeps track of how far the mob is along the path
   def distance = abs(dist)
   
-  val r = scala.util.Random.nextFloat() 
+  val r = scala.util.Random
   
   //keep track of the mob's location
-  var x = (-sqSize * (i + 1) * w.distance) - (r * w.distance * 20) 
-  var y = lvl.pathStart*sqSize.toFloat
+  var x = (-sqSize * (i + 1) * w.distance) - (r.nextFloat() * w.distance * 20) 
+  var y = lvl.pathStart*sqSize.toFloat - sqSize/12 + r.nextInt(sqSize/6)
   
   def pos = (x + sqSize/2,y + sqSize/2)
   
@@ -61,11 +61,11 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   /** Moves the mob in the given direction and sets 
    *  it's dir and dist variables correct.*/
   private def move(d: (Int, Int)) = {
-    x += d._1*speed
-    y += d._2*speed
+    x += d._1*speed*g.runSpeed
+    y += d._2*speed*g.runSpeed
     dir = (d._1,d._2)
     if (x > -sqSize) // updates the distance variable
-      dist += abs(d._1*speed + d._2*speed)
+      dist += abs(d._1*speed*g.runSpeed + d._2*speed*g.runSpeed)
   }
   
   

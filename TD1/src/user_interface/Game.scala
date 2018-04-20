@@ -92,6 +92,20 @@ class Game extends PApplet {
   mobSprites(2) = spiderSprites
   ////////////////////////////////////////////////////
   
+  
+  // relative speed of the program, 1 is normal rate
+  private var rate = 1
+  def runSpeed = rate // controls the rate of all the things that have speed in the game
+  // when sped up, the speed is 4 times faster
+  private val fast = 4
+  
+  def toggleRunSpeed() = {
+    if (runSpeed == fast)
+      rate = 1
+    else
+      rate = fast
+  }
+  
   var sounds: Sounds = null
   var font: PFont = null
   
@@ -129,19 +143,12 @@ class Game extends PApplet {
     size(aWidth * sqSize + sqSize * mWidth, aHeight * sqSize)
   }
   
-  var intro = true
   def gameOver = player.hp <= 0
   
-  //TODO: fps change
-  ////////////////////////////////////////////////////////////
-  //smarter way to do - make a method here                  //
-  //somewhere that changes the speed of the mobs,           //
-  //the damage made by defences, and other stuff accordingly//
-  ////////////////////////////////////////////////////////////
   
   override def draw() = {
     
-    if (introMenu.isOn || currentLvl.isComplete) {
+    if (introMenu.isOn) {
       introMenu.doStuff()
       
     } else if (!gameOver) {
@@ -159,6 +166,12 @@ class Game extends PApplet {
       textFont(font,44)
       text("GAME OVER", aWidth*sqSize/2, aHeight*sqSize/2)
     }
+     // TODO
+    if (currentLvl.isComplete) {
+      fill(0)
+      textFont(font,44)
+      text("Level Complete", aWidth*sqSize/2, aHeight*sqSize/2)
+    }
     
     if (this.exitCalled()) {
       sounds.stop()
@@ -171,7 +184,7 @@ class Game extends PApplet {
   
   override def mousePressed() {
     if (introMenu.isOn) {
-        intro = false
+        introMenu.isOn = false
       if (mouseButton == menu.leftMouse)
         startLevel(easyLvls(0))
       else
@@ -179,10 +192,15 @@ class Game extends PApplet {
     } else {
       menu.clickingStuff()
     }
+    
+    if (currentLvl.isComplete) {
+      introMenu.isOn = true
+    }
   }
   
   
   override def keyPressed() {
+    toggleRunSpeed()
   }
   
   
