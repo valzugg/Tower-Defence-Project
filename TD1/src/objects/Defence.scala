@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package objects
 
 import user_interface.Game
@@ -155,27 +156,22 @@ extends Defence(tower,range,damage,speed,cost,g) {
 
   def mobsInRange =  g.currentWave.aliveMobs.filter(m => this.withinRange(m.x + sqSize/2,m.y + sqSize/2))
   
-  // the changing circle size
+  // the changing circle size that is emitted
   private var circleSize = 0
     
   /**Slows all the mobs within range down.*/
   def speciality() = {
     if (!mobsInRange.isEmpty) {
       circleSize += 2 * g.runSpeed
-      g.currentWave.aliveMobs.foreach(_.speed = tSpeed.toFloat)
       mobsInRange.foreach(_.speed = tSpeed.toFloat * (1 - slowBy))
       game.noFill()
       game.stroke(0,0,250,200 - circleSize%range*2)
       game.ellipse(location._1, location._2, circleSize%range*2, circleSize%range*2)
       // sound
       if (circleSize%range*2 == 0) g.sounds.play(g.sounds.woop)
-      
-    } else { // TODO: Toimii vain viimeisimmällä for some reason
-      if (g.currentWave.aliveMobs.exists(_.speed != tSpeed.toFloat))
-        g.currentWave.aliveMobs.foreach(_.speed = tSpeed.toFloat)
+    } else {
       circleSize = 0
     }
-    
   }
   
   override def shoot() = {}

@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package objects
 
 import map._
@@ -16,6 +17,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   val game = g.asInstanceOf[PApplet]
   val hp = new HealthBar(this,hitpoints)
   val moneyValue = ((hitpoints/80)*speed).toInt
+  val originalSpeed = speed
   
   private var dist = -sqSize.toFloat // keeps track of how far the mob is along the path
   def distance = abs(dist)
@@ -46,9 +48,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
     this.hp.damage(by)
     hasBeenDamaged = true
     if (dead) { 
-      g.player.getPaid()
-      
-      // TODO: Parametreiksi äänet
+      g.player.getPaid()      
       g.sounds.play(g.sounds.antDead)
     }
   }
@@ -66,6 +66,8 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
     dir = (d._1,d._2)
     if (x > -sqSize) // updates the distance variable
       dist += abs(d._1*speed*g.runSpeed + d._2*speed*g.runSpeed)
+    if (speed != originalSpeed) // returns the speed of the mob to normal after it is slowed
+      speed = originalSpeed
   }
   
   

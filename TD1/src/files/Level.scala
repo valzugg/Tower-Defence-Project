@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package files
 
 import java.io._

@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package user_interface
 
 import processing._
@@ -8,6 +9,7 @@ import map._
 import objects._
 import general._
 
+// references:
 // https://processing.org/reference/
 // https://www.youtube.com/thecodingtrain
 // http://kenney.nl/assets/tower-defense-top-down
@@ -152,12 +154,16 @@ class Game extends PApplet {
       introMenu.doStuff()
       
     } else if (!gameOver) {
+      // draws the tiles of the arena
       arena.drawArena()
     
+      // handles the defences
       arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
       
-      currentWave.doStuff()
+      // handles the mobs
+      currentWave.doStuff()  
       
+      // handles the HUD
       menu.doStuff()
       
       fr += 1
