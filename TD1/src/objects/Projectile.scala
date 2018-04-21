@@ -68,7 +68,7 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
     if (!hasHit && d.withinRange(x,y)) {
       if (d.withinRange(target.pos) && !target.dead) curDir = di
       g.fill(0,0,0,255)
-      g.stroke(0,0,0)
+      g.stroke(50,50,50)
       g.line(x + di._1*size,y + di._2*size,x,y)
     }
   }

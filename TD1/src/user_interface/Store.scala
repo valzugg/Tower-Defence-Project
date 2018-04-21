@@ -51,7 +51,7 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   
   def whenClicked() = {
     if (this.mouseOn(1)) {
-      if (s.buyDef(this.t,s.crossbowDef(this.t)))
+      if (s.buyDef(this.t,s.machineDef(this.t)))
         this.toggle()
     } else if (this.mouseOn(2)) {
       if (s.buyDef(this.t,s.iceDef(this.t)))
@@ -66,10 +66,18 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
 class Store(m: Menu) extends Helper(m.g) {
   val g = m.g      //game
   
-  def crossbowDef(t: Tower) = new BasicDefence(t,110,60,3,5,m.g)
-  def machineDef(t: Tower)  = new BasicDefence(t,90,50,9,10,m.g)
-  def iceDef(t: Tower)   = new IceDefence(t,150,0,0,5,m.g,0.5.toFloat)
-  def fireDef   = new FireDefence(m.arena.towers(mSqX)(mSqY),100,10,3,5,m.g)
+  // store items
+  def crossbowDef(t: Tower) = new BasicDefence(t,110,60,3,5,m.g,0,0,
+                                               "Crossbow\nDefence",
+                                               "A Basic Defence.")
+  def machineDef(t: Tower)  = new BasicDefence(t,90,50,9,10,m.g,3,6,
+                                               "Machinegun\nDefence",
+                                               "A more effective\nBasic Defence.")
+  def iceDef(t: Tower)      = new IceDefence  (t,150,0,0,5,m.g,0.5.toFloat,1,5,
+                                               "Ice Defence",
+                                               "Slows the mobs\nwithin range.\nDoes no damage.")
+  def fireDef(t: Tower)     = new FireDefence (t,100,10,3,5,m.g,2,0,
+                                               "","")
   
   def buyDef(t: Tower, d: Defence): Boolean = {
     if (player.money >= d.cost)

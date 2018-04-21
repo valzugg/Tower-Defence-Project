@@ -53,7 +53,7 @@ class Menu(val g: Game) extends Helper(g) {
       
     
     drawWaveButton()
-    
+    drawFastButton()
     drawMuteButton()
     
     if (storeMenu != null && storeMenu.toggled)
@@ -100,7 +100,7 @@ class Menu(val g: Game) extends Helper(g) {
       text  = "Start Next\n    Wave"
     }
       
-    def stuff = {
+    def draw() = {
       game.rect(waveButtonPos._1,waveButtonPos._2,waveButtonSize._1,waveButtonSize._2)
       game.textFont(g.font,12)
       game.fill(0) 
@@ -111,10 +111,50 @@ class Menu(val g: Game) extends Helper(g) {
     
     if (onWaveButton) {
       game.fill(color._1,color._2,color._3,160)
-      stuff
+      draw()
     } else {
       game.fill(color._1,color._2,color._3,100)
-      stuff
+      draw()
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////
+  
+  // FASTFORWARD BUTTON //////////////////////////////////////////////////////////////////////
+  val fastButtonPos = (aWidth*sqSize + sqSize/2,sqSize*17 + sqSize/2)
+  val fastButtonSize = (sqSize*3,sqSize)
+  
+  def onFastButton = (mouseX > fastButtonPos._1) && (mouseY > fastButtonPos._2) &&
+                     (mouseX < fastButtonPos._1 + fastButtonSize._1) && 
+                     (mouseY < fastButtonPos._2 + fastButtonSize._2)
+                
+  def drawFastButton() = {
+    var color = (50,150,50)
+    var text  = "     >  "
+    if (g.isFast) {
+      color = (0,0,150)
+      text  = "  >>>> "
+    }
+      
+    // A bit wetwet, but there are some details that make it difficult to generalize
+    def draw() = {
+      game.rect(fastButtonPos._1,fastButtonPos._2,fastButtonSize._1,fastButtonSize._2)
+      game.textFont(g.font,12)
+      game.fill(0) 
+      game.text(text,fastButtonPos._1 + sqSize +2,fastButtonPos._2 + sqSize*5/8 + 2)
+      game.fill(250) 
+      game.text(text,fastButtonPos._1 + sqSize,fastButtonPos._2 + sqSize*5/8)
+    }
+    
+    if (onFastButton) {
+      game.fill(255,255,255,160)
+      draw()
+      if (g.isFast)
+        infoScreen.title("Return to\nNormal \nSpeed")
+      else
+        infoScreen.title("Fastforward")
+    } else {
+      game.fill(color._1,color._2,color._3,100)
+      draw()
     }
   }
   /////////////////////////////////////////////////////////////////////////////////////////
@@ -132,21 +172,20 @@ class Menu(val g: Game) extends Helper(g) {
       if (!t.hasDef) {
         infoScreen.title("Empty Tower")
         infoScreen.description("Click to see\nDefences")
-      } else if (t.getDef.isInstanceOf[BasicDefence]) {
-        val d = t.getDef.asInstanceOf[BasicDefence]
-        infoScreen.title("Crossbow\nDefence")
-        infoScreen.description("A Basic Defence.")
+      } else if (t.getDef.isInstanceOf[Defence]) {
+        val d = t.getDef.asInstanceOf[Defence]
+        infoScreen.title(d.title)
+        infoScreen.description(d.description)
         infoScreen.stats(d.damage.toInt,d.range,d.speed,d.cost)
-      } else if (t.getDef.isInstanceOf[IceDefence]) {
-        val d = t.getDef.asInstanceOf[IceDefence]
-        infoScreen.title("Ice Defence")
-        infoScreen.description("Slows the mobs\nwithin range.\nDoes no damage.")
-        infoScreen.stats(d.damage.toInt,d.range,d.speed,d.cost)
-      }
-        
+      } 
     }
   }
   
+  def mouseStoreMenu() = {
+    if (storeMenu.mouseOn) {
+      
+    }
+  }
   
   def mouseEmpty() = {
     if (!onMenu && mouseSq.isInstanceOf[Empty]) {
@@ -218,6 +257,10 @@ class Menu(val g: Game) extends Helper(g) {
         // wave button
         if (onWaveButton) {
           g.nextWave()
+        } 
+        // fastforward button
+        if (onFastButton) {
+          g.toggleRunSpeed()
         } 
       }
       

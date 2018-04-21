@@ -20,7 +20,7 @@ import general.Helper
  *  @param g The game of which it is a part */
 abstract class Defence(val tower: Tower, val range: Int, val damage: Double, 
                        val speed: Int, val cost: Int, val g: Game, spriteI: Int, 
-                       soundI: Int) extends Helper(g) {
+                       soundI: Int, val title: String, val description: String) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val location = tower.pos
   
@@ -117,8 +117,9 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
 
 /**A defence without a speciality.*/
 class BasicDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
-                   cost: Int, g: Game, spriteI: Int = 0, soundI: Int = 0) 
-extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI) {
+                   cost: Int, g: Game, spriteI: Int = 0, soundI: Int = 0,
+                   title: String, description: String) 
+extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI,title,description) {
   
   /**Does nothing.*/
   def speciality() = {}
@@ -147,8 +148,9 @@ extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI) {
 
 /**Defence which slow the opponent down by the given ratio of slowBy when being shot at. */
 class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
-                 cost: Int, g: Game, val slowBy: Float, spriteI: Int = 1,soundI: Int = 5) 
-extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI) {
+                 cost: Int, g: Game, val slowBy: Float, spriteI: Int = 1,soundI: Int = 5,
+                 title: String, description: String) 
+extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI,title,description) {
   
   //the original speed of the mob
   def tSpeed = g.currentWave.speed
@@ -180,8 +182,9 @@ extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI) {
 
 /**Defence which 'chain targets' another mob as well, and damages that by 50% of the normal damage. */
 class FireDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
-                  cost: Int, g: Game, spriteI: Int = 2, soundI: Int = 0) 
-extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI) {
+                  cost: Int, g: Game, spriteI: Int = 2, soundI: Int = 0,
+                  title: String, description: String) 
+extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI,title,description) {
   
   //the other target
   var t2 = {

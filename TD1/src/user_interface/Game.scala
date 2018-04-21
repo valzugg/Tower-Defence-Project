@@ -82,7 +82,7 @@ class Game extends PApplet {
   val highlight  = Array.ofDim[PImage](1)
   val muteButton = Array.ofDim[PImage](2)
   val obstacles = Array.ofDim[PImage](8)
-  val defences  = Array.ofDim[PImage](3)
+  val defences  = Array.ofDim[PImage](4)
   val squares   = Array.ofDim[PImage](6)
   val menuS     = Array.ofDim[PImage](2)
   val mobSprites = Array.ofDim[PImage](3,4)
@@ -97,6 +97,7 @@ class Game extends PApplet {
   
   // relative speed of the program, 1 is normal rate
   private var rate = 1
+  def isFast = rate == fast
   def runSpeed = rate // controls the rate of all the things that have speed in the game
   // when sped up, the speed is 4 times faster
   private val fast = 4
@@ -131,7 +132,7 @@ class Game extends PApplet {
     (0 to 3).foreach(s => spiderSprites(s) = loadImage("imgs/spider/" + s + ".png"))
     
     (0 to 4).foreach(o => obstacles(o) = loadImage("imgs/arena/obs" + o + ".png"))
-    (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def" + d + ".png"))
+    (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def/" + d + ".png"))
     menuS(0)  = loadImage("imgs/menu.png")
     
     font = createFont("Arial Bold",16,true)
@@ -206,7 +207,7 @@ class Game extends PApplet {
   
   
   override def keyPressed() {
-    toggleRunSpeed()
+    //toggleRunSpeed()
   }
   
   
