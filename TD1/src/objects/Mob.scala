@@ -18,6 +18,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
   val hp = new HealthBar(this,hitpoints)
   val moneyValue = ((hitpoints/80)*speed).toInt
   val originalSpeed = speed
+  val hitboxSize = (size * 40).toInt
   
   private var dist = -sqSize.toFloat // keeps track of how far the mob is along the path
   def distance = abs(dist)

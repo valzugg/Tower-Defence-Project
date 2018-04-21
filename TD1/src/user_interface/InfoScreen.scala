@@ -7,8 +7,8 @@ class InfoScreen(m: Menu) extends Helper(m.g) {
   val sizeX = sqSize * mWidth - sqSize
   val sizeY = sqSize * 7
 
-  val shadowX = pos._1 + sqSize/2 + 2
-  val shadowY = pos._2 + sqSize + 2
+  val shadowX = pos._1 + sqSize/2 + 1
+  val shadowY = pos._2 + sqSize + 1
   val textX   = pos._1 + sqSize/2
   val textY   = pos._2 + sqSize
   
@@ -29,22 +29,25 @@ class InfoScreen(m: Menu) extends Helper(m.g) {
     m.g.text("\n\n\n" + t,textX-sqSize/8,textY)
   }
   
-  def stats(damage: Int, range: Int, speed: Int, cost: Int) = {
-    m.g.textFont(m.g.font,12)
+  def stats(damage: Int, range: Int, speed: Int) = {
+    m.g.textFont(m.g.font,13)
     if (range != 0) {
       m.g.fill(0)
       m.g.text("\n\n\n\n\n\n\nDamage: " + damage + "\nRange: " + 
                range + "\nSpeed: " + speed,shadowX,shadowY)
-      m.g.fill(255,0,0) 
+      m.g.fill(0,255,0) 
       m.g.text("\n\n\n\n\n\n\nDamage: " + damage + "\nRange: " + 
                range + "\nSpeed: " + speed,textX,textY)
     }
-    m.g.fill(0)
-    m.g.text("\n\n\n\n\n\n\n\n\n\n\nCost: " + cost,shadowX,shadowY)
-    m.g.fill(255,255,0)
-    m.g.text("\n\n\n\n\n\n\n\n\n\n\nCost: " + cost,textX,textY)
   }
   
+  def cost(amount: Int) = {
+    m.g.textFont(m.g.font,13)
+    m.g.fill(0)
+    m.g.text("\n\n\n\n\n\n\n\n\n\n\nCost: " + amount,shadowX,shadowY)
+    m.g.fill(255,255,0)
+    m.g.text("\n\n\n\n\n\n\n\n\n\n\nCost: " + amount,textX,textY)
+  }
   
   def doStuff() = {
     m.g.fill(120,120,120,150)

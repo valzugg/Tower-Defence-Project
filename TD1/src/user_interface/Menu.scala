@@ -56,7 +56,7 @@ class Menu(val g: Game) extends Helper(g) {
     drawFastButton()
     drawMuteButton()
     
-    if (storeMenu != null && storeMenu.toggled)
+    if (storeMenu != null && storeMenu.isToggled)
       storeMenu.doStuff()
       
       
@@ -104,7 +104,7 @@ class Menu(val g: Game) extends Helper(g) {
       game.rect(waveButtonPos._1,waveButtonPos._2,waveButtonSize._1,waveButtonSize._2)
       game.textFont(g.font,12)
       game.fill(0) 
-      game.text(text,waveButtonPos._1 + sqSize*3/4 +2,waveButtonPos._2 + sqSize*7/8 + 2)
+      game.text(text,waveButtonPos._1 + sqSize*3/4 +1,waveButtonPos._2 + sqSize*7/8 + 1)
       game.fill(250) 
       game.text(text,waveButtonPos._1 + sqSize*3/4,waveButtonPos._2 + sqSize*7/8)
     }
@@ -135,12 +135,12 @@ class Menu(val g: Game) extends Helper(g) {
       text  = "  >>>> "
     }
       
-    // A bit wetwet, but there are some details that make it difficult to generalize
+    // A bit wetwet, but there are some details that make it difficult to generalize 
     def draw() = {
       game.rect(fastButtonPos._1,fastButtonPos._2,fastButtonSize._1,fastButtonSize._2)
       game.textFont(g.font,12)
       game.fill(0) 
-      game.text(text,fastButtonPos._1 + sqSize +2,fastButtonPos._2 + sqSize*5/8 + 2)
+      game.text(text,fastButtonPos._1 + sqSize +1,fastButtonPos._2 + sqSize*5/8 + 1)
       game.fill(250) 
       game.text(text,fastButtonPos._1 + sqSize,fastButtonPos._2 + sqSize*5/8)
     }
@@ -176,14 +176,18 @@ class Menu(val g: Game) extends Helper(g) {
         val d = t.getDef.asInstanceOf[Defence]
         infoScreen.title(d.title)
         infoScreen.description(d.description)
-        infoScreen.stats(d.damage.toInt,d.range,d.speed,d.cost)
+        infoScreen.stats(d.damage.toInt,d.range,d.speed)
+        //infoScreen.cost(d.cost)
       } 
     }
   }
   
   def mouseStoreMenu() = {
-    if (storeMenu.mouseOn) {
-      
+    if (storeMenu != null && storeMenu.mouseOn) {
+      val c = storeMenu.mouseCell
+      infoScreen.title(c._2)
+      infoScreen.description(c._3)
+      infoScreen.cost(c._5)
     }
   }
   
@@ -191,7 +195,7 @@ class Menu(val g: Game) extends Helper(g) {
     if (!onMenu && mouseSq.isInstanceOf[Empty]) {
       infoScreen.title("Empty Tile")
       infoScreen.description("Click to \nBuy Tower")
-      infoScreen.stats(0,0,0,5)
+      infoScreen.cost(store.towerCost)
     }
   }
   
@@ -211,10 +215,14 @@ class Menu(val g: Game) extends Helper(g) {
   
   
   def infoScreenText() = {
-    mouseTower()
-    mouseEmpty()
-    mousePath()
-    mouseObs()
+    if (storeMenu != null && storeMenu.mouseOn) {
+      mouseStoreMenu()
+    } else {
+      mouseTower()
+      mouseEmpty()
+      mousePath()
+      mouseObs()
+    }
   }
   
  
@@ -236,7 +244,7 @@ class Menu(val g: Game) extends Helper(g) {
                 storeMenu = new StoreMenu(t,store)
               else
                 storeMenu.toggle()
-            } else if (!sq.isInstanceOf[Tower] && !storeMenu.toggled) {
+            } else if (!sq.isInstanceOf[Tower] && !storeMenu.isToggled) {
               store.buyTower(mSqX,mSqY)
             } else {
               storeMenu.toggle()

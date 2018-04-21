@@ -7,7 +7,6 @@ import general.Helper
 class Projectile(d: Defence, speed: Int, dam: Double) {
   val g = d.game
   val sqSize = d.sqSize
-  val hitboxSize = 10
   var hasHit = false
   var age = 0
   
@@ -23,6 +22,8 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
   
   val target = d.t
   var curDir = dir
+  
+  def hitboxSize = target.hitboxSize
   
   // location of the target
   def tx = target.x + sqSize/2
@@ -60,7 +61,7 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
     y += curDir._2 * speed * d.g.runSpeed
   }
   
-  
+  /**Draws and updates the projectile. */
   def doStuff() = {
     val di = dir
     age += 1

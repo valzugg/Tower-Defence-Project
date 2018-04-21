@@ -1,10 +1,6 @@
 EASY
 MONEY
-20
-DEFENCES
-type range damage speed cost special
-0_   100_  60_    3_    5
-1_   90_   0_     0_    5_   0.5
+200
 ARENA
 24x20
 0 0 0 0 0 0 0 0 0 0 0 x 0 0 0 0 0 0 0 0 0 0 0 0

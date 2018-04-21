@@ -24,12 +24,7 @@ class Tower(x: Int, y: Int) extends Square {
   /** Adds a defence to this tower if one doesn't already exist.
    *  Returns a boolean indicating if the addition was successful.*/
   def addDefence(d: Defence) = {
-    if (defence.isEmpty) {
-      defence = Some(d)
-      true
-    } else {
-      false
-    }
+    defence = Some(d)
   }
   
   def doStuff() = {
