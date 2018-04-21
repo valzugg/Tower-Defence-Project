@@ -47,6 +47,18 @@ class Game extends PApplet {
   }
   //////////////////////////////////////////////////// 
   
+  
+  /** Calculates the score for the current level from the total distance all the mobs moved,
+   *  and the the health the player has at the end.*/
+  def score = {
+    val pathLen = arena.pathLength
+    val mobAmount = currentLvl.waves.flatMap(_.mobs).size
+    val bestPossibleScore = mobAmount * pathLen * 100
+    val currentScore = currentLvl.waves.map(_.mobs.map(pathLen - _.distance)
+                                       .reduceLeft(_+_)).reduceLeft(_+_).toInt
+    (((currentScore.toDouble*player.hp)/bestPossibleScore)*1000).toInt
+  }
+  
   def player = currentLvl.player
   val menu   = new Menu(this)
   
@@ -177,7 +189,7 @@ class Game extends PApplet {
     if (currentLvl.isComplete) {
       fill(0)
       textFont(font,44)
-      text("Level Complete", aWidth*sqSize/2, aHeight*sqSize/2)
+      text("Level Complete" + "\n    Score: " + score, aWidth*sqSize/2, aHeight*sqSize/2)
     }
     
     if (this.exitCalled()) {
@@ -190,7 +202,7 @@ class Game extends PApplet {
   
   
   override def mousePressed() {
-    if (introMenu.isOn) {
+    if (introMenu.isOn) { // TODO
         introMenu.isOn = false
       if (mouseButton == menu.leftMouse)
         startLevel(easyLvls(0))
@@ -207,7 +219,7 @@ class Game extends PApplet {
   
   
   override def keyPressed() {
-    //toggleRunSpeed()
+    if (key == menu.enter) toggleRunSpeed()
   }
   
   

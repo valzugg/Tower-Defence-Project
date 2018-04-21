@@ -102,12 +102,18 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
    *  See act()*/
   private def rotate() = {
     dir match {
-      case this.right => 
-      case this.down  => game.rotate(halfPi)
-      case this.left  => game.rotate(2*halfPi)
-      case _          => game.rotate(3*halfPi)
+      case this.right => sx = sDist; sy = sDist
+      case this.down  => game.rotate(halfPi); sy = -sDist; sx = sDist
+      case this.left  => game.rotate(2*halfPi); sx = -sDist; sy = -sDist
+      case _          => game.rotate(3*halfPi); sx = -sDist; sy = sDist
     }
   }
+  
+  // the shadow's distance from mob
+  private val sDist = -sqSize/12
+  // the shadow's offset
+  private var sx = sDist
+  private var sy = sDist
   
   /** The concrete stuff that is sent to be done at the Game class.
    *  @param img The sprite of the mob as a PImage already loaded.*/
@@ -117,6 +123,9 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
       game.translate(sqSize/2,sqSize/2)
       game.translate(this.x,this.y) // the 'axis' of the mob is being moved
       this.act()
+      game.tint(0,0,0,150) // draws the shadow
+      game.image(img,-sqSize*size+sx,-sqSize*size+sy,sqSize*2*size,sqSize*2*size)
+      game.noTint()
       game.image(img,-sqSize*size,-sqSize*size,sqSize*2*size,sqSize*2*size)
       game.popMatrix()
     }

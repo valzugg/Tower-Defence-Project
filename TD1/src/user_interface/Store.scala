@@ -7,7 +7,18 @@ import processing.core.PImage
 
 /** A menu which is created whenever a tower is clicked. */
 class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
-  val pos = (t.pos._1 + sqSize/2,t.pos._2 - sqSize/2)
+  private val position = (t.pos._1 + sqSize/2,t.pos._2 - sqSize/2)
+  val pos = {
+    if (t.pos._1 <= (aWidth - 2)*sqSize && t.pos._2 <= (aHeight - 4)*sqSize)
+      position
+    else if (t.pos._1 <= (aWidth - 1)*sqSize)
+      (position._1,position._2 - 2*sqSize)
+    else if (t.pos._2 <= (aHeight - 2)*sqSize)
+      (position._1 - 2*sqSize,position._2)
+    else
+      (position._1 - 2*sqSize,position._2 - 2*sqSize)
+  }
+  
   private var toggled = true
   def isToggled = toggled
   
@@ -15,11 +26,11 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   lazy val emptyTower = Vector( (s.g.defences(0),s.crossbowTitle,s.crossbowDesc,s.crossbowStats,s.crossbowPrice),
                                 (s.g.defences(3),s.machineTitle,s.machineDesc,s.machineStats,s.machinePrice),
                                 (s.g.defences(1),s.iceDefTitle,s.iceDefDesc,s.iceDefStats,s.iceDefPrice) )
-  def crossbow   = Vector( (s.g.defences(0),s.crossbowTitle,"+ 10 Damage.",(0,0,0),s.upgradeCost),
+  lazy val crossbow   = Vector( (s.g.defences(0),s.crossbowTitle,"+ 10 Damage.",(0,0,0),s.upgradeCost),
                                 (s.g.defences(0),s.crossbowTitle,"+ 20 Range.",(0,0,0),s.upgradeCost),
                                 (s.g.defences(0),s.crossbowTitle,"+ 1 Speed.",(0,0,0),s.upgradeCost) )
-  def iceDef     = Vector( (s.g.defences(1),s.crossbowTitle,"+ 20 Range.",(0,0,0),s.upgradeCost) )
-  def machineGun = Vector( (s.g.defences(3),s.machineTitle,"+ 10 Damage.",(0,0,0),s.upgradeCost),
+  lazy val iceDef     = Vector( (s.g.defences(1),s.crossbowTitle,"+ 20 Range.",(0,0,0),s.upgradeCost) )
+  lazy val machineGun = Vector( (s.g.defences(3),s.machineTitle,"+ 10 Damage.",(0,0,0),s.upgradeCost),
                                 (s.g.defences(3),s.machineTitle,"+ 10 Range.",(0,0,0),s.upgradeCost),
                                 (s.g.defences(3),s.machineTitle,"+ 1 Speed.",(0,0,0),s.upgradeCost) )
   
@@ -58,10 +69,10 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   }
   
   /**Gives boolean telling if the mouse is on the given cell of the StoreMenu. */
-  def mouseOn(n: Int) = {
+  def mouseOn(i: Int) = {
     toggled &&
-    (mouseX >= pos._1 && mouseY >= pos._2 + n * sqSize) &&
-    (mouseX < pos._1 + sqSize && mouseY < pos._2  + (n + 1) * sqSize)
+    (mouseX >= pos._1 && mouseY >= pos._2 + i * sqSize) &&
+    (mouseX < pos._1 + sqSize && mouseY < pos._2  + (i + 1) * sqSize)
   }
   
   def mouseOn = {
@@ -79,6 +90,8 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   def doStuff() = {
     s.g.fill(150,150,150,100)
     s.g.rect(pos._1,pos._2,sqSize,size*sqSize)
+    s.g.noFill()
+    s.g.rect(t.pos._1 - sqSize/2,t.pos._2 - sqSize/2,sqSize,sqSize)
     (0 until size) foreach { i =>
       setImg(currentCells(i)._1,i)
     }

@@ -148,10 +148,13 @@ class Menu(val g: Game) extends Helper(g) {
     if (onFastButton) {
       game.fill(255,255,255,160)
       draw()
-      if (g.isFast)
+      if (g.isFast) {
         infoScreen.title("Return to\nNormal \nSpeed")
-      else
+        infoScreen.description("\n         (Enter)")
+      } else {
         infoScreen.title("Fastforward")
+        infoScreen.description("\n         (Enter)")
+      }
     } else {
       game.fill(color._1,color._2,color._3,100)
       draw()

@@ -20,6 +20,7 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   // keeps track of the towers in the arena
   lazy val towers = Array.ofDim[Tower](dims._1,dims._2)
   
+  lazy val pathLength = path.size * sqSize
   
   def apply(x: Int, y: Int) = {
     require(x >= 0 && x < aWidth)
@@ -126,6 +127,10 @@ class Arena(g: Game, l: Level) extends Helper(g) {
     }
   }
   
+  // shadow distance for towers
+  private val sDistTower = -sqSize/8
+  // shadow distance for obstacles
+  private val sDistObst = -sqSize/20
   
   def drawArena() = {
     for (col <- 0 until g.aWidth) {
@@ -135,9 +140,15 @@ class Arena(g: Game, l: Level) extends Helper(g) {
           g.image(g.squares(sq.i), col * sqSize, row * sqSize, sqSize, sqSize)
         } else if (sq.isInstanceOf[Obstacle]) {
           g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
+          g.tint(0,0,0,150) // draw the shadow of the obstacles
+          g.image(g.obstacles(sq.i), col * sqSize + sDistObst, row * sqSize + sDistObst, sqSize, sqSize)
+          g.noTint()
           g.image(g.obstacles(sq.i), col * sqSize, row * sqSize, sqSize, sqSize)
         } else {
           g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
+          g.tint(0,0,0,150) // draw the shadow of the tower
+          g.image(g.squares(4), col * sqSize + sDistTower, row * sqSize + sDistTower, sqSize, sqSize)
+          g.noTint()
           g.image(g.squares(4), col * sqSize, row * sqSize, sqSize, sqSize)
           sq.asInstanceOf[Tower].doStuff()
         }
