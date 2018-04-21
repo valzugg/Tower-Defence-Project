@@ -85,7 +85,7 @@ class Menu(val g: Game) extends Helper(g) {
   ///////////////////////////////////////////////////////////////////
   
   // WAVE BUTTON /////////////////////////////////////////////////////////////////////////
-  val waveButtonPos = (aWidth*sqSize + sqSize/2,sqSize*9 + sqSize/2)
+  val waveButtonPos = (aWidth*sqSize + sqSize/2,sqSize*10 + sqSize/2)
   val waveButtonSize = (sqSize*3,sqSize*2)
   
   def onWaveButton = (mouseX > waveButtonPos._1) && (mouseY > waveButtonPos._2) &&
@@ -129,23 +129,19 @@ class Menu(val g: Game) extends Helper(g) {
   def mouseTower() = {
     if (!onMenu && mouseSq.isInstanceOf[Tower]) {
       val t = mouseSq.asInstanceOf[Tower]
-      if (!t.hasDef)
-        infoScreen.write("Empty Tower",
-                  Vector("Click to see\nDefences") )
-      else if (t.getDef.isInstanceOf[BasicDefence]) {
+      if (!t.hasDef) {
+        infoScreen.title("Empty Tower")
+        infoScreen.description("Click to see\nDefences")
+      } else if (t.getDef.isInstanceOf[BasicDefence]) {
         val d = t.getDef.asInstanceOf[BasicDefence]
-        infoScreen.write("Crossbow \nDefence",
-                  Vector("\nNo speciality", 
-                         "\nRange: " + d.range, 
-                         "\nDamage: " + d.damage, 
-                         "\nSpeed: " + d.speed) )
+        infoScreen.title("Crossbow\nDefence")
+        infoScreen.description("A Basic Defence.")
+        infoScreen.stats(d.damage.toInt,d.range,d.speed,d.cost)
       } else if (t.getDef.isInstanceOf[IceDefence]) {
         val d = t.getDef.asInstanceOf[IceDefence]
-        infoScreen.write("Ice Defence",
-                  Vector("Slows the mobs \nwithin range.", 
-                         "",
-                         "Range: " + d.range, 
-                         "Slows by: " + d.slowBy) )
+        infoScreen.title("Ice Defence")
+        infoScreen.description("Slows the mobs\nwithin range.\nDoes no damage.")
+        infoScreen.stats(d.damage.toInt,d.range,d.speed,d.cost)
       }
         
     }
@@ -154,19 +150,23 @@ class Menu(val g: Game) extends Helper(g) {
   
   def mouseEmpty() = {
     if (!onMenu && mouseSq.isInstanceOf[Empty]) {
-      infoScreen.write("Empty Tile", "Click to \nBuy Tower")
+      infoScreen.title("Empty Tile")
+      infoScreen.description("Click to \nBuy Tower")
+      infoScreen.stats(0,0,0,5)
     }
   }
   
   def mousePath() = {
     if (!onMenu && mouseSq.isInstanceOf[Path]) {
-      infoScreen.write("Path", "Click to Buy \nTrap")
+      infoScreen.title("Path")
+      infoScreen.description("Click to Buy\nTrap")
     }
   }
   
   def mouseObs() = {
     if (!onMenu && mouseSq.isInstanceOf[Obstacle]) {
-      infoScreen.write("Obstacle", "Cannot Buy \nAnything Here")
+      infoScreen.title("Obstacle")
+      infoScreen.description("Cannot Buy \nAnything Here")
     }
   }
   

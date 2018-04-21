@@ -12,6 +12,13 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   
   val size = 2
   
+  // possible contents
+  val emptyTower = Vector()
+  val crossbow   = Vector()
+  val iceDef     = Vector()
+  val machineGun = Vector()
+  
+  
   def toggle() = {
     if (toggled)
       toggled = false
@@ -44,7 +51,7 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   
   def whenClicked() = {
     if (this.mouseOn(1)) {
-      if (s.buyDef(this.t,s.basicDef(this.t)))
+      if (s.buyDef(this.t,s.crossbowDef(this.t)))
         this.toggle()
     } else if (this.mouseOn(2)) {
       if (s.buyDef(this.t,s.iceDef(this.t)))
@@ -59,8 +66,9 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
 class Store(m: Menu) extends Helper(m.g) {
   val g = m.g      //game
   
-  def basicDef(t: Tower) = new BasicDefence(t,110,60,3,5,m.g)
-  def iceDef(t: Tower)   = new IceDefence(t,150,20,2,5,m.g,0.5.toFloat)
+  def crossbowDef(t: Tower) = new BasicDefence(t,110,60,3,5,m.g)
+  def machineDef(t: Tower)  = new BasicDefence(t,90,50,9,10,m.g)
+  def iceDef(t: Tower)   = new IceDefence(t,150,0,0,5,m.g,0.5.toFloat)
   def fireDef   = new FireDefence(m.arena.towers(mSqX)(mSqY),100,10,3,5,m.g)
   
   def buyDef(t: Tower, d: Defence): Boolean = {

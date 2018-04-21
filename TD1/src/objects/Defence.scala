@@ -19,7 +19,8 @@ import general.Helper
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
 abstract class Defence(val tower: Tower, val range: Int, val damage: Double, 
-                       val speed: Int, val cost: Int, val g: Game) extends Helper(g) {
+                       val speed: Int, val cost: Int, val g: Game, spriteI: Int, 
+                       soundI: Int) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val location = tower.pos
   
@@ -28,8 +29,6 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
   
   // the current projectile
   var bullet: Projectile = null
-  
-  val i: Int //the index of the sprite
   
   /**Determines whether the target mob is dead. */
   def deadTarget = t.dead
@@ -84,7 +83,7 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
       if ((bullet == null || bullet.died)) {
         if (withinRange(targetPos)) {
           bullet = new Projectile(this, speed, damage)
-          g.sounds.play(g.sounds.arrow)
+          g.sounds.play(g.sounds.arr(soundI))
         }
       } else if (bullet != null && withinRange(targetPos)) {
         bullet.damageTarget
@@ -101,7 +100,7 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
    * The speciality() method is also called here. 
    * Note that it is called before shoot().*/
   def doStuff() = {
-    game.image(g.defences(i), location._1 - sqSize/2, 
+    game.image(g.defences(spriteI), location._1 - sqSize/2, 
                location._2 - sqSize/2, sqSize, sqSize)
     if ((mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location) {
       game.noFill()
@@ -117,9 +116,9 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
 }
 
 /**A defence without a speciality.*/
-class BasicDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game) 
-extends Defence(tower,range,damage,speed,cost,g) {
-  val i = 0
+class BasicDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
+                   cost: Int, g: Game, spriteI: Int = 0, soundI: Int = 0) 
+extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI) {
   
   /**Does nothing.*/
   def speciality() = {}
@@ -129,10 +128,10 @@ extends Defence(tower,range,damage,speed,cost,g) {
       game.pushMatrix()
       game.translate(location._1,location._2)
       game.rotate(bullet.angle)
-      game.image(g.defences(i),-sqSize/2,-sqSize/2, sqSize, sqSize)
+      game.image(g.defences(spriteI),-sqSize/2,-sqSize/2, sqSize, sqSize)
       game.popMatrix()
     } else {
-      game.image(g.defences(i), location._1 - sqSize/2, 
+      game.image(g.defences(spriteI), location._1 - sqSize/2, 
                  location._2 - sqSize/2, sqSize, sqSize)
     }
     if ((mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location) {
@@ -147,9 +146,9 @@ extends Defence(tower,range,damage,speed,cost,g) {
 
 
 /**Defence which slow the opponent down by the given ratio of slowBy when being shot at. */
-class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game, val slowBy: Float) 
-extends Defence(tower,range,damage,speed,cost,g) {
-  val i = 1
+class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
+                 cost: Int, g: Game, val slowBy: Float, spriteI: Int = 1,soundI: Int = 5) 
+extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI) {
   
   //the original speed of the mob
   def tSpeed = g.currentWave.speed
@@ -168,7 +167,7 @@ extends Defence(tower,range,damage,speed,cost,g) {
       game.stroke(0,0,250,200 - circleSize%range*2)
       game.ellipse(location._1, location._2, circleSize%range*2, circleSize%range*2)
       // sound
-      if (circleSize%range*2 == 0) g.sounds.play(g.sounds.woop)
+      if (circleSize%range*2 == 0) g.sounds.play(g.sounds.arr(soundI))
     } else {
       circleSize = 0
     }
@@ -180,9 +179,9 @@ extends Defence(tower,range,damage,speed,cost,g) {
 
 
 /**Defence which 'chain targets' another mob as well, and damages that by 50% of the normal damage. */
-class FireDefence(tower: Tower, range: Int, damage: Int, speed: Int, cost: Int, g: Game) 
-extends Defence(tower,range,damage,speed,cost,g) {
-  val i = 1
+class FireDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
+                  cost: Int, g: Game, spriteI: Int = 2, soundI: Int = 0) 
+extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI) {
   
   //the other target
   var t2 = {
