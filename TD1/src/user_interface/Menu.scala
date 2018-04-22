@@ -18,10 +18,6 @@ class Menu(val g: Game) extends Helper(g) {
   //determines whether the mouse is on the menu
   def onMenu = mSqX > aWidth-1
   
-  var buyT = false      //keeps track of if the player is buying towers currently
-  var menuCol = (0,255) //changes the menu buttons from green to red and back
-  var menuChoose = 0    //transparency of the menu button
-  
   var storeMenu: StoreMenu = null
   val infoScreen = new InfoScreen(this)
   
@@ -60,15 +56,6 @@ class Menu(val g: Game) extends Helper(g) {
     if (storeMenu != null && storeMenu.isToggled)
       storeMenu.doStuff()
       
-      
-    highlight()
-  }
-  
-  def highlight() = {
-    if (!onMenu && !buyT) {
-      game.image(g.highlight(0),(mSqX)*sqSize, 
-                 (mSqY)*sqSize, sqSize, sqSize)
-    }
   }
   
   // MUTE BUTTON ///////////////////////////////////////////////////
@@ -191,6 +178,7 @@ class Menu(val g: Game) extends Helper(g) {
       val c = storeMenu.mouseCell
       infoScreen.title(c._2)
       infoScreen.description(c._3)
+      infoScreen.stats(c._4._2,c._4._1,c._4._3)
       infoScreen.cost(c._5)
     }
   }

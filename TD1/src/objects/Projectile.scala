@@ -68,6 +68,10 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
     move()
     if (!hasHit && d.withinRange(x,y)) {
       if (d.withinRange(target.pos) && !target.dead) curDir = di
+      // shadow
+      g.stroke(50,50,50,100)
+      g.line(x + di._1*size-2,y + di._2*size-2,x-2,y-2)
+      //actual projectile
       g.fill(0,0,0,255)
       g.stroke(50,50,50)
       g.line(x + di._1*size,y + di._2*size,x,y)

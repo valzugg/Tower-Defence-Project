@@ -19,10 +19,16 @@ import general.Helper
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
 abstract class Defence(val tower: Tower, val range: Int, val damage: Double, 
-                       val speed: Int, val cost: Int, val g: Game, spriteI: Int, 
-                       soundI: Int, val title: String, val description: String) extends Helper(g) {
+                       val speed: Int, val g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val location = tower.pos
+  
+  val spriteI: Int
+  val soundI: Int
+  val title: String 
+  val description: String
+  val cost: Int
+  
   
   /**keeps track of the target mob*/
   var t: Mob = closestMob 
@@ -116,10 +122,14 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
 }
 
 /**A defence without a speciality.*/
-class BasicDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
-                   cost: Int, g: Game, spriteI: Int = 0, soundI: Int = 0,
-                   title: String, description: String) 
-extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI,title,description) {
+class BasicDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game) 
+  extends Defence(tower,range,damage,speed,g) {
+  
+  val spriteI: Int = 0
+  val soundI: Int  = 0
+  val title: String = g.menu.store.crossbowTitle
+  val description: String = g.menu.store.crossbowDesc
+  val cost: Int = g.menu.store.crossbowPrice
   
   /**Does nothing.*/
   def speciality() = {}
@@ -145,12 +155,26 @@ extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI,title,description
   
 }
 
+/**A defence without a speciality.*/
+class GunDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game) 
+  extends BasicDefence(tower,range,damage,speed,g) {
+  override val spriteI: Int = 3
+  override val soundI: Int  = 6
+  override val title: String = g.menu.store.machineTitle
+  override val description: String = g.menu.store.machineDesc
+  override val cost: Int = g.menu.store.machinePrice
+}
+
 
 /**Defence which slow the opponent down by the given ratio of slowBy when being shot at. */
-class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
-                 cost: Int, g: Game, val slowBy: Float, spriteI: Int = 1,soundI: Int = 5,
-                 title: String, description: String) 
-extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI,title,description) {
+class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game, val slowBy: Float) 
+  extends Defence(tower,range,damage,speed,g) {
+  
+  val spriteI: Int = 1
+  val soundI: Int  = 5
+  val title: String = g.menu.store.iceDefTitle
+  val description: String = g.menu.store.iceDefDesc
+  val cost: Int = g.menu.store.iceDefPrice
   
   //the original speed of the mob
   def tSpeed = g.currentWave.speed
@@ -181,10 +205,14 @@ extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI,title,description
 
 
 /**Defence which 'chain targets' another mob as well, and damages that by 50% of the normal damage. */
-class FireDefence(tower: Tower, range: Int, damage: Int, speed: Int, 
-                  cost: Int, g: Game, spriteI: Int = 2, soundI: Int = 0,
-                  title: String, description: String) 
-extends Defence(tower,range,damage,speed,cost,g,spriteI,soundI,title,description) {
+class FireDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game) 
+  extends Defence(tower,range,damage,speed,g) {
+  
+  val spriteI: Int = 2
+  val soundI: Int  = 0
+  val title: String = ""
+  val description: String = ""
+  val cost: Int = 10
   
   //the other target
   var t2 = {

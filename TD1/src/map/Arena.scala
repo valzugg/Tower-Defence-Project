@@ -141,13 +141,13 @@ class Arena(g: Game, l: Level) extends Helper(g) {
           g.image(g.squares(sq.i), col * sqSize, row * sqSize, sqSize, sqSize)
         } else if (sq.isInstanceOf[Obstacle]) {
           g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
-          g.tint(0,0,0,150) // draw the shadow of the obstacles
+          g.tint(0,0,0,sIntensity) // draw the shadow of the obstacles
           g.image(g.obstacles(sq.i), col * sqSize + sDistObst, row * sqSize + sDistObst, sqSize, sqSize)
           g.noTint()
           g.image(g.obstacles(sq.i), col * sqSize, row * sqSize, sqSize, sqSize)
         } else {
           g.image(g.squares(2), col * sqSize, row * sqSize, sqSize, sqSize)
-          g.tint(0,0,0,150) // draw the shadow of the tower
+          g.tint(0,0,0,sIntensity) // draw the shadow of the tower
           g.image(g.squares(4), col * sqSize + sDistTower, row * sqSize + sDistTower, sqSize, sqSize)
           g.noTint()
           g.image(g.squares(4), col * sqSize, row * sqSize, sqSize, sqSize)

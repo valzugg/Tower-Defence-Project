@@ -6,10 +6,11 @@ import objects._
 import general.Helper
 import processing.core.PImage
 
-/** A menu which is created whenever a tower is clicked. */
+/** A menu which is created or toggled whenever a tower is clicked. */
 class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   private val position = (t.pos._1 + sqSize/2,t.pos._2 - sqSize/2)
-  val pos = {
+  // the position has to be different near the edges
+  val posi = {
     if (t.pos._1 <= (aWidth - 2)*sqSize && t.pos._2 <= (aHeight - 4)*sqSize)
       position
     else if (t.pos._1 <= (aWidth - 1)*sqSize)
@@ -18,6 +19,17 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
       (position._1 - 2*sqSize,position._2)
     else
       (position._1 - 2*sqSize,position._2 - 2*sqSize)
+  }
+  
+  // has to take into account ice defence with only one upgrade possibility
+  def pos = {
+    if (t.hasDef && t.getDef.isInstanceOf[IceDefence])
+      if (t.pos._2 > (aHeight - 2)*sqSize)
+        (posi._1,posi._2 + 2*sqSize)
+      else
+        posi
+    else
+      posi
   }
   
   private var toggled = true
@@ -30,9 +42,9 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   lazy val crossbow   = Vector( (s.g.defences(0),s.crossbowTitle,"+ 10 Damage.",(0,0,0),s.upgradeCost),
                                 (s.g.defences(0),s.crossbowTitle,"+ 20 Range.",(0,0,0),s.upgradeCost),
                                 (s.g.defences(0),s.crossbowTitle,"+ 1 Speed.",(0,0,0),s.upgradeCost) )
-  lazy val iceDef     = Vector( (s.g.defences(1),s.crossbowTitle,"+ 20 Range.",(0,0,0),s.upgradeCost) )
+  lazy val iceDef     = Vector( (s.g.defences(1),s.iceDefTitle,"+ 20 Range.",(0,0,0),s.upgradeCost) )
   lazy val machineGun = Vector( (s.g.defences(3),s.machineTitle,"+ 10 Damage.",(0,0,0),s.upgradeCost),
-                                (s.g.defences(3),s.machineTitle,"+ 10 Range.",(0,0,0),s.upgradeCost),
+                                (s.g.defences(3),s.machineTitle,"+ 20 Range.",(0,0,0),s.upgradeCost),
                                 (s.g.defences(3),s.machineTitle,"+ 1 Speed.",(0,0,0),s.upgradeCost) )
   
   def size = currentCells.size
@@ -82,7 +94,12 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
     (mouseX < pos._1 + sqSize && mouseY < pos._2  + size * sqSize)
   }
   
-  
+  def mouseIndex = {
+    if (mouseOn(0)) 0
+    else if (mouseOn(1)) 1
+    else if (mouseOn(2)) 2
+    else 3
+  }
   
   def setImg(img: PImage, spot: Int) = {
     s.g.image(img,pos._1,pos._2 + (sqSize* spot),sqSize,sqSize)
@@ -93,6 +110,14 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
     s.g.rect(pos._1,pos._2,sqSize,size*sqSize)
     s.g.noFill()
     s.g.rect(t.pos._1 - sqSize/2,t.pos._2 - sqSize/2,sqSize,sqSize)
+    
+    if (mouseOn) {
+      s.g.noStroke
+      s.g.fill(150,150,150,200)
+      s.g.rect(pos._1 + 1,pos._2 + mouseIndex*sqSize + 1,sqSize - 1,sqSize - 1)
+      s.g.stroke(0)
+    }
+    
     (0 until size) foreach { i =>
       setImg(currentCells(i)._1,i)
     }
@@ -102,10 +127,15 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
     (0 until size) foreach { i =>
       if (this.mouseOn(i)) {
         if (this.isUpgradable) {
-          i match {
-            case 0 => if (s.buyUpgrade(t,'d')) this.toggle()
-            case 1 => if (s.buyUpgrade(t,'r')) this.toggle()
-            case 2 => if (s.buyUpgrade(t,'s')) this.toggle()
+          // ice defence can only get range
+          if (this.t.getDef.isInstanceOf[IceDefence]) {
+            if (s.buyUpgrade(t,'r')) this.toggle()
+          } else {
+            i match {
+              case 0 => if (s.buyUpgrade(t,'d')) this.toggle()
+              case 1 => if (s.buyUpgrade(t,'r')) this.toggle()
+              case 2 => if (s.buyUpgrade(t,'s')) this.toggle()
+            }
           }
         } else if (s.buyDef(this.t,s.getDefence(this.t,i)))
           this.toggle()
@@ -141,7 +171,7 @@ class Store(m: Menu) extends Helper(m.g) {
     }
   }
   
-  // TODO: only uses crossbow defs for now
+  
   def buyUpgrade(t: Tower, i: Char): Boolean = {
     val p = m.g.player
     if (p.canAfford(upgradeCost)) {
@@ -149,17 +179,25 @@ class Store(m: Menu) extends Helper(m.g) {
       g.sounds.play(g.sounds.crossbow)
       val d = t.getDef
       i match {
-        case 'r' => t.addDefence(crossbowDef(t,
-                    upgradedStats(i,(d.range,d.damage.toInt,d.speed)))) // improve range
-        case 'd' => t.addDefence(crossbowDef(t,
-                    upgradedStats(i,(d.range,d.damage.toInt,d.speed)))) // improve damage
-        case 's' => t.addDefence(crossbowDef(t,
-                    upgradedStats(i,(d.range,d.damage.toInt,d.speed)))) // improve speed
+        case 'r' => t.addDefence(upgradeDef(d,t,i)) // improve range
+        case 'd' => t.addDefence(upgradeDef(d,t,i)) // improve damage
+        case 's' => t.addDefence(upgradeDef(d,t,i)) // improve speed
       }
       true
     } else {
       false
     }
+  }
+  
+  def upgradeDef(d: Defence, t: Tower, i: Char) = {
+    if (d.isInstanceOf[GunDefence])
+      machineDef(t,upgradedStats(i,(d.range,d.damage.toInt,d.speed)))
+    else if (d.isInstanceOf[BasicDefence])
+      crossbowDef(t,upgradedStats(i,(d.range,d.damage.toInt,d.speed)))
+    else if (d.isInstanceOf[IceDefence])
+      iceDef(t,upgradedStats(i,(d.range,d.damage.toInt,d.speed)))
+    else
+      fireDef(t,upgradedStats(i,(d.range,d.damage.toInt,d.speed)))
   }
   
   //the initial stats    r   d  s
@@ -177,24 +215,15 @@ class Store(m: Menu) extends Helper(m.g) {
     }
   }
   
-  // store items // TODO: what if machine gun is its own class?
+  // store items
   def crossbowDef(t: Tower, s: (Int,Int,Int)) = 
-    new BasicDefence(t,s._1,s._2,
-                     s._3,crossbowPrice,m.g,0,0,
-                     crossbowTitle,
-                     crossbowDesc)
+    new BasicDefence(t,s._1,s._2,s._3,m.g)
   def machineDef(t: Tower, s: (Int,Int,Int))  = 
-    new BasicDefence(t,s._1,s._2,
-                     s._3,machinePrice,m.g,3,6,
-                     machineTitle,
-                     machineDesc)
+    new GunDefence(t,s._1,s._2,s._3,m.g)
   def iceDef(t: Tower, s: (Int,Int,Int))      = 
-    new IceDefence  (t,s._1,s._2,
-                     s._3,iceDefPrice,m.g,0.5.toFloat,1,5,
-                     iceDefTitle,
-                     iceDefDesc)
+    new IceDefence  (t,s._1,s._2,s._3,m.g,0.5.toFloat)
   def fireDef(t: Tower, s: (Int,Int,Int))     = 
-    new FireDefence (t,s._1,s._2,s._3,5,m.g,2,0, "","")
+    new FireDefence (t,s._1,s._2,s._3,m.g)
   
   def buyDef(t: Tower, d: Defence): Boolean = {
     if (player.money >= d.cost) {

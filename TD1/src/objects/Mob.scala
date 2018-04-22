@@ -123,7 +123,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game,
       game.translate(sqSize/2,sqSize/2)
       game.translate(this.x,this.y) // the 'axis' of the mob is being moved
       this.act()
-      game.tint(0,0,0,150) // draws the shadow
+      game.tint(0,0,0,sIntensity) // draws the shadow
       game.image(img,-sqSize*size+sx,-sqSize*size+sy,sqSize*2*size,sqSize*2*size)
       game.noTint()
       game.image(img,-sqSize*size,-sqSize*size,sqSize*2*size,sqSize*2*size)

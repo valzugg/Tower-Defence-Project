@@ -35,4 +35,7 @@ class Helper(g: Game) {
   // processing specific
   val leftMouse = 37
   val enter     = 10
+  
+  // misc
+  lazy val sIntensity = 100
 }

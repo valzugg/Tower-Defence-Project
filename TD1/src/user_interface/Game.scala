@@ -91,7 +91,7 @@ class Game extends PApplet {
   
   // IMAGES //////////////////////////////////////////
   val introImg   = Array.ofDim[PImage](1)
-  val highlight  = Array.ofDim[PImage](1)
+  val highlig    = Array.ofDim[PImage](1)
   val muteButton = Array.ofDim[PImage](2)
   val obstacles = Array.ofDim[PImage](8)
   val defences  = Array.ofDim[PImage](4)
@@ -129,7 +129,7 @@ class Game extends PApplet {
     frameRate(60)
     
     introImg(0)  = loadImage("imgs/intro.png")
-    highlight(0) = loadImage("imgs/highlight.png")
+    highlig(0)   = loadImage("imgs/highlight.png")
     muteButton(0) = loadImage("imgs/unmuted.png")
     muteButton(1) = loadImage("imgs/muted.png")
     squares(0) = loadImage("imgs/arena/arena0.png")
@@ -160,6 +160,11 @@ class Game extends PApplet {
   
   def gameOver = player.hp <= 0
   
+  def highlight() = {
+    if (!menu.onMenu) {
+      image(highlig(0),(mSqX)*sqSize, (mSqY)*sqSize, sqSize, sqSize)
+    }
+  }
   
   override def draw() = {
     
@@ -170,6 +175,8 @@ class Game extends PApplet {
       // draws the tiles of the arena
       arena.drawArena()
     
+      highlight()
+      
       // handles the defences
       arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
       
