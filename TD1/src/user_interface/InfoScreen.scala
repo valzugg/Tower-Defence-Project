@@ -34,11 +34,16 @@ class InfoScreen(m: Menu) extends Helper(m.g) {
     m.g.textFont(m.g.font,13)
     if (range != 0) {
       m.g.fill(0)
-      m.g.text("\n\n\n\n\n\n\nDamage: " + damage + "\nRange: " + 
+      m.g.text("\n\n\n\n\n\n     Stats\nDamage: " + damage + "\nRange: " + 
                range + "\nSpeed: " + speed,shadowX,shadowY)
-      m.g.fill(0,255,0) 
-      m.g.text("\n\n\n\n\n\n\nDamage: " + damage + "\nRange: " + 
-               range + "\nSpeed: " + speed,textX,textY)
+      m.g.fill(255)
+      m.g.text("\n\n\n\n\n\n     Stats",textX,textY)
+      m.g.fill(255,100,100) 
+      m.g.text("\n\n\n\n\n\n\nDamage: " + damage,textX,textY)
+      m.g.fill(100,255,100)
+      m.g.text("\n\n\n\n\n\n\n\nRange: " + range,textX,textY)
+      m.g.fill(100,100,255)
+      m.g.text("\n\n\n\n\n\n\n\n\nSpeed: " + speed,textX,textY)
     }
   }
   

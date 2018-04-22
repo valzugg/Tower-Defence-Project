@@ -10,7 +10,7 @@ import processing.core.PImage
 class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   private val position = (t.pos._1 + sqSize/2,t.pos._2 - sqSize/2)
   // the position has to be different near the edges
-  val posi = {
+  private val posi = {
     if (t.pos._1 <= (aWidth - 2)*sqSize && t.pos._2 <= (aHeight - 4)*sqSize)
       position
     else if (t.pos._1 <= (aWidth - 1)*sqSize)
@@ -39,13 +39,13 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   lazy val emptyTower = Vector( (s.g.defences(0),s.crossbowTitle,s.crossbowDesc,s.crossbowStats,s.crossbowPrice),
                                 (s.g.defences(3),s.machineTitle,s.machineDesc,s.machineStats,s.machinePrice),
                                 (s.g.defences(1),s.iceDefTitle,s.iceDefDesc,s.iceDefStats,s.iceDefPrice) )
-  lazy val crossbow   = Vector( (s.g.defences(0),s.crossbowTitle,"+ 10 Damage.",(0,0,0),s.upgradeCost),
-                                (s.g.defences(0),s.crossbowTitle,"+ 20 Range.",(0,0,0),s.upgradeCost),
-                                (s.g.defences(0),s.crossbowTitle,"+ 1 Speed.",(0,0,0),s.upgradeCost) )
-  lazy val iceDef     = Vector( (s.g.defences(1),s.iceDefTitle,"+ 20 Range.",(0,0,0),s.upgradeCost) )
-  lazy val machineGun = Vector( (s.g.defences(3),s.machineTitle,"+ 10 Damage.",(0,0,0),s.upgradeCost),
-                                (s.g.defences(3),s.machineTitle,"+ 20 Range.",(0,0,0),s.upgradeCost),
-                                (s.g.defences(3),s.machineTitle,"+ 1 Speed.",(0,0,0),s.upgradeCost) )
+  lazy val crossbow   = Vector( (s.g.defences(0),s.crossbowTitle,"Upgrade:\n+ 10 Damage.",(0,0,0),s.upgradeCost),
+                                (s.g.defences(0),s.crossbowTitle,"Upgrade:\n+ 20 Range.",(0,0,0),s.upgradeCost),
+                                (s.g.defences(0),s.crossbowTitle,"Upgrade:\n+ 1 Speed.",(0,0,0),s.upgradeCost) )
+  lazy val iceDef     = Vector( (s.g.defences(1),s.iceDefTitle,"Upgrade:\n+ 20 Range.",(0,0,0),s.upgradeCost) )
+  lazy val machineGun = Vector( (s.g.defences(3),s.machineTitle,"Upgrade:\n+ 10 Damage.",(0,0,0),s.upgradeCost),
+                                (s.g.defences(3),s.machineTitle,"Upgrade:\n+ 20 Range.",(0,0,0),s.upgradeCost),
+                                (s.g.defences(3),s.machineTitle,"Upgrade:\n+ 1 Speed.",(0,0,0),s.upgradeCost) )
   
   def size = currentCells.size
   
@@ -113,13 +113,26 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
     
     if (mouseOn) {
       s.g.noStroke
-      s.g.fill(150,150,150,200)
+      s.g.fill(150,150,150)
       s.g.rect(pos._1 + 1,pos._2 + mouseIndex*sqSize + 1,sqSize - 1,sqSize - 1)
       s.g.stroke(0)
     }
     
     (0 until size) foreach { i =>
       setImg(currentCells(i)._1,i)
+      if (isUpgradable) {
+        s.g.fill(0,255,0)
+        if (currentCells.size == 1) {
+          s.g.text("R",pos._1+sqSize/2,pos._2 + sqSize*3/4)
+        } else {
+          s.g.fill(255,0,0)
+          s.g.text("D",pos._1+sqSize/2,pos._2+sqSize*3/4)
+          s.g.fill(0,255,0)
+          s.g.text("R",pos._1+sqSize/2,pos._2 + (sqSize*7/4))
+          s.g.fill(0,0,255)
+          s.g.text("S",pos._1+sqSize/2,pos._2 + (sqSize*11/4))
+        }
+      }
     }
   }
   
