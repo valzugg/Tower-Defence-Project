@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package user_interface
 
 import general.Helper
@@ -42,10 +43,16 @@ class InfoScreen(m: Menu) extends Helper(m.g) {
   }
   
   def cost(amount: Int) = {
+    val c = { // text color depending on if the player can afford the price
+      if (m.g.level.player.canAfford(amount)) 
+        (255,255,0)
+      else
+        (255,0,0)
+    }
     m.g.textFont(m.g.font,13)
     m.g.fill(0)
     m.g.text("\n\n\n\n\n\n\n\n\n\n\nCost: " + amount,shadowX,shadowY)
-    m.g.fill(255,255,0)
+    m.g.fill(c._1,c._2,c._3)
     m.g.text("\n\n\n\n\n\n\n\n\n\n\nCost: " + amount,textX,textY)
   }
   

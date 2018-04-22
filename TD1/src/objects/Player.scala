@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package objects
 
 import user_interface.Game

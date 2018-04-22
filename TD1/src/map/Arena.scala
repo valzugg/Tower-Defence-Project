@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package map
 
 import processing.core.PApplet

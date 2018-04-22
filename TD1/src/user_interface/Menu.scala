@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package user_interface
 
 import processing._
