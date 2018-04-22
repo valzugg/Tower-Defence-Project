@@ -11,6 +11,13 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   
   var isOn = true
   
+  def toggle() = {
+    if (isOn)
+      isOn = false
+    else
+      isOn = true
+  }
+  
   def clickingStuff() = {
     ???
   }
@@ -44,7 +51,7 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     g.textFont(g.font,24)
     g.fill(0)
     g.text(text,6*sqSize + (buttonSize._1/2),pos*sqSize + (buttonSize._2/2))
-  } // TODO: Really slow for some reason?
+  }
   
   def doStuff() = { // processing doesnt like drawing big images // TODO: arena in the background.
     //g.image(g.introImg(0), 0, 0, aWidth*sqSize+mWidth*sqSize, aHeight*sqSize)

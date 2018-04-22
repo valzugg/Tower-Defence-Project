@@ -27,6 +27,7 @@ class Game extends PApplet {
   val introMenu = new IntroMenu(this,progress)
   
   // LEVELS /////////////////////////////////////////
+  val menuLvl = new Level("lvls/menu.lvl", this)
   val easyLvls   = Vector(new Level("lvls/1.lvl", this),
                           new Level("lvls/2.lvl", this),
                           new Level("lvls/3.lvl", this))
@@ -169,11 +170,12 @@ class Game extends PApplet {
   override def draw() = {
     
     if (introMenu.isOn) {
+      menuLvl.arena.drawArena(menuLvl.width,menuLvl.height)
       introMenu.doStuff()
       
     } else if (!gameOver) {
       // draws the tiles of the arena
-      arena.drawArena()
+      arena.drawArena(aWidth,aHeight)
     
       highlight()
       

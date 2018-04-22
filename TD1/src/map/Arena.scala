@@ -133,9 +133,9 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   // shadow distance for obstacles
   private val sDistObst = -sqSize/20
   
-  def drawArena() = {
-    for (col <- 0 until g.aWidth) {
-      for (row <- 0 until g.aHeight) {
+  def drawArena(width: Int, height: Int) = {
+    for (col <- 0 until width) {
+      for (row <- 0 until height) {
         val sq = this.squares(col)(row)
         if (sq.basic) {
           g.image(g.squares(sq.i), col * sqSize, row * sqSize, sqSize, sqSize)
