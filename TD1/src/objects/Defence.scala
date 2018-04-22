@@ -19,7 +19,7 @@ import general.Helper
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
 abstract class Defence(val tower: Tower, val range: Int, val damage: Double, 
-                       val speed: Int, val g: Game) extends Helper(g) {
+                       val speed: Int, g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val location = tower.pos
   

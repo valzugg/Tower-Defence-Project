@@ -171,8 +171,9 @@ class Game extends PApplet {
     
     if (introMenu.isOn) {
       menuLvl.arena.drawArena(menuLvl.width,menuLvl.height)
-      introMenu.doStuff()
+      introMenu.drawStuff()
       
+      // Main game loop
     } else if (!gameOver) {
       // draws the tiles of the arena
       arena.drawArena(aWidth,aHeight)
@@ -212,17 +213,13 @@ class Game extends PApplet {
   
   override def mousePressed() {
     if (introMenu.isOn) { // TODO
-        introMenu.isOn = false
-      if (mouseButton == menu.leftMouse)
-        startLevel(easyLvls(0))
-      else
-        startLevel(easyLvls(2))
+      introMenu.clickingStuff()
     } else {
       menu.clickingStuff()
     }
     
     if (currentLvl.isComplete) {
-      introMenu.isOn = true
+      introMenu.toggle()
     }
   }
   

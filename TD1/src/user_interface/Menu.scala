@@ -9,7 +9,7 @@ import map._
 import objects._
 import general.Helper
 
-class Menu(val g: Game) extends Helper(g) {
+class Menu(g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val store = new Store(this)
   

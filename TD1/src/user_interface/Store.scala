@@ -7,7 +7,6 @@ import general.Helper
 import processing.core.PImage
 
 class Store(m: Menu) extends Helper(m.g) {
-  val g = m.g      //game
   val towerCost = 5
   val upgradeCost = 5
   
