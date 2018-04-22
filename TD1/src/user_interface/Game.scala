@@ -28,23 +28,14 @@ class Game extends PApplet {
   
   // LEVELS /////////////////////////////////////////
   val menuLvl = new Level("lvls/menu.lvl", this)
-  val easyLvls   = Vector(new Level("lvls/1.lvl", this),
-                          new Level("lvls/2.lvl", this),
-                          new Level("lvls/3.lvl", this))
-  val normalLvls = Vector(new Level("lvls/1.lvl", this),
-                          new Level("lvls/2.lvl", this),
-                          new Level("lvls/3.lvl", this))
-  val hardLvls   = Vector(new Level("lvls/1.lvl", this),
-                          new Level("lvls/2.lvl", this),
-                          new Level("lvls/3.lvl", this))
-  val insaneLvls = Vector(new Level("lvls/1.lvl", this),
-                          new Level("lvls/2.lvl", this),
-                          new Level("lvls/3.lvl", this))
-  private var currentLvl = easyLvls(0)
+  val levels  = Vector(new Level("lvls/1.lvl", this),
+                       new Level("lvls/2.lvl", this),
+                       new Level("lvls/3.lvl", this))
+  private var currentLvl = levels(0)
   def level = currentLvl
   def startLevel(l: Level) = {
-    introMenu.isOn = false
     currentLvl = l
+    introMenu.toggle()
   }
   //////////////////////////////////////////////////// 
   
@@ -169,10 +160,10 @@ class Game extends PApplet {
   
   override def draw() = {
     
+      // Main menu loop
     if (introMenu.isOn) {
       menuLvl.arena.drawArena(menuLvl.width,menuLvl.height)
       introMenu.drawStuff()
-      
       // Main game loop
     } else if (!gameOver) {
       // draws the tiles of the arena
@@ -188,20 +179,22 @@ class Game extends PApplet {
       
       // handles the HUD
       menu.doStuff()
-      
       fr += 1
+      
+      // Game over
     } else {
       fill(0)
       textFont(font,44)
       text("GAME OVER", aWidth*sqSize/2, aHeight*sqSize/2)
     }
-     // TODO
+     // Level complete
     if (currentLvl.isComplete) {
       fill(0)
       textFont(font,44)
       text("Level Complete" + "\n    Score: " + score, aWidth*sqSize/2, aHeight*sqSize/2)
     }
     
+    // stops sounds so that minim doesnt give error
     if (this.exitCalled()) {
       sounds.stop()
     }
@@ -225,7 +218,8 @@ class Game extends PApplet {
   
   
   override def keyPressed() {
-    if (key == menu.enter) toggleRunSpeed()
+    if (key == menu.enter && !introMenu.isOn) 
+      toggleRunSpeed()
   }
   
   
