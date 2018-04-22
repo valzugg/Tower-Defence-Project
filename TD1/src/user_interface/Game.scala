@@ -113,6 +113,13 @@ class Game extends PApplet {
       rate = fast
   }
   
+  def togglePause() = {
+    if (runSpeed == 0)
+      rate = 1
+    else
+      rate = 0
+  }
+  
   var sounds: Sounds = null
   var font: PFont = null
   
@@ -213,6 +220,7 @@ class Game extends PApplet {
     
     if (currentLvl.isComplete) {
       introMenu.toggle()
+      introMenu.changeState(introMenu.Progress)
     }
   }
   
@@ -220,6 +228,8 @@ class Game extends PApplet {
   override def keyPressed() {
     if (key == menu.enter && !introMenu.isOn) 
       toggleRunSpeed()
+    if (key == menu.tab && !introMenu.isOn) 
+      togglePause()
   }
   
   

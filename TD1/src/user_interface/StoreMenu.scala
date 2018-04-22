@@ -75,10 +75,13 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   }
   
   def toggle() = {
-    if (toggled)
+    if (toggled) {
       toggled = false
-    else
+      t.isChosen = false
+    } else {
       toggled = true
+      t.isChosen = true
+    }
   }
   
   /**Gives boolean telling if the mouse is on the given cell of the StoreMenu. */

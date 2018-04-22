@@ -27,14 +27,16 @@ class Helper(val g: Game) {
   val mWidth  = 4
   
   // vector directions
-  val right = (1, 0)
-  val up    = (0,-1)
-  val down  = (0, 1)
-  val left  = (-1,0)
+  lazy val right = (1, 0)
+  lazy val up    = (0,-1)
+  lazy val down  = (0, 1)
+  lazy val left  = (-1,0)
   
   // processing specific
-  val leftMouse = 37
-  val enter     = 10
+  lazy val leftMouse = 37
+  lazy val enter     = 10
+  lazy val esc       = 27
+  lazy val tab       = 9
   
   // misc
   lazy val sIntensity = 100

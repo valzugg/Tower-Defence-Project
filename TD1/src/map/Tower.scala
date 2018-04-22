@@ -10,9 +10,10 @@ class Tower(x: Int, y: Int) extends Square {
   val pos = (x*sqSize + sqSize.toFloat/2,y*sqSize + sqSize.toFloat/2)
   val basic = false
   
-  // TODO: tower upgrading
-  private var version = 0
+  var isChosen = false
   
+  // not implemented
+  private var version = 0
   def upgrade() = {
     version += 1
   }

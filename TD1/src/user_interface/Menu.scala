@@ -52,6 +52,7 @@ class Menu(g: Game) extends Helper(g) {
     drawWaveButton()
     drawFastButton()
     drawMuteButton()
+    drawMenuButton()
     
     if (storeMenu != null && storeMenu.isToggled)
       storeMenu.doStuff()
@@ -108,7 +109,7 @@ class Menu(g: Game) extends Helper(g) {
   /////////////////////////////////////////////////////////////////////////////////////////
   
   // FASTFORWARD BUTTON //////////////////////////////////////////////////////////////////////
-  val fastButtonPos = (aWidth*sqSize + sqSize/2,sqSize*17 + sqSize/2)
+  val fastButtonPos = (aWidth*sqSize + sqSize/2,sqSize*12 + sqSize)
   val fastButtonSize = (sqSize*3,sqSize)
   
   def onFastButton = (mouseX > fastButtonPos._1) && (mouseY > fastButtonPos._2) &&
@@ -150,6 +151,40 @@ class Menu(g: Game) extends Helper(g) {
   }
   /////////////////////////////////////////////////////////////////////////////////////////
   
+  // MENU BUTTON //////////////////////////////////////////////////////////////////////
+  val menuButtonPos = (aWidth*sqSize + sqSize/2,sqSize*17 + sqSize/2)
+  val menuButtonSize = (sqSize*3,sqSize)
+  
+  def onMenuButton = (mouseX > menuButtonPos._1) && (mouseY > menuButtonPos._2) &&
+                     (mouseX < menuButtonPos._1 + menuButtonSize._1) && 
+                     (mouseY < menuButtonPos._2 + menuButtonSize._2)
+                
+  def drawMenuButton() = {
+    val color = (100,100,50)
+    val text  = "  Menu"
+      
+    // A bit wetwet, but there are some details that make it difficult to generalize 
+    def draw() = {
+      game.rect(menuButtonPos._1,menuButtonPos._2,menuButtonSize._1,menuButtonSize._2)
+      game.textFont(g.font,12)
+      game.fill(0) 
+      game.text(text,menuButtonPos._1 + sqSize +1,menuButtonPos._2 + sqSize*5/8 + 1)
+      game.fill(250) 
+      game.text(text,menuButtonPos._1 + sqSize,menuButtonPos._2 + sqSize*5/8)
+    }
+    
+    if (onMenuButton) {
+      game.fill(255,255,255,160)
+      draw()
+      infoScreen.title("Pause the\ngame and\nopen menu")
+      infoScreen.description("\n         (Tab)")
+      
+    } else {
+      game.fill(color._1,color._2,color._3,100)
+      draw()
+    }
+  }
+  /////////////////////////////////////////////////////////////////////////////////////////
   
   def mouseSq = {
     arena.squares(mSqX)(mSqY)
@@ -261,6 +296,10 @@ class Menu(g: Game) extends Helper(g) {
         // fastforward button
         if (onFastButton) {
           g.toggleRunSpeed()
+        } 
+        // menu/pause button
+        if (onMenuButton) {
+          g.togglePause()
         } 
       }
       

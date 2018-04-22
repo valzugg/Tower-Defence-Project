@@ -9,6 +9,7 @@ import processing.core.PApplet
 class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   private var toggled = true
   def isOn = toggled
+  
   def toggle() = {
     if (toggled)
       toggled = false
@@ -16,25 +17,16 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
       toggled = true
   }
   
-  
-  def onEasy = ???
-               
-  def onNormal = ???
-  def onHard   = ???
-  def onInsane = ???
-  
-  def onCredits = ???
-  
   // numbers which represent states of the menu
-  private val Start    = 0
-  private val Progress = 1
-  private val Saves    = 2
-  private val Help     = 3
-  private val Credits  = 4
+  val Start    = 0
+  val Progress = 1
+  val Saves    = 2
+  val Help     = 3
+  val Credits  = 4
   
   
   var currentState = Start
-  
+  def changeState(state: Int) = currentState = state
   
   // start menu buttons
   val progressButton = new Button("Progression Map",(6,3 ),(16,3),this)
@@ -56,11 +48,21 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   val eleventh= new Button("11",(22,6),(1,1),this)
   val twelveth= new Button("12",(22,17),(1,1),this)
   
+  // saves menu buttons
+  val save1 = new Button("Save 1",(8,3 ),(12,3),this)
+  val save2 = new Button("Save 2",(8,7 ),(12,3),this)
+  val save3 = new Button("Save 3",(8,11),(12,3),this)
+  val save4 = new Button("Save 4",(8,15),(12,3),this)
+  
+  val goBack = new Button("< Back to Main Menu",(1,1),(5,2),this)
+  
   def startDraw() = {
-    g.textFont(g.font,24)
-    g.noStroke()
+    g.textFont(g.font,34)
+    g.fill(0,0,0,100)
+    g.text("Desert Tower Defence",10.toFloat*sqSize-2,2*sqSize-2)
     g.fill(0)
-    g.text("Desert Tower Defence",11.4.toFloat*sqSize,1.65.toFloat*sqSize)
+    g.text("Desert Tower Defence",10.toFloat*sqSize,2*sqSize)
+    g.textFont(g.font,24)
     progressButton.draw()
     savesButton.draw()
     helpButton.draw()
@@ -68,6 +70,14 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   }
   
   def progressDraw() = {
+    g.textFont(g.font,34)
+    g.fill(0,0,0,100)
+    g.text("Pick A Level",11.5.toFloat*sqSize-2,2*sqSize-2)
+    g.fill(0)
+    g.text("Pick A Level",11.5.toFloat*sqSize,2*sqSize)
+    g.textFont(g.font,14)
+    goBack.draw()
+    g.textFont(g.font,24)
     first.draw()
     second.draw()
     third.draw()
@@ -83,15 +93,25 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   }
   
   def savesDraw() = {
-    
+    g.textFont(g.font,14)
+    goBack.draw()
+    g.textFont(g.font,24)
+    save1.draw()
+    save2.draw()
+    save3.draw()
+    save4.draw()
   }
   
   def helpDraw() = {
-    
+    g.textFont(g.font,14)
+    goBack.draw()
+    g.textFont(g.font,24)
   }
   
   def creditsDraw() = {
-    
+    g.textFont(g.font,14)
+    goBack.draw()
+    g.textFont(g.font,24)
   }
   
   def startClick() = {
@@ -102,6 +122,9 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   }
   
   def progressClick() = {
+    goBack.clicking(Start)
+    // The numbers as the parameters are the indexes 
+    // of the levels vector in Game, with 100 added.
     first.clicking(100)
     second.clicking(101)
     third.clicking(102)
@@ -117,15 +140,15 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   }
   
   def savesClick() = {
-    
+    goBack.clicking(Start)
   }
   
   def helpClick() = {
-    
+    goBack.clicking(Start)
   }
   
   def creditsClick() = {
-    
+    goBack.clicking(Start)
   }
   
   
@@ -136,8 +159,8 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
       case Saves    => savesClick()
       case Help     => helpClick()
       case Credits  => creditsClick()
-      case _        => 
-    }
+      case _        => // level starting has to happen in draw 
+    }                  // for it to take effect
   }
   
   def drawStuff() = {
@@ -165,15 +188,15 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
   def draw() = {
     if (mouseOn) {
       g.noStroke()
-      g.fill(0,0,0,100)
-      g.rect(pos._1*sqSize - 4,pos._2*sqSize - 4,size._1*sqSize,size._2*sqSize)
-      g.fill(255,255,255,150)
+      g.fill(0,0,100,100)
+      g.rect(pos._1*sqSize - 2,pos._2*sqSize - 2,size._1*sqSize,size._2*sqSize)
+      g.fill(200,200,255,150)
       g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
       g.fill(0,0,0,100)
       g.text(text,pos._1*sqSize + (size._1*sqSize/6) - 2,pos._2*sqSize + (size._2*sqSize*3/5) - 2)
     } else {
       g.noStroke()
-      g.fill(100,100,100,100)
+      g.fill(100,100,150,100)
       g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
     }
     g.fill(0)
@@ -182,7 +205,7 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
   
   def clicking(state: Int): Unit = {
     if (mouseOn && g.mouseButton == leftMouse) {
-      i.currentState = state
+      i.changeState(state)
     }
   }
   

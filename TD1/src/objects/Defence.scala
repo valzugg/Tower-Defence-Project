@@ -29,6 +29,7 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
   val description: String
   val cost: Int
   
+  def isChosen = tower.isChosen
   
   /**keeps track of the target mob*/
   var t: Mob = closestMob 
@@ -108,7 +109,9 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
   def doStuff() = {
     game.image(g.defences(spriteI), location._1 - sqSize/2, 
                location._2 - sqSize/2, sqSize, sqSize)
-    if ((mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location) {
+    // if the mouse is on the store menu, range should not be drawn
+    if (isChosen || (!g.menu.storeMenu.mouseOn && 
+        (mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location)) {
       game.noFill()
       game.stroke(0,0,0,100)
       game.ellipse(location._1, location._2, range*2, range*2)
@@ -145,7 +148,9 @@ class BasicDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game)
       game.image(g.defences(spriteI), location._1 - sqSize/2, 
                  location._2 - sqSize/2, sqSize, sqSize)
     }
-    if ((mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location) {
+    // if the mouse is on the store menu, range should not be drawn
+    if (isChosen || (!g.menu.storeMenu.mouseOn && 
+        (mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location)) {
       game.noFill()
       game.stroke(0,0,0,100)
       game.ellipse(location._1, location._2, range*2, range*2)
