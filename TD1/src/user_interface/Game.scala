@@ -69,20 +69,8 @@ class Game extends PApplet {
   def mSqY = menu.mSqY
   ////////////////////////////////////////////////////
     
-  // MOB WAVES ///////////////////////////////////////
-  var waveIndex = -1 // starts with the empty Wave
-  def emptyWave = new Wave(1,0,0,0,0,0,currentLvl,this)
-  def currentWave = {
-    if (waveIndex >= 0) 
-      currentLvl.waves(waveIndex)
-    else 
-      emptyWave
-  }
-  def nextWave()= {
-    if (currentWave.isComplete)
-      waveIndex += 1
-  }
-  ////////////////////////////////////////////////////
+  
+  def currentWave = level.currentWave
   
   // IMAGES //////////////////////////////////////////
   val highlig    = Array.ofDim[PImage](1)
@@ -172,6 +160,7 @@ class Game extends PApplet {
     if (introMenu.isOn) {
       menuLvl.arena.drawArena(menuLvl.width,menuLvl.height)
       introMenu.drawStuff()
+      
       // Main game loop
     } else if (!gameOver) {
       // draws the tiles of the arena
@@ -183,7 +172,7 @@ class Game extends PApplet {
       arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
       
       // handles the mobs
-      currentWave.doStuff()  
+      level.currentWave.doStuff()  
       
       // handles the HUD
       menu.doStuff()
@@ -191,17 +180,18 @@ class Game extends PApplet {
       
       // Game over
     } else {
-      fill(0)
+      fill(0) // TODO
       textFont(font,44)
       text("GAME OVER", aWidth*sqSize/2, aHeight*sqSize/2)
     }
      // Level complete
-    if (currentLvl.isComplete) {
+    if (currentLvl.isComplete && !introMenu.isOn) {
       // TODO
       
       fill(0)
       textFont(font,44)
-      text("Level Complete" + "\n    Score: " + score, aWidth*sqSize/2, aHeight*sqSize/2)
+      text("Level Complete" + "\n    Score: " + score + "\n(Click anywhere to continue)", 
+           aWidth*sqSize/3, aHeight*sqSize/3)
     }
     
     // stops sounds so that minim doesnt give error
@@ -217,11 +207,11 @@ class Game extends PApplet {
   override def mousePressed() {
     if (introMenu.isOn) { // TODO
       introMenu.clickingStuff()
-    } else {
+    } else if (!currentLvl.isComplete) {
       menu.clickingStuff()
     }
     
-    if (currentLvl.isComplete) {
+    if (currentLvl.isComplete && !introMenu.isOn) {
       if (levelIndex == progress.available) 
         progress.unlock()
       progress.setHighscore(levelIndex,score)

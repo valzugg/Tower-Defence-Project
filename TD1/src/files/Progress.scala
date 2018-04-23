@@ -9,7 +9,9 @@ class Progress(i: Int = 0) {
   def unlock() = unlocked += 1
   def unlock(n: Int) = unlocked = n
   
-  private val highscores = Array.fill(12)(0)
+  private val lastLevelIndex = 11
+  
+  private val highscores = Array.fill(lastLevelIndex+1)(0)
   def highscore(i: Int)  = highscores(i)
   def setHighscore(i: Int, score: Int) = {
     if (score > highscores(i))
@@ -24,7 +26,6 @@ class Progress(i: Int = 0) {
     for (i <- 0 until available) {
       pw.write("\n" + highscore(i))
     }
-    highscores.foreach(x => println(x + " "))
     pw.close()
   }
   
@@ -42,20 +43,20 @@ class Progress(i: Int = 0) {
     try {
       line = lineReader.readLine().trim()
       levels = line.toInt
-      require(levels >= 0 && levels <= 11,
+      require(levels >= 0 && levels <= lastLevelIndex,
               "No such level exists" + " (" + line + ") " + ", save corrupt.")
       unlock(line.toInt)
       for (i <- 0 until available) {
         line = lineReader.readLine().trim()
         highscores(i) = line.toInt
       }
+      for (i <- available to lastLevelIndex) {
+        highscores(i) = 0
+      }
     } catch {
       case r: IllegalArgumentException => {
         println(r.getMessage)
       }
-//      case e: Exception => {
-//        println( " ======== Save file is corrupt ======== " )
-//      }
     }
     levels
   }

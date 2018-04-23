@@ -9,7 +9,7 @@ import general.Helper
 
 class Arena(g: Game, l: Level) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
-  val dims = (l.width,l.height)
+  lazy val dims = (l.width,l.height)
   
   // in order to read the level row by row, it has to be transposed afterwards
   lazy val squaresTransposed = Array.ofDim[Square](dims._2,dims._1)

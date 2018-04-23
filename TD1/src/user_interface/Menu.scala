@@ -291,7 +291,7 @@ class Menu(g: Game) extends Helper(g) {
         }
         // wave button
         if (onWaveButton) {
-          g.nextWave()
+          g.level.nextWave()
         } 
         // fastforward button
         if (onFastButton) {

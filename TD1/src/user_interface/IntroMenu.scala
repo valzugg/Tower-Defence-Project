@@ -61,18 +61,21 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   val progressMapButtons = Vector(first,second,third,fourth,fifth,
                            sixth,seventh,eigth,ninth,tenth,
                            eleventh,twelveth)
-  val mapTexts   = Vector("Entering the Desert" + highscore(0),
-                          "Zigzag" + highscore(1),
-                          "Going in Circles" + highscore(2),
-                          "When you least expect it" + highscore(3),
-                          "They won't stop" + highscore(4),
-                          "Happy Times" + highscore(5),
-                          "Broke." + highscore(6),
-                          "Happy Times" + highscore(7),
-                          "Happy Times" + highscore(8),
-                          "Happy Times" + highscore(9),
-                          "Strange Sightings" + highscore(10),
-                          "???" + highscore(11))
+  val allMapTexts  = Vector("Entering the Desert",
+                            "Zigzag",
+                            "Going in Circles",
+                            "When you least expect it",
+                            "They won't stop",
+                            "Happy Times",
+                            "Broke.",
+                            "Happy Times",
+                            "Happy Times",
+                            "Happy Times",
+                            "Strange Sightings",
+                            "???")
+  /**map text with its highscore if there is one*/          
+  def mapTexts = allMapTexts.take(p.available + 1).zipWithIndex
+                            .map(t => t._1 + highscore(t._2))
                            
   // saves menu buttons
   val saves = Vector(new Button("Save 1",(8,3 ),(12,3),this),

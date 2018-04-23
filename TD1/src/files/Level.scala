@@ -8,20 +8,34 @@ import user_interface._
 import objects.Wave
 import objects.Player
 import general.Helper
+import scala.collection.mutable.Buffer
 
 class Level(file: String, g: Game) {
-  lazy val fileIndex = file.filter(_.isDigit).toInt
+  lazy val fileIndex = {
+    if (file.exists(_.isDigit))
+      file.filter(_.isDigit).toInt
+    else
+      0
+  }
   
-  val waves = scala.collection.mutable.Buffer[Wave]()
+  lazy val waves = Buffer[Wave](new Wave(1,0,0,0,0,0,this,g))
+  private var waveIndex = 0
+  def currentWave = this.waves(waveIndex)
+  def isComplete = waves.forall(_.isComplete)
+  def nextWave()= {
+    if (currentWave.isComplete)
+      waveIndex += 1
+  }
+  
   lazy val arena  = new Arena(g,this)
   lazy val player = new Player(g,initMoney)
   lazy val path   = arena.path
   lazy val pathStart = arena.start
   
-  def isComplete = waves.forall(_.isComplete)
-  
   private var initMoney = 10
   private var index = 0
+  
+  override def toString = file
   
   val fileReader = new FileReader(file)
   val lineReader = new BufferedReader(fileReader)
@@ -72,10 +86,10 @@ class Level(file: String, g: Game) {
     case r: IllegalArgumentException => {
       println(r.getMessage)
     }
-    case e: Exception => {
-      println( " ======== File doesnt follow expected format ======== " )
-      g.asInstanceOf[PApplet].exit()
-    }
+//    case e: Exception => {
+//      println( " ======== File doesnt follow expected format ======== " )
+//      g.asInstanceOf[PApplet].exit()
+//    }
   }
   
   
