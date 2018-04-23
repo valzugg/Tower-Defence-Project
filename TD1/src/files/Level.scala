@@ -35,6 +35,12 @@ class Level(file: String, g: Game) {
   private var initMoney = 10
   private var index = 0
   
+  def reset() = {
+    waveIndex = 0
+    arena.resetSquares()
+    player.reset()
+  }
+  
   override def toString = file
   
   val fileReader = new FileReader(file)

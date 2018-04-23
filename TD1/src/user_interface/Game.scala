@@ -36,6 +36,7 @@ class Game extends PApplet {
   def level = currentLvl
   def levelIndex = level.fileIndex - 1
   def startLevel(l: Level) = {
+    l.reset()
     currentLvl = l
     introMenu.toggle()
   }
@@ -155,6 +156,13 @@ class Game extends PApplet {
   }
   
   override def draw() = {
+    
+    // TODO: Debug
+    if (fr%30 == 0) {
+      println("Level index: " + levelIndex + 
+              " Current level is complete: " + currentLvl.isComplete + 
+              " Current Money: " + currentLvl.player.money)
+    }
     
       // Main menu loop
     if (introMenu.isOn) {

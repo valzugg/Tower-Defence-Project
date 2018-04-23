@@ -15,6 +15,16 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   lazy val squaresTransposed = Array.ofDim[Square](dims._2,dims._1)
   lazy val squares = squaresTransposed.transpose
   
+  /** Resets the arena grid. */
+  def resetSquares() = {
+    val originalSquares = squaresTransposed.transpose
+    for (col <- 0 until dims._1) {
+      for (row <- 0 until dims._2) {
+        squares(col)(row) = originalSquares(col)(row)
+      }
+    }
+  }
+  
   // the start and end rows of the level
   var start = 0
   var end   = 0
@@ -26,7 +36,7 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   
   def apply(x: Int, y: Int) = {
     require(x >= 0 && x < aWidth)
- 
+    require(y >= 0 && y < aHeight)
     this.squares(x)(y)
   }
   

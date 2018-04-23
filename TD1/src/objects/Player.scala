@@ -7,6 +7,12 @@ class Player(g: Game, initMoney: Int) {
   var money = initMoney
   var hp    = 100
   
+  def reset() = {
+    money = initMoney
+    hp    = 100
+  }
+    
+  
   def canAfford(c: Int) = money >= c
   def pay(c: Int) = if (canAfford(c)) money -= c
   
