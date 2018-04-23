@@ -6,7 +6,7 @@ import user_interface.Game
 /** Contains some general references and constants.
  *  Made to extend other classes with. */
 class Helper(val g: Game) {
-  lazy val player = g.player
+  def player = g.player
   def gameOver = player.hp <= 0
   val sounds = g.sounds
   def arena  = g.arena

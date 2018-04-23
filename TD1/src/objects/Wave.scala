@@ -23,9 +23,13 @@ class Wave(val size: Int, val distance: Float, val speed: Double,
   var sprite: PImage = null
   
   val mobs = Array.ofDim[Mob](size)
-  for (m <- 0 until size) {
-    mobs(m) = new Mob(this,speed.toFloat,hp,g,m,mobSize.toFloat,lvl)
+  
+  def resetMobs() = {
+    for (m <- 0 until size)
+      mobs(m) = new Mob(this,speed.toFloat,hp,g,m,mobSize.toFloat,lvl)
   }
+  
+  resetMobs()
   
   def deadMobs  = mobs.filter(_.dead)
   def aliveMobs = mobs.filter(!_.dead)

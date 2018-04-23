@@ -38,7 +38,9 @@ class Level(file: String, g: Game) {
   def reset() = {
     waveIndex = 0
     arena.resetSquares()
+    arena.resetTowers()
     player.reset()
+    waves.foreach(_.resetMobs())
   }
   
   override def toString = file

@@ -157,13 +157,6 @@ class Game extends PApplet {
   
   override def draw() = {
     
-    // TODO: Debug
-    if (fr%30 == 0) {
-      println("Level index: " + levelIndex + 
-              " Current level is complete: " + currentLvl.isComplete + 
-              " Current Money: " + currentLvl.player.money)
-    }
-    
       // Main menu loop
     if (introMenu.isOn) {
       menuLvl.arena.drawArena(menuLvl.width,menuLvl.height)

@@ -32,6 +32,18 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   // keeps track of the towers in the arena
   lazy val towers = Array.ofDim[Tower](dims._1,dims._2)
   
+  /** Reset's the 'towers' grid, so that  */
+  def resetTowers() = {
+    for (col <- 0 until dims._1) {
+      for (row <- 0 until dims._2) {
+        if (squares(col)(row).isInstanceOf[Tower])
+          towers(col)(row) = squares(col)(row).asInstanceOf[Tower]
+        else 
+          towers(col)(row) = null
+      }
+    }
+  }
+  
   lazy val pathLength = path.size * sqSize
   
   def apply(x: Int, y: Int) = {
