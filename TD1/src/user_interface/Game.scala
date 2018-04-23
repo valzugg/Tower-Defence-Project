@@ -187,12 +187,23 @@ class Game extends PApplet {
     }
      // Level complete
     if (currentLvl.isComplete && !introMenu.isOn) {
-      // TODO
+      if (isFast) toggleRunSpeed()
       
+      // TODO
+      noStroke()
+      fill(100,100,150,100)
+      rect(6*sqSize,5*sqSize,12*sqSize,8*sqSize)
+      
+      fill(0,0,0,100)
+      textFont(font,34)
+      text("Level Complete" + "\n    Score: " + score, 9*sqSize-2, 8*sqSize-2)
+      textFont(font,18)
+      text("\n\n\n\n(Click anywhere to continue)", 9*sqSize-2, 8*sqSize-2)
       fill(0)
-      textFont(font,44)
-      text("Level Complete" + "\n    Score: " + score + "\n(Click anywhere to continue)", 
-           aWidth*sqSize/3, aHeight*sqSize/3)
+      textFont(font,34)
+      text("Level Complete" + "\n    Score: " + score, 9*sqSize, 8*sqSize)
+      textFont(font,18)
+      text("\n\n\n\n(Click anywhere to continue)", 9*sqSize, 8*sqSize)
     }
     
     // stops sounds so that minim doesnt give error
