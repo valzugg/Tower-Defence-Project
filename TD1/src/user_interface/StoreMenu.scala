@@ -143,7 +143,7 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
     (0 until size) foreach { i =>
       if (this.mouseOn(i)) {
         if (this.isUpgradable) {
-          // ice defence can only get range
+          // ice defence can only get range upgrades
           if (this.t.getDef.isInstanceOf[IceDefence]) {
             if (s.buyUpgrade(t,'r')) this.toggle()
           } else {

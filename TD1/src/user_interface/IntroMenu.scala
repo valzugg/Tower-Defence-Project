@@ -48,6 +48,24 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   val eleventh= new Button("11",(22,6),(1,1),this)
   val twelveth= new Button("12",(22,17),(1,1),this)
   
+  def isUnlocked(n: Int) = p.available >= n
+  
+  val progressMapButtons = Vector(first,second,third,fourth,fifth,
+                           sixth,seventh,eigth,ninth,tenth,
+                           eleventh,twelveth)
+  val mapTexts   = Vector("Entering the Desert",
+                          "Emptiness",
+                          "Going in Circles",
+                          "When you least expect it",
+                          "They won't stop",
+                          "Happy Times",
+                          "Broke.",
+                          "Happy Times",
+                          "Happy Times",
+                          "Happy Times",
+                          "Strange Sightings",
+                          "???")
+                           
   // saves menu buttons
   val save1 = new Button("Save 1",(8,3 ),(12,3),this)
   val save2 = new Button("Save 2",(8,7 ),(12,3),this)
@@ -77,19 +95,12 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     g.text("Pick A Level",11.5.toFloat*sqSize,2*sqSize)
     g.textFont(g.font,14)
     goBack.draw()
-    g.textFont(g.font,24)
-    first.draw()
-    second.draw()
-    third.draw()
-    fourth.draw()
-    fifth.draw()
-    sixth.draw()
-    seventh.draw()
-    eigth.draw()
-    ninth.draw()
-    tenth.draw()
-    eleventh.draw()
-    twelveth.draw()
+    for (i <- 0 until progressMapButtons.size) {
+      if (isUnlocked(i)) {
+        progressMapButtons(i).draw()
+        progressMapButtons(i).progressMapText(mapTexts(i))
+      }
+    }
   }
   
   def savesDraw() = {
@@ -105,12 +116,16 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   def helpDraw() = {
     g.textFont(g.font,14)
     goBack.draw()
+    g.fill(100,100,150,100)
+    g.rect(8*sqSize,sqSize,12*sqSize,18*sqSize)
     g.textFont(g.font,24)
   }
   
   def creditsDraw() = {
     g.textFont(g.font,14)
     goBack.draw()
+    g.fill(100,100,150,100)
+    g.rect(8*sqSize,sqSize,12*sqSize,18*sqSize)
     g.textFont(g.font,24)
   }
   
@@ -125,18 +140,9 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     goBack.clicking(Start)
     // The numbers as the parameters are the indexes 
     // of the levels vector in Game, with 100 added.
-    first.clicking(100)
-    second.clicking(101)
-    third.clicking(102)
-    fourth.clicking(103)
-    fifth.clicking(104)
-    sixth.clicking(105)
-    seventh.clicking(106)
-    eigth.clicking(107)
-    ninth.clicking(108)
-    tenth.clicking(109)
-    eleventh.clicking(110)
-    twelveth.clicking(111)
+    for (i <- 0 until progressMapButtons.size) {
+      progressMapButtons(i).clicking(i+100)
+    }
   }
   
   def savesClick() = {
@@ -206,6 +212,12 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
   def clicking(state: Int): Unit = {
     if (mouseOn && g.mouseButton == leftMouse) {
       i.changeState(state)
+    }
+  }
+  
+  def progressMapText(t: String) = {
+    if (mouseOn) {
+      g.text(t,pos._1*sqSize+sqSize,pos._2*sqSize+sqSize*2/3)
     }
   }
   
