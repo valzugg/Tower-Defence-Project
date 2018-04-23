@@ -17,6 +17,8 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
       toggled = true
   }
   
+  var currentSave = 1
+  
   // numbers which represent states of the menu
   val Start    = 0
   val Progress = 1

@@ -24,6 +24,7 @@ class Game extends PApplet {
   var fr = 0 // the current frame of the animation
   
   val progress = new Progress
+  progress.load(1) // loads the first slot by default
   val introMenu = new IntroMenu(this,progress)
   
   // LEVELS /////////////////////////////////////////
@@ -196,6 +197,8 @@ class Game extends PApplet {
     }
      // Level complete
     if (currentLvl.isComplete) {
+      // TODO
+      progress.save(introMenu.currentSave)
       fill(0)
       textFont(font,44)
       text("Level Complete" + "\n    Score: " + score, aWidth*sqSize/2, aHeight*sqSize/2)
