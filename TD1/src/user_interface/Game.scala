@@ -34,6 +34,7 @@ class Game extends PApplet {
                        new Level("lvls/3.lvl", this))
   private var currentLvl = levels(0)
   def level = currentLvl
+  def levelIndex = level.fileIndex - 1
   def startLevel(l: Level) = {
     currentLvl = l
     introMenu.toggle()
@@ -42,7 +43,8 @@ class Game extends PApplet {
   
   
   /** Calculates the score for the current level from the total distance all the mobs moved,
-   *  and the the health the player has at the end.*/
+   *  and the the health the player has at the end. 
+   *  The maximum score is 1000. (though impossible)*/
   def score = {
     val pathLen = arena.pathLength
     val mobAmount = currentLvl.waves.flatMap(_.mobs).size
@@ -83,7 +85,6 @@ class Game extends PApplet {
   ////////////////////////////////////////////////////
   
   // IMAGES //////////////////////////////////////////
-  val introImg   = Array.ofDim[PImage](1)
   val highlig    = Array.ofDim[PImage](1)
   val muteButton = Array.ofDim[PImage](2)
   val obstacles = Array.ofDim[PImage](8)
@@ -128,7 +129,6 @@ class Game extends PApplet {
     
     frameRate(60)
     
-    introImg(0)  = loadImage("imgs/intro.png")
     highlig(0)   = loadImage("imgs/highlight.png")
     muteButton(0) = loadImage("imgs/unmuted.png")
     muteButton(1) = loadImage("imgs/muted.png")
@@ -198,7 +198,7 @@ class Game extends PApplet {
      // Level complete
     if (currentLvl.isComplete) {
       // TODO
-      progress.save(introMenu.currentSave)
+      
       fill(0)
       textFont(font,44)
       text("Level Complete" + "\n    Score: " + score, aWidth*sqSize/2, aHeight*sqSize/2)
@@ -222,6 +222,10 @@ class Game extends PApplet {
     }
     
     if (currentLvl.isComplete) {
+      if (levelIndex == progress.available) 
+        progress.unlock()
+      progress.setHighscore(levelIndex,score)
+      progress.save(introMenu.currentSave)
       introMenu.toggle()
       introMenu.changeState(introMenu.Progress)
     }

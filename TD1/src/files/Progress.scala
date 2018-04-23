@@ -1,21 +1,34 @@
 package files
 
 import java.io._
-import scala.io.Source
 
 class Progress(i: Int = 0) {
   private var saveNumber = 1 // 1 ... 4
   private var unlocked = i   // 0 ... 11
   def available = unlocked
   def unlock() = unlocked += 1
+  def unlock(n: Int) = unlocked = n
   
-  def save(n: Int) = {
-    val file = new File("saves/" + n + ".prog")
-    val bw = new PrintWriter(new FileWriter(file))
-    bw.write(this.available)
-    bw.close()
+  private val highscores = Array.fill(12)(0)
+  def highscore(i: Int)  = highscores(i)
+  def setHighscore(i: Int, score: Int) = {
+    if (score > highscores(i))
+      highscores(i) = score
   }
   
+  /** Saving progress onto the given file number. */
+  def save(n: Int) = {
+    val file = new File("saves/" + n + ".prog")
+    val pw = new PrintWriter(file)
+    pw.write(this.available.toString)
+    for (i <- 0 until available) {
+      pw.write("\n" + highscore(i))
+    }
+    highscores.foreach(x => println(x + " "))
+    pw.close()
+  }
+  
+  /** Loading a save of a given file number. */
   def load(n: Int) = {
     require(n >= 1 && n <= 4,"No such save exists.")
     saveNumber = n
@@ -24,21 +37,27 @@ class Progress(i: Int = 0) {
     val fileReader = new FileReader(file)
     val lineReader = new BufferedReader(fileReader)
     var line: String = null
+    var levels: Int  = 0
     
     try {
       line = lineReader.readLine().trim()
-      require(line.toInt >= 0 && line.toInt <= 11,
-              "No such level exists, save corrupt.")
-      
+      levels = line.toInt
+      require(levels >= 0 && levels <= 11,
+              "No such level exists" + " (" + line + ") " + ", save corrupt.")
+      unlock(line.toInt)
+      for (i <- 0 until available) {
+        line = lineReader.readLine().trim()
+        highscores(i) = line.toInt
+      }
     } catch {
       case r: IllegalArgumentException => {
         println(r.getMessage)
       }
-      case e: Exception => {
-        println( " ======== Save file is corrupt ======== " )
-      }
+//      case e: Exception => {
+//        println( " ======== Save file is corrupt ======== " )
+//      }
     }
-    line.toInt
+    levels
   }
   
 }

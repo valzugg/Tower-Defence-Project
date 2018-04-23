@@ -50,29 +50,35 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   val eleventh= new Button("11",(22,6),(1,1),this)
   val twelveth= new Button("12",(22,17),(1,1),this)
   
-  def isUnlocked(n: Int) = p.available >= n
+  def isUnlocked(i: Int) = p.available >= i
+  
+  def highscore(i: Int) = {
+    val hs = p.highscore(i)
+    if (p.highscore(i) == 0) "" 
+      else "\nHighscore: " + hs.toString
+  }
   
   val progressMapButtons = Vector(first,second,third,fourth,fifth,
                            sixth,seventh,eigth,ninth,tenth,
                            eleventh,twelveth)
-  val mapTexts   = Vector("Entering the Desert",
-                          "Emptiness",
-                          "Going in Circles",
-                          "When you least expect it",
-                          "They won't stop",
-                          "Happy Times",
-                          "Broke.",
-                          "Happy Times",
-                          "Happy Times",
-                          "Happy Times",
-                          "Strange Sightings",
-                          "???")
+  val mapTexts   = Vector("Entering the Desert" + highscore(0),
+                          "Zigzag" + highscore(1),
+                          "Going in Circles" + highscore(2),
+                          "When you least expect it" + highscore(3),
+                          "They won't stop" + highscore(4),
+                          "Happy Times" + highscore(5),
+                          "Broke." + highscore(6),
+                          "Happy Times" + highscore(7),
+                          "Happy Times" + highscore(8),
+                          "Happy Times" + highscore(9),
+                          "Strange Sightings" + highscore(10),
+                          "???" + highscore(11))
                            
   // saves menu buttons
-  val save1 = new Button("Save 1",(8,3 ),(12,3),this)
-  val save2 = new Button("Save 2",(8,7 ),(12,3),this)
-  val save3 = new Button("Save 3",(8,11),(12,3),this)
-  val save4 = new Button("Save 4",(8,15),(12,3),this)
+  val saves = Vector(new Button("Save 1",(8,3 ),(12,3),this),
+                     new Button("Save 2",(8,7 ),(12,3),this),
+                     new Button("Save 3",(8,11),(12,3),this),
+                     new Button("Save 4",(8,15),(12,3),this))
   
   val goBack = new Button("< Back to Main Menu",(1,1),(5,2),this)
   
@@ -99,8 +105,14 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     goBack.draw()
     for (i <- 0 until progressMapButtons.size) {
       if (isUnlocked(i)) {
-        progressMapButtons(i).draw()
-        progressMapButtons(i).progressMapText(mapTexts(i))
+        val hs = p.highscore(i)
+        if (hs != 0) {
+          progressMapButtons(i).draw(0,0,hs/4)
+          progressMapButtons(i).progressMapText(mapTexts(i))
+        } else {
+          progressMapButtons(i).draw(200,100,0)
+          progressMapButtons(i).progressMapText(mapTexts(i))
+        }
       }
     }
   }
@@ -109,10 +121,7 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     g.textFont(g.font,14)
     goBack.draw()
     g.textFont(g.font,24)
-    save1.draw()
-    save2.draw()
-    save3.draw()
-    save4.draw()
+    saves.foreach(_.draw())
   }
   
   def helpDraw() = {
@@ -143,12 +152,19 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     // The numbers as the parameters are the indexes 
     // of the levels vector in Game, with 100 added.
     for (i <- 0 until progressMapButtons.size) {
-      progressMapButtons(i).clicking(i+100)
+      if (isUnlocked(i))
+        progressMapButtons(i).clicking(i+100)
     }
   }
   
   def savesClick() = {
     goBack.clicking(Start)
+    for (i <- 0 until 4) {
+      if (saves(i).mouseOn) {
+        p.load(i + 1)
+        saves(i).clicking(Start)
+      }
+    }
   }
   
   def helpClick() = {
@@ -205,6 +221,24 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
     } else {
       g.noStroke()
       g.fill(100,100,150,100)
+      g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
+    }
+    g.fill(0)
+    g.text(text,pos._1*sqSize + (size._1*sqSize/6),pos._2*sqSize + (size._2*sqSize*3/5))
+  }
+  
+  def draw(col: (Int,Int,Int)) = {
+    if (mouseOn) {
+      g.noStroke()
+      g.fill(0,0,100,100)
+      g.rect(pos._1*sqSize - 2,pos._2*sqSize - 2,size._1*sqSize,size._2*sqSize)
+      g.fill(200,200,255,150)
+      g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
+      g.fill(0,0,0,100)
+      g.text(text,pos._1*sqSize + (size._1*sqSize/6) - 2,pos._2*sqSize + (size._2*sqSize*3/5) - 2)
+    } else {
+      g.noStroke()
+      g.fill(col._1,col._2,col._3,100)
       g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
     }
     g.fill(0)

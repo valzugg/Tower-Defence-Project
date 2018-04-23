@@ -10,6 +10,7 @@ import objects.Player
 import general.Helper
 
 class Level(file: String, g: Game) {
+  lazy val fileIndex = file.filter(_.isDigit).toInt
   
   val waves = scala.collection.mutable.Buffer[Wave]()
   lazy val arena  = new Arena(g,this)
@@ -60,7 +61,7 @@ class Level(file: String, g: Game) {
     line = lineReader.readLine()
     
     // create mob waves
-    while( line != null ) { 
+    while( line != null && line != "//") { 
       val l = line.split("_").map(_.trim)
       waves += new Wave(l(0).toInt,l(1).toFloat,l(2).toFloat,l(3).toInt,
                         l(4).toFloat,l(5).toInt,this,g)
