@@ -20,6 +20,7 @@ class Tower(x: Int, y: Int) extends Square {
   
   private var defence: Option[Defence] = None
   
+  def removeDef() = defence = None
   def hasDef = !defence.isEmpty
   def getDef = defence.get
   
@@ -30,7 +31,7 @@ class Tower(x: Int, y: Int) extends Square {
   }
   
   def doStuff() = {
-    if (defence.isDefined) defence.get.doStuff()
+    if (hasDef) defence.get.doStuff()
   }
   
 }

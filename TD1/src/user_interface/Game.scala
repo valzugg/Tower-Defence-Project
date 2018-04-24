@@ -36,7 +36,7 @@ class Game extends PApplet {
   def level = currentLvl
   def levelIndex = level.fileIndex - 1
   def startLevel(l: Level) = {
-    l.reset()
+    if (l.isComplete) l.reset()
     currentLvl = l
     introMenu.toggle()
   }
@@ -163,7 +163,7 @@ class Game extends PApplet {
       introMenu.drawStuff()
       
       // Main game loop
-    } else if (!gameOver) {
+    } else if (!gameOver && !currentLvl.isComplete) {
       // draws the tiles of the arena
       arena.drawArena(aWidth,aHeight)
     
@@ -180,16 +180,16 @@ class Game extends PApplet {
       fr += 1
       
       // Game over
-    } else {
+    } else if (gameOver && !introMenu.isOn) {
       fill(0) // TODO
       textFont(font,44)
       text("GAME OVER", aWidth*sqSize/2, aHeight*sqSize/2)
-    }
-     // Level complete
-    if (currentLvl.isComplete && !introMenu.isOn) {
+    } else if (currentLvl.isComplete && !introMenu.isOn) {
+      arena.drawArena(aWidth,aHeight)
+      arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
+      
       if (isFast) toggleRunSpeed()
       
-      // TODO
       noStroke()
       fill(100,100,150,100)
       rect(6*sqSize,5*sqSize,12*sqSize,8*sqSize)
