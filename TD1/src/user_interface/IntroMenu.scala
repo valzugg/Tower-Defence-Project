@@ -55,7 +55,7 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   def highscore(i: Int) = {
     val hs = p.highscore(i)
     if (p.highscore(i) == 0) "" 
-      else "\nHighscore: " + hs.toString
+    else "\nHighscore: " + hs.toString
   }
   
   val progressMapButtons = Vector(first,second,third,fourth,fifth,
@@ -201,6 +201,36 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     }                  // starts the level of the index
   }
   
+  private var pauseMenu = false
+  def pauseIsOn = pauseMenu
+  def togglePause() = {
+    if (pauseMenu)
+      pauseMenu = false
+    else 
+      pauseMenu = true
+  }
+  
+  // TODO: Uusi luokka vai metodit?
+  def drawPauseMenu() = {
+    ???
+  }
+  
+  def clickingPauseMenu() = {
+    ???
+  }
+  
+  
+}
+
+
+class PauseMenu(g: Game, p: Progress) extends IntroMenu(g,p) {
+  override def clickingStuff() = {
+    ???
+  }
+  override def drawStuff() = {
+    ???
+  }
+  
 }
 
 /**A Button class to simplify the menu.
@@ -211,16 +241,10 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
   def mouseOn = (mouseX > pos._1 * sqSize) && (mouseY > pos._2 * sqSize) &&
                 (mouseX < pos._1 * sqSize + size._1 * sqSize) && 
                 (mouseY < pos._2 * sqSize + size._2 * sqSize)
-  
+                
   def draw() = {
     if (mouseOn) {
-      g.noStroke()
-      g.fill(0,0,100,100)
-      g.rect(pos._1*sqSize - 2,pos._2*sqSize - 2,size._1*sqSize,size._2*sqSize)
-      g.fill(200,200,255,150)
-      g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
-      g.fill(0,0,0,100)
-      g.text(text,pos._1*sqSize + (size._1*sqSize/6) - 2,pos._2*sqSize + (size._2*sqSize*3/5) - 2)
+      mouseOnDraw()
     } else {
       g.noStroke()
       g.fill(100,100,150,100)
@@ -230,15 +254,10 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
     g.text(text,pos._1*sqSize + (size._1*sqSize/6),pos._2*sqSize + (size._2*sqSize*3/5))
   }
   
+  /** Draw method except with a specified color when the mouse isn't on the button. */
   def draw(col: (Int,Int,Int)) = {
     if (mouseOn) {
-      g.noStroke()
-      g.fill(0,0,100,100)
-      g.rect(pos._1*sqSize - 2,pos._2*sqSize - 2,size._1*sqSize,size._2*sqSize)
-      g.fill(200,200,255,150)
-      g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
-      g.fill(0,0,0,100)
-      g.text(text,pos._1*sqSize + (size._1*sqSize/6) - 2,pos._2*sqSize + (size._2*sqSize*3/5) - 2)
+      mouseOnDraw()
     } else {
       g.noStroke()
       g.fill(col._1,col._2,col._3,100)
@@ -246,6 +265,17 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
     }
     g.fill(0)
     g.text(text,pos._1*sqSize + (size._1*sqSize/6),pos._2*sqSize + (size._2*sqSize*3/5))
+  }
+  
+  /** The "if (mouseOn)" section of the draw() method for saving lines. */
+  private def mouseOnDraw() = {
+    g.noStroke()
+    g.fill(0,0,100,100)
+    g.rect(pos._1*sqSize - 2,pos._2*sqSize - 2,size._1*sqSize,size._2*sqSize)
+    g.fill(200,200,255,150)
+    g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
+    g.fill(0,0,0,100)
+    g.text(text,pos._1*sqSize + (size._1*sqSize/6) - 2,pos._2*sqSize + (size._2*sqSize*3/5) - 2)
   }
   
   def clicking(state: Int): Unit = {

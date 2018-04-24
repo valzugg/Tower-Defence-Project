@@ -29,9 +29,8 @@ class Game extends PApplet {
   
   // LEVELS /////////////////////////////////////////
   val menuLvl = new Level("lvls/menu.lvl", this)
-  val levels  = Vector(new Level("lvls/1.lvl", this),
-                       new Level("lvls/2.lvl", this),
-                       new Level("lvls/3.lvl", this))
+  val levels  = (0 to progress.lastLevelIndex) // creates all the 12 levels
+                .map(i => new Level("lvls/" + (i + 1) + ".lvl", this)).toVector
   private var currentLvl = levels(0)
   def level = currentLvl
   def levelIndex = level.fileIndex - 1
