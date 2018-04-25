@@ -5,7 +5,7 @@ import java.io._
 
 class Progress(i: Int = 0) {
   private var saveNumber = 1 // 1 ... 4
-  private var unlocked = i   // 0 ... 11
+  private var unlocked = i   // 0 ... 12
   private def nowUnlocked = unlocked
   // indicates whether or not the player has completed all the levels
   def hasFinished = nowUnlocked > lastLevelIndex + 1
@@ -24,8 +24,7 @@ class Progress(i: Int = 0) {
   
   /** Saving progress onto the given file number. */
   def save(n: Int) = {
-    val file = new File("saves/" + n + ".prog")
-    val pw = new PrintWriter(file)
+    val pw = new PrintWriter(new File("saves/" + n + ".prog"))
     pw.write(nowUnlocked.toString)
     for (i <- 0 until available) pw.write("\n" + highscore(i))
     pw.close()
@@ -45,10 +44,7 @@ class Progress(i: Int = 0) {
     try {
       line = lineReader.readLine().trim()
       levels = line.toInt
-      require( if (!hasFinished)
-                 levels >= 0 && levels <= lastLevelIndex
-               else 
-                 levels >= 0 && levels <= lastLevelIndex + 1,
+      require(levels >= 0 && levels <= lastLevelIndex + 1,
               "No such level exists" + " (" + line + ") " + ",save corrupt.")
       // unlocks correct levels
       unlock(levels)
@@ -59,8 +55,17 @@ class Progress(i: Int = 0) {
       if (!hasFinished)
         for (i <- available to lastLevelIndex) highscores(i) = 0
     } catch {
+      case n: NullPointerException => {
+        println("A highscore missing, save corrupt.")
+        n.printStackTrace()
+      }
+      case f: NumberFormatException => {
+        println("Invalid characters used, save corrupt.")
+        f.printStackTrace()
+      }
       case r: IllegalArgumentException => {
         println(r.getMessage)
+        r.printStackTrace()
       }
     }
   }
