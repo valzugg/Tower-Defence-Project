@@ -105,6 +105,7 @@ class Game extends PApplet {
   
   def isPaused = runSpeed == 0
   def togglePause() = {
+    introMenu.togglePause()
     if (isPaused)
       rate = 1
     else
@@ -165,12 +166,6 @@ class Game extends PApplet {
       // Main game loop
     } else if (!gameOver && !currentLvl.isComplete) {
       
-      if (introMenu.pauseIsOn) {
-        introMenu.drawPauseMenu()
-      } else {
-        fr += 1
-      }
-      
       // draws the tiles of the arena
       arena.drawArena(aWidth,aHeight)
     
@@ -185,31 +180,25 @@ class Game extends PApplet {
       // handles the HUD
       menu.doStuff()
       
+      if (isPaused) {
+        introMenu.drawPauseMenu()
+      } else {
+        fr += 1
+      }
+      
       // Game over
     } else if (gameOver && !introMenu.isOn) {
-      fill(0) // TODO
-      textFont(font,44)
-      text("GAME OVER", aWidth*sqSize/2, aHeight*sqSize/2)
+      arena.drawArena(aWidth,aHeight)
+      level.currentWave.doStuff()  
+      menu.doStuff()
+      if (isFast) toggleRunSpeed()
+      bigText("   Game Over")
     } else if (currentLvl.isComplete && !introMenu.isOn) {
       arena.drawArena(aWidth,aHeight)
       arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
-      
+      menu.doStuff()
       if (isFast) toggleRunSpeed()
-      
-      noStroke()
-      fill(100,100,150,100)
-      rect(6*sqSize,5*sqSize,12*sqSize,8*sqSize)
-      
-      fill(0,0,0,100)
-      textFont(font,34)
-      text("Level Complete" + "\n    Score: " + score, 9*sqSize-2, 8*sqSize-2)
-      textFont(font,18)
-      text("\n\n\n\n(Click anywhere to continue)", 9*sqSize-2, 8*sqSize-2)
-      fill(0)
-      textFont(font,34)
-      text("Level Complete" + "\n    Score: " + score, 9*sqSize, 8*sqSize)
-      textFont(font,18)
-      text("\n\n\n\n(Click anywhere to continue)", 9*sqSize, 8*sqSize)
+      bigText("Level Complete" + "\n    Score: " + score)
     }
     
     // stops sounds so that minim doesnt give error
@@ -219,26 +208,45 @@ class Game extends PApplet {
     
   }
   
+  def bigText(t: String) = {
+    noStroke()
+    fill(100,100,150,100)
+    rect(6*sqSize,5*sqSize,12*sqSize,8*sqSize)
+    
+    fill(0,0,0,100)
+    textFont(font,34)
+    text(t, 9*sqSize-2, 8*sqSize-2)
+    textFont(font,18)
+    text("\n\n\n\n(Click anywhere to continue)", 9*sqSize-2, 8*sqSize-2)
+    fill(0)
+    textFont(font,34)
+    text(t, 9*sqSize, 8*sqSize)
+    textFont(font,18)
+    text("\n\n\n\n(Click anywhere to continue)", 9*sqSize, 8*sqSize)
+  }
   
   
   
   override def mousePressed() {
-    if (introMenu.isOn) { // TODO
+    if (introMenu.isOn) {
       introMenu.clickingStuff()
-    } else if (introMenu.pauseIsOn) {
+    } else if (isPaused) {
       introMenu.clickingPauseMenu()
-    } else if (!currentLvl.isComplete) {
+    } else if (!currentLvl.isComplete && !gameOver) {
       menu.clickingStuff()
-    }
-    
-    if (currentLvl.isComplete && !introMenu.isOn) {
+    } else if (currentLvl.isComplete) {
       if (levelIndex == progress.available && !progress.hasFinished) 
         progress.unlock()
       progress.setHighscore(levelIndex,score)
       progress.save(introMenu.currentSave)
       introMenu.toggle()
       introMenu.changeState(introMenu.Progress)
+    } else if (gameOver) {
+      level.reset()
+      introMenu.toggle()
+      introMenu.changeState(introMenu.Progress)
     }
+    
   }
   
   

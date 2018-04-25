@@ -176,7 +176,6 @@ class Arena(g: Game, l: Level) extends Helper(g) {
           g.image(g.squares(4), col * sqSize + sDistTower, row * sqSize + sDistTower, sqSize, sqSize)
           g.noTint()
           g.image(g.squares(4), col * sqSize, row * sqSize, sqSize, sqSize)
-          sq.asInstanceOf[Tower].doStuff()
         }
       }
     }

@@ -132,6 +132,8 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     g.fill(100,100,150,100)
     g.rect(8*sqSize,sqSize,12*sqSize,18*sqSize)
     g.textFont(g.font,24)
+    
+    // TODO: Text
   }
   
   def creditsDraw() = {
@@ -140,6 +142,8 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     g.fill(100,100,150,100)
     g.rect(8*sqSize,sqSize,12*sqSize,18*sqSize)
     g.textFont(g.font,24)
+    
+    // TODO: Text
   }
   
   def startClick() = {
@@ -204,30 +208,40 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   def pauseIsOn = pauseMenu
   def togglePause() = {
     if (pauseMenu) {
-      g.togglePause()
       pauseMenu = false
     } else {
-      g.togglePause()
       pauseMenu = true
-    } // TODO
+    }
   }
   
   // pause menu buttons
   val continueButton = new Button("Continue Game",(6,3 ),(16,3),this)
   val progMapButton  = new Button("Back to Menu", (6,7 ),(16,3),this)
-  val helpButton2    = new Button("Help",         (6,11),(16,3),this)
+  val restartButton  = new Button("Restart Level",(6,11),(16,3),this)
+  val helpButton2    = new Button("Help",         (6,15),(16,3),this)
   
   def drawPauseMenu() = {
+    g.textFont(g.font,24)
     continueButton.draw()
     progMapButton.draw()
+    restartButton.draw()
     helpButton2.draw()
   }
   
   def clickingPauseMenu() = {
-    if (continueButton.mouseOn)
-      togglePause()
-    progMapButton.clicking(Progress)
-    helpButton2.clicking(Help)
+    if (g.mouseButton == leftMouse) {
+      if (continueButton.mouseOn)
+        g.togglePause()
+      else if (restartButton.mouseOn) {
+        g.level.reset()
+        g.togglePause()
+      } else if (progMapButton.mouseOn || helpButton2.mouseOn) {
+        g.togglePause()
+        this.toggle()
+        progMapButton.clicking(Progress)
+        helpButton2.clicking(Help)
+      }
+    }
   }
   
   

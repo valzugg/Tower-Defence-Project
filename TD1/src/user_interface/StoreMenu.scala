@@ -111,14 +111,13 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
   def doStuff() = {
     s.g.fill(150,150,150,100)
     s.g.rect(pos._1,pos._2,sqSize,size*sqSize)
-    s.g.noFill()
+    s.g.fill(80,80,250,80)
     s.g.rect(t.pos._1 - sqSize/2,t.pos._2 - sqSize/2,sqSize,sqSize)
     
     if (mouseOn) {
       s.g.noStroke
       s.g.fill(150,150,150)
       s.g.rect(pos._1 + 1,pos._2 + mouseIndex*sqSize + 1,sqSize - 1,sqSize - 1)
-      s.g.stroke(0)
     }
     
     (0 until size) foreach { i =>

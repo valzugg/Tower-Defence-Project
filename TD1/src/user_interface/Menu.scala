@@ -22,33 +22,22 @@ class Menu(g: Game) extends Helper(g) {
   val infoScreen = new InfoScreen(this)
   
   def doStuff() = {
+    game.noStroke()
     
     game.image(g.menuS(0),sqSize*aWidth,0,sqSize*mWidth,sqSize*aHeight)
-    
-    
-    game.textFont(g.font,16)
-    game.fill(0)  
-    game.text("Val's Tower Defence",sqSize*aWidth+ 5,21)
-    game.fill(46, 204, 113)
-    game.text("Val's Tower Defence",sqSize*aWidth+ 4,20)
     game.fill(0) 
     game.textFont(g.font,20)
-    game.text("Money:   " + player.money,sqSize*aWidth+ 9,61)
+    game.text(" Money:   " + player.money,sqSize*aWidth+ 9,51)
     game.fill(255, 255, 0)
-    game.text("Money:   " + player.money,sqSize*aWidth+ 8,60)
+    game.text(" Money:   " + player.money,sqSize*aWidth+ 8,50)
     game.fill(0) 
     game.textFont(g.font,22)
-    game.text("HP:       " + player.hp,sqSize*aWidth+ 9,91)
+    game.text("   HP:    " + player.hp,sqSize*aWidth+ 9,81)
     game.fill(255, 0, 0)
-    game.text("HP:       " + player.hp,sqSize*aWidth+ 8,90)
-    ////////////////////////////////////////////////////////
-    
-    game.stroke(1)
-    
+    game.text("   HP:    " + player.hp,sqSize*aWidth+ 8,80)
     
     infoScreen.doStuff()
       
-    
     drawWaveButton()
     drawFastButton()
     drawMuteButton()
@@ -117,7 +106,7 @@ class Menu(g: Game) extends Helper(g) {
                      (mouseY < fastButtonPos._2 + fastButtonSize._2)
                 
   def drawFastButton() = {
-    var color = (50,150,50)
+    var color = (100,100,100)
     var text  = "     >  "
     if (g.isFast) {
       color = (0,0,150)
@@ -219,7 +208,7 @@ class Menu(g: Game) extends Helper(g) {
           infoScreen.title("Obstacle")
           infoScreen.description("Cannot Buy \nAnything Here")
         }
-        case Tower(_,_) => {
+        case _ => {
           val t = sq.asInstanceOf[Tower]
           if (!t.hasDef) {
             infoScreen.title("Empty Tower")
@@ -295,11 +284,7 @@ class Menu(g: Game) extends Helper(g) {
           g.togglePause()
         } 
       }
-      
-      if (g.level.isComplete) {
-        
-      }
-      
+
     }
     
   }

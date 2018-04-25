@@ -3,10 +3,10 @@ package map
 
 import objects.Defence
 
-case class Tower(x: Int, y: Int) extends Square {
+class Tower(x: Int, y: Int) extends Square {
   val i = 2
   var mouse = false
-  val sqSize = 40 // TODO: how to get a reference to helper here?
+  val sqSize = 40 //couldn't figure how to get a reference to helper here
   val pos = (x*sqSize + sqSize.toFloat/2,y*sqSize + sqSize.toFloat/2)
   val basic = false
   
