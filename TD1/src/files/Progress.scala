@@ -1,3 +1,4 @@
+/**@author Valtteri Kortteisto */
 package files
 
 import java.io._
@@ -7,7 +8,7 @@ class Progress(i: Int = 0) {
   private var unlocked = i   // 0 ... 11
   private def nowUnlocked = unlocked
   // indicates whether or not the player has completed all the levels
-  private def hasFinished = nowUnlocked > lastLevelIndex
+  def hasFinished = nowUnlocked > lastLevelIndex + 1
   def available = if (hasFinished) unlocked - 1 else unlocked 
   def unlock() = unlocked += 1
   private def unlock(n: Int) = unlocked = n
@@ -15,7 +16,7 @@ class Progress(i: Int = 0) {
   val lastLevelIndex = 11
   
   private val highscores = Array.fill(lastLevelIndex+1)(0)
-  def highscore(i: Int)  = highscores(i) // TODO: viimeisen levelin highscore näkyviin
+  def highscore(i: Int)  = highscores(i)
   def setHighscore(i: Int, score: Int) = {
     if (score > highscores(i))
       highscores(i) = score
@@ -26,10 +27,7 @@ class Progress(i: Int = 0) {
     val file = new File("saves/" + n + ".prog")
     val pw = new PrintWriter(file)
     pw.write(nowUnlocked.toString)
-    if (hasFinished)
-      for (i <- 0 to    available) pw.write("\n" + highscore(i))
-    else
-      for (i <- 0 until available) pw.write("\n" + highscore(i))
+    for (i <- 0 until available) pw.write("\n" + highscore(i))
     pw.close()
   }
   
@@ -47,12 +45,15 @@ class Progress(i: Int = 0) {
     try {
       line = lineReader.readLine().trim()
       levels = line.toInt
-      require(levels >= 0 && levels <= lastLevelIndex + 1,
-              "No such level exists" + " (" + line + ") " + ", save corrupt.")
+      require( if (!hasFinished)
+                 levels >= 0 && levels <= lastLevelIndex
+               else 
+                 levels >= 0 && levels <= lastLevelIndex + 1,
+              "No such level exists" + " (" + line + ") " + ",save corrupt.")
       // unlocks correct levels
-      if (levels > lastLevelIndex) unlock(levels - 1) else unlock(levels)
+      unlock(levels)
       // sets highscores
-      for (i <- 0 until levels) {
+      for (i <- 0 until available) {
         highscores(i) = lineReader.readLine().trim().toInt
       }
       if (!hasFinished)
