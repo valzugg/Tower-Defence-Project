@@ -103,8 +103,9 @@ class Game extends PApplet {
       rate = fast
   }
   
+  def isPaused = runSpeed == 0
   def togglePause() = {
-    if (runSpeed == 0)
+    if (isPaused)
       rate = 1
     else
       rate = 0
@@ -163,6 +164,13 @@ class Game extends PApplet {
       
       // Main game loop
     } else if (!gameOver && !currentLvl.isComplete) {
+      
+      if (introMenu.pauseIsOn) {
+        introMenu.drawPauseMenu()
+      } else {
+        fr += 1
+      }
+      
       // draws the tiles of the arena
       arena.drawArena(aWidth,aHeight)
     
@@ -176,7 +184,6 @@ class Game extends PApplet {
       
       // handles the HUD
       menu.doStuff()
-      fr += 1
       
       // Game over
     } else if (gameOver && !introMenu.isOn) {
@@ -218,6 +225,8 @@ class Game extends PApplet {
   override def mousePressed() {
     if (introMenu.isOn) { // TODO
       introMenu.clickingStuff()
+    } else if (introMenu.pauseIsOn) {
+      introMenu.clickingPauseMenu()
     } else if (!currentLvl.isComplete) {
       menu.clickingStuff()
     }

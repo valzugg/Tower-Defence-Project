@@ -93,11 +93,13 @@ class Level(file: String, g: Game) {
   } catch {
     case r: IllegalArgumentException => {
       println(r.getMessage)
+      r.printStackTrace()
     }
-//    case e: Exception => {
-//      println( " ======== File doesnt follow expected format ======== " )
-//      g.asInstanceOf[PApplet].exit()
-//    }
+    case e: Exception => {
+      println( " ======== File doesnt follow expected format ======== " )
+      e.printStackTrace()
+      g.asInstanceOf[PApplet].exit()
+    }
   }
   
   

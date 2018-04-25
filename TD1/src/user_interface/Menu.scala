@@ -107,7 +107,7 @@ class Menu(g: Game) extends Helper(g) {
     }
   }
   /////////////////////////////////////////////////////////////////////////////////////////
-  // TODO: button luokka
+  
   // FASTFORWARD BUTTON //////////////////////////////////////////////////////////////////////
   val fastButtonPos = (aWidth*sqSize + sqSize/2,sqSize*12 + sqSize)
   val fastButtonSize = (sqSize*3,sqSize)
@@ -191,23 +191,6 @@ class Menu(g: Game) extends Helper(g) {
   }
   
   
-  /** What happens when the mouse is over a tower on the arena. */
-  def mouseTower() = {
-    if (!onMenu && mouseSq.isInstanceOf[Tower]) {
-      val t = mouseSq.asInstanceOf[Tower]
-      if (!t.hasDef) {
-        infoScreen.title("Empty Tower")
-        infoScreen.description("Click to see\nDefences")
-      } else if (t.getDef.isInstanceOf[Defence]) {
-        val d = t.getDef.asInstanceOf[Defence]
-        infoScreen.title(d.title)
-        infoScreen.description(d.description)
-        infoScreen.stats(d.damage.toInt,d.range,d.speed)
-        //infoScreen.cost(d.cost)
-      } 
-    }
-  }
-  
   def mouseStoreMenu() = {
     if (storeMenu != null && storeMenu.mouseOn) {
       val c = storeMenu.mouseCell
@@ -218,41 +201,51 @@ class Menu(g: Game) extends Helper(g) {
     }
   }
   
-  def mouseEmpty() = {
-    if (!onMenu && mouseSq.isInstanceOf[Empty]) {
-      infoScreen.title("Empty Tile")
-      infoScreen.description("Click to \nBuy Tower")
-      infoScreen.cost(store.towerCost)
+  /** Decides what happens in the infoScreen when the mouse is over the arena. */
+  def mouseArena() = {
+    if (!onMenu) {
+     val sq = mouseSq
+     sq match {
+        case Empty(_,_) => {
+          infoScreen.title("Empty Tile")
+          infoScreen.description("Click to \nBuy Tower")
+          infoScreen.cost(store.towerCost)
+        }
+        case Path(_,_) => {
+          infoScreen.title("Path")
+          infoScreen.description("Cannot Buy \nAnything Here")
+        }
+        case Obstacle(_,_) => {
+          infoScreen.title("Obstacle")
+          infoScreen.description("Cannot Buy \nAnything Here")
+        }
+        case Tower(_,_) => {
+          val t = sq.asInstanceOf[Tower]
+          if (!t.hasDef) {
+            infoScreen.title("Empty Tower")
+            infoScreen.description("Click to see\nDefences")
+          } else if (t.getDef.isInstanceOf[Defence]) {
+            val d = t.getDef.asInstanceOf[Defence]
+            infoScreen.title(d.title)
+            infoScreen.description(d.description)
+            infoScreen.stats(d.damage.toInt,d.range,d.speed)
+          }
+        }
+      }
     }
   }
   
-  def mousePath() = {
-    if (!onMenu && mouseSq.isInstanceOf[Path]) {
-      infoScreen.title("Path")
-      infoScreen.description("Click to Buy\nTrap")
-    }
-  }
-  
-  def mouseObs() = {
-    if (!onMenu && mouseSq.isInstanceOf[Obstacle]) {
-      infoScreen.title("Obstacle")
-      infoScreen.description("Cannot Buy \nAnything Here")
-    }
-  }
-  
-  
+  /** Writes the text on the infoScreen. */
   def infoScreenText() = {
     if (storeMenu != null && storeMenu.mouseOn) {
       mouseStoreMenu()
     } else {
-      mouseTower()
-      mouseEmpty()
-      mousePath()
-      mouseObs()
+      mouseArena()
     }
   }
   
- 
+  /** Decides what happens with clicks in the game.
+   *  A bit of a mess, could have been done more in separate methods.*/
   def clickingStuff() = {
     
     if (game.mouseButton == leftMouse) {

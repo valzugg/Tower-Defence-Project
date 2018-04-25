@@ -74,8 +74,7 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
                             "Strange Sightings",
                             "???")
   /**map text with its highscore if there is one*/          
-  def mapTexts = allMapTexts.take(p.available + 1).zipWithIndex
-                            .map(t => t._1 + highscore(t._2))
+  def mapTexts(i: Int) = allMapTexts(i) + highscore(i)
                            
   // saves menu buttons
   val saves = Vector(new Button("Save 1",(8,3 ),(12,3),this),
@@ -204,36 +203,38 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   private var pauseMenu = false
   def pauseIsOn = pauseMenu
   def togglePause() = {
-    if (pauseMenu)
+    if (pauseMenu) {
+      g.togglePause()
       pauseMenu = false
-    else 
+    } else {
+      g.togglePause()
       pauseMenu = true
+    } // TODO
   }
   
-  // TODO: Uusi luokka vai metodit?
+  // pause menu buttons
+  val continueButton = new Button("Continue Game",(6,3 ),(16,3),this)
+  val progMapButton  = new Button("Back to Menu", (6,7 ),(16,3),this)
+  val helpButton2    = new Button("Help",         (6,11),(16,3),this)
+  
   def drawPauseMenu() = {
-    ???
+    continueButton.draw()
+    progMapButton.draw()
+    helpButton2.draw()
   }
   
   def clickingPauseMenu() = {
-    ???
+    if (continueButton.mouseOn)
+      togglePause()
+    progMapButton.clicking(Progress)
+    helpButton2.clicking(Help)
   }
   
   
 }
 
 
-class PauseMenu(g: Game, p: Progress) extends IntroMenu(g,p) {
-  override def clickingStuff() = {
-    ???
-  }
-  override def drawStuff() = {
-    ???
-  }
-  
-}
-
-/**A Button class to simplify the menu.
+/**A Button class to simplify the menu. Only used in IntroMenu class.
  * Parameters pos and size and given in multipliers of sqSizes. */
 class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu) 
   extends Helper(i.g) {
@@ -267,7 +268,7 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
     g.text(text,pos._1*sqSize + (size._1*sqSize/6),pos._2*sqSize + (size._2*sqSize*3/5))
   }
   
-  /** The "if (mouseOn)" section of the draw() method for saving lines. */
+  /** The "if (mouseOn)" section of the draw() method for the sake of saving lines. */
   private def mouseOnDraw() = {
     g.noStroke()
     g.fill(0,0,100,100)

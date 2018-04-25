@@ -3,7 +3,7 @@ package map
 
 import objects.Defence
 
-class Tower(x: Int, y: Int) extends Square {
+case class Tower(x: Int, y: Int) extends Square {
   val i = 2
   var mouse = false
   val sqSize = 40 // TODO: how to get a reference to helper here?
