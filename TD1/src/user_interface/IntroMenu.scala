@@ -126,13 +126,27 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     saves.foreach(_.draw())
   }
   
+  def textRectangle(title: String, content: String) = {
+    g.textFont(g.font,34)
+    g.fill(0,0,0,100)
+    g.text(title, 12*sqSize-2, 3*sqSize-2)
+    g.fill(0)
+    g.text(title, 12*sqSize, 3*sqSize)
+    g.textFont(g.font,14)
+    g.text("\n\n\n" + content, 9*sqSize, 3*sqSize)
+  }
+  
   def helpDraw() = {
     g.textFont(g.font,14)
     goBack.draw()
     g.fill(100,100,150,100)
-    g.rect(8*sqSize,sqSize,12*sqSize,18*sqSize)
+    g.rect(7*sqSize,sqSize,14*sqSize,18*sqSize)
     g.textFont(g.font,24)
     
+    textRectangle("    Help", 
+                  "alsodldsgodflolvosdlvosd\n" +
+	                "asdfsfbgbfgbfghfghfghfgj\n" + 
+	                "csdvbdffgjdhfgsdfasfsdg")
     // TODO: Text
   }
   
@@ -140,8 +154,19 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     g.textFont(g.font,14)
     goBack.draw()
     g.fill(100,100,150,100)
-    g.rect(8*sqSize,sqSize,12*sqSize,18*sqSize)
+    g.rect(7*sqSize,sqSize,14*sqSize,18*sqSize)
     g.textFont(g.font,24)
+    
+    textRectangle("  Credits", 
+                  "\nAuthor Valtteri Kortteisto.\n\n\n" +
+	                "Graphical Library:  Processing 3.0\n" + 
+	                "Refence:  processing.org/reference/\n\n" +
+	                "Arena Sprites: \nTop-Down Tower Defence Assets by Kenney\n" + 
+	                "(opengameart.org/content/tower-defense-300-tilessprites)\n\n" +
+	                "Other Sprites: \n???\n\n\n" + 
+	                "Sound Library:  Minim Sound Library for Processing\n\n" + 
+	                "Individual Sounds From:  freesound.org\n\n\n" + 
+	                "Hospitality: Otto Laitinen\n\n")
     
     // TODO: Text
   }
