@@ -12,10 +12,6 @@ import general.Helper
  *  In this abstract class only the speciality() method is undefined.
  *  @param tower The tower to which this defence belongs. 
  *  A defence doesnt exist without being in a tower.
- *  @param range The range of the defence in pixels
- *  @param damage The damage per hit caused to hit mob
- *  @param speed The speed at which defence fires
- *  @param cost The cost this defence has in the store
  *  @param i The index of this defence's sprite
  *  @param g The game of which it is a part */
 abstract class Defence(val tower: Tower, val range: Int, val damage: Double, 
@@ -212,6 +208,9 @@ class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game, val
 /**Defence which 'chain targets' another mob as well, and damages that by 50% of the normal damage. */
 class FireDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game) 
   extends Defence(tower,range,damage,speed,g) {
+  //////////////////////////////////
+  // THIS IS NOT USED IN THE GAME //
+  //////////////////////////////////
   
   val spriteI: Int = 2
   val soundI: Int  = 0

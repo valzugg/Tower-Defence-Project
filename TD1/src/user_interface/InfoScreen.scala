@@ -3,7 +3,7 @@ package user_interface
 
 import general.Helper
 
-class InfoScreen(m: Menu) extends Helper(m.g) {
+class InfoScreen(m: GameMenu) extends Helper(m.g) {
   val pos = (aWidth*sqSize + sqSize/2, 3*sqSize) 
   val sizeX = sqSize * mWidth - sqSize
   val sizeY = sqSize * 7
@@ -56,9 +56,9 @@ class InfoScreen(m: Menu) extends Helper(m.g) {
     }
     m.g.textFont(m.g.font,13)
     m.g.fill(0)
-    m.g.text("\n\n\n\n\n\n\n\n\n\n\nCost: " + amount,shadowX,shadowY)
+    m.g.text("\n\n\n\n\n\n\n\n\n\nCost: " + amount,shadowX,shadowY)
     m.g.fill(c._1,c._2,c._3)
-    m.g.text("\n\n\n\n\n\n\n\n\n\n\nCost: " + amount,textX,textY)
+    m.g.text("\n\n\n\n\n\n\n\n\n\nCost: " + amount,textX,textY)
   }
   
   def doStuff() = {

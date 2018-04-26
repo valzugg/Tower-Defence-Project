@@ -29,6 +29,6 @@ The '.lvl' files follow the following format:
    
 5. After the line "WAVES", (and the line after) come the mob waves in order of occurance.
    The format of the numbers here must be:
-   waveSize_ (space) distance_ (space) speed_ (space)  health_ (space) mobSize_ (space) spriteIndex
+   waveSize_ (space) distance_ (space) speed_ (space)  health_ (space) moneyValue_ (space) mobSize_ (space) spriteIndex
    Only distance, speed and mobSize can be decimals.
-   For example: 5_ 1.8_ 1.5_ 100_ 0.50_ 1
+   For example: 5_ 1.8_ 1.5_ 100_ 2_ 0.50_ 1

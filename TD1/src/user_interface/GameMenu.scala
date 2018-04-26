@@ -9,7 +9,7 @@ import map._
 import objects._
 import general.Helper
 
-class Menu(g: Game) extends Helper(g) {
+class GameMenu(g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val store = new Store(this)
   
@@ -21,6 +21,9 @@ class Menu(g: Game) extends Helper(g) {
   var storeMenu: StoreMenu = null
   val infoScreen = new InfoScreen(this)
   
+  /** All the methods called doStuff() are called in the Game's main draw loop.
+   *  They use processing specific methods to draw what is needed every frame, 
+   *  and call other methods to change or check things every frame. */
   def doStuff() = {
     game.noStroke()
     
@@ -176,7 +179,12 @@ class Menu(g: Game) extends Helper(g) {
   /////////////////////////////////////////////////////////////////////////////////////////
   
   def mouseSq = {
-    arena.squares(mSqX)(mSqY)
+    if (mSqX >= 0 && mSqX < aWidth && 
+        mSqY >= 0 && mSqY < aHeight)
+      arena.squares(mSqX)(mSqY)
+    else
+      new Obstacle(-1,-1) 
+    // prevents the problems from the player accidentally clicking out of bounds
   }
   
   

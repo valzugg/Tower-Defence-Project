@@ -87,7 +87,7 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   def startDraw() = {
     g.textFont(g.font,34)
     g.fill(0,0,0,100)
-    g.text("Desert Tower Defence",10.toFloat*sqSize-2,2*sqSize-2)
+    g.text("Desert Tower Defence",10.toFloat*sqSize-1,2*sqSize-1)
     g.fill(0)
     g.text("Desert Tower Defence",10.toFloat*sqSize,2*sqSize)
     g.textFont(g.font,24)
@@ -98,11 +98,6 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   }
   
   def progressDraw() = {
-    g.textFont(g.font,34)
-    g.fill(0,0,0,100)
-    g.text("Pick A Level",11.5.toFloat*sqSize-2,2*sqSize-2)
-    g.fill(0)
-    g.text("Pick A Level",11.5.toFloat*sqSize,2*sqSize)
     g.textFont(g.font,14)
     goBack.draw()
     for (i <- 0 until progressMapButtons.size) {
@@ -127,48 +122,55 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   }
   
   def textRectangle(title: String, content: String) = {
+    g.fill(150,150,200,150)
+    g.rect(7*sqSize,sqSize,14*sqSize,18*sqSize)
     g.textFont(g.font,34)
     g.fill(0,0,0,100)
-    g.text(title, 12*sqSize-2, 3*sqSize-2)
+    g.text(title, 12*sqSize-1, (sqSize*7/2)-1)
     g.fill(0)
-    g.text(title, 12*sqSize, 3*sqSize)
+    g.text(title, 12*sqSize, sqSize*7/2)
     g.textFont(g.font,14)
-    g.text("\n\n\n" + content, 9*sqSize, 3*sqSize)
+    g.text("\n\n" + content, 9*sqSize, sqSize*7/2)
   }
   
   def helpDraw() = {
     g.textFont(g.font,14)
     goBack.draw()
-    g.fill(100,100,150,100)
-    g.rect(7*sqSize,sqSize,14*sqSize,18*sqSize)
-    g.textFont(g.font,24)
-    
     textRectangle("    Help", 
-                  "alsodldsgodflolvosdlvosd\n" +
-	                "asdfsfbgbfgbfghfghfghfgj\n" + 
-	                "csdvbdffgjdhfgsdfasfsdg")
-    // TODO: Text
+                  "Start a game by going into the 'progression map' from\n" +
+                  "the main menu, and clicking a level there.\n\n" +
+                  "In this Tower Defence Game, your goal is to prevent\n" +
+	                "the enemies, or 'mobs' from getting across the game's\n" + 
+	                "arena on their path.\n" +
+	                "You do this by eliminating the mobs with various defences, \n" +
+	                "which can be bought on towers. Towers can be bought by clicking\n" +
+	                "on any empty place in the arena that is not the mobs path.\n" +
+	                "Defences damage, range and speed can also be upgraded.\n\n" +
+	                "The gray area on the right can be helpful in telling you about\n" + 
+	                "whatever your cursor is currently on.\n\n" +
+	                "The default save the game loads is the first slot (Save 1).\n\n" +
+	                "Information about the game's level and save file formats\n" + 
+	                "can be found in the game files in \nlvls/readme.txt and saves/readme.txt.\n\n" +
+	                "If any other questions remain or you find a bug, contact:\nvaltteri.kortteisto@gmail.com")
   }
   
   def creditsDraw() = {
     g.textFont(g.font,14)
     goBack.draw()
-    g.fill(100,100,150,100)
-    g.rect(7*sqSize,sqSize,14*sqSize,18*sqSize)
-    g.textFont(g.font,24)
-    
     textRectangle("  Credits", 
-                  "\nAuthor Valtteri Kortteisto.\n\n\n" +
+                  "Author Valtteri Kortteisto.\n\n" +
 	                "Graphical Library:  Processing 3.0\n" + 
-	                "Refence:  processing.org/reference/\n\n" +
+	                "Refence:  processing.org/reference/\n" +
+	                "Tutorials:  youtube.com/thecodingtrain\n\n" +
 	                "Arena Sprites: \nTop-Down Tower Defence Assets by Kenney\n" + 
 	                "(opengameart.org/content/tower-defense-300-tilessprites)\n\n" +
-	                "Other Sprites: \n???\n\n\n" + 
-	                "Sound Library:  Minim Sound Library for Processing\n\n" + 
-	                "Individual Sounds From:  freesound.org\n\n\n" + 
-	                "Hospitality: Otto Laitinen\n\n")
-    
-    // TODO: Text
+	                "Other Sprites: \nrainyislesketch.blogspot.fi/\n" + 
+	                "giphy.com/explore/bug-sticker\n" +
+	                "ianparberry.wordpress.com/2013/02/01/ant-walk-cycles/\n\n" + 
+	                "Sound Library:  Minim Sound Library for Processing\n" +
+	                "Reference: code.compartmental.net/minim/javadoc/ddf/minim\n\n" + 
+	                "Individual Sounds From:  freesound.org\n\n" + 
+	                "Hospitality: Otto Laitinen")
   }
   
   def startClick() = {
@@ -311,11 +313,11 @@ class Button(text: String, pos: (Int,Int), size: (Int,Int), i: IntroMenu)
   private def mouseOnDraw() = {
     g.noStroke()
     g.fill(0,0,100,100)
-    g.rect(pos._1*sqSize - 2,pos._2*sqSize - 2,size._1*sqSize,size._2*sqSize)
-    g.fill(200,200,255,150)
+    g.rect(pos._1*sqSize - 1,pos._2*sqSize - 1,size._1*sqSize,size._2*sqSize)
+    g.fill(250,250,255,150)
     g.rect(pos._1*sqSize,pos._2*sqSize,size._1*sqSize,size._2*sqSize)
     g.fill(0,0,0,100)
-    g.text(text,pos._1*sqSize + (size._1*sqSize/6) - 2,pos._2*sqSize + (size._2*sqSize*3/5) - 2)
+    g.text(text,pos._1*sqSize + (size._1*sqSize/6) - 1,pos._2*sqSize + (size._2*sqSize*3/5) - 1)
   }
   
   def clicking(state: Int): Unit = {

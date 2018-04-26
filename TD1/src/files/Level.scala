@@ -18,7 +18,7 @@ class Level(file: String, g: Game) {
       0
   }
   
-  lazy val waves = Buffer[Wave](new Wave(1,0,0,0,0,0,this,g))
+  lazy val waves = Buffer[Wave](new Wave(1,0,0,0,0,0,0,this,g))
   private var waveIndex = 0
   def currentWave = this.waves(waveIndex)
   def isComplete = waves.forall(_.isComplete)
@@ -85,8 +85,7 @@ class Level(file: String, g: Game) {
     // create mob waves
     while( line != null && line != "//") { 
       val l = line.split("_").map(_.trim)
-      waves += new Wave(l(0).toInt,l(1).toFloat,l(2).toFloat,l(3).toInt,
-                        l(4).toFloat,l(5).toInt,this,g)
+      waves += new Wave(l(0).toInt,l(1).toFloat,l(2).toFloat,l(3).toInt,l(4).toInt,l(5).toFloat,l(6).toInt,this,g)
       line = lineReader.readLine()
     }
     

@@ -12,11 +12,10 @@ import scala.math.abs
 /** Represents an enemy in a tower defence game 
  *  
  */
-class Mob(w: Wave ,var speed: Float, hitpoints: Int, g: Game, 
+class Mob(w: Wave ,var speed: Float, hitpoints: Int,  val moneyValue: Int, g: Game, 
           val i: Int, size: Float = 0.25.toFloat, lvl: Level) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   val hp = new HealthBar(this,hitpoints)
-  val moneyValue = ((hitpoints/80)*speed).toInt
   val originalSpeed = speed
   val hitboxSize = (size * 40).toInt
   

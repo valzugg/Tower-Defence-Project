@@ -116,7 +116,10 @@ class StoreMenu(val t: Tower, s: Store) extends Helper(s.g) {
     
     if (mouseOn) {
       s.g.noStroke
-      s.g.fill(150,150,150)
+      if (s.g.player.canAfford(currentCells(mouseIndex)._5))
+        s.g.fill(100,200,100)
+      else
+        s.g.fill(200,100,100)
       s.g.rect(pos._1 + 1,pos._2 + mouseIndex*sqSize + 1,sqSize - 1,sqSize - 1)
     }
     

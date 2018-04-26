@@ -6,7 +6,8 @@ import objects._
 import general.Helper
 import processing.core.PImage
 
-class Store(m: Menu) extends Helper(m.g) {
+/** */
+class Store(m: GameMenu) extends Helper(m.g) {
   val towerCost = 5
   val upgradeCost = 5
   
@@ -18,7 +19,7 @@ class Store(m: Menu) extends Helper(m.g) {
   val machinePrice  = 10
   val iceDefTitle   = "Ice Defence"
   val iceDefDesc    = "Slows the mobs\nwithin range.\nDoes no damage."
-  val iceDefPrice   = 10
+  val iceDefPrice   = 15
   
   def getDefence(t: Tower, i: Int) = {
     i match {
@@ -60,7 +61,7 @@ class Store(m: Menu) extends Helper(m.g) {
   
   //the initial stats    r   d  s
   val crossbowStats   = (110,50,5)
-  val machineStats    = (90, 50,12)
+  val machineStats    = (90, 30,12)
   val iceDefStats     = (150,0, 0)
   
   /**@param i symbol of the thing that is upgraded */
@@ -74,12 +75,15 @@ class Store(m: Menu) extends Helper(m.g) {
   }
   
   // store items
+  /** Creates a new defence with the given stats (s). */ 
   def crossbowDef(t: Tower, s: (Int,Int,Int)) = 
     new BasicDefence(t,s._1,s._2,s._3,m.g)
   def machineDef(t: Tower, s: (Int,Int,Int))  = 
     new GunDefence(t,s._1,s._2,s._3,m.g)
   def iceDef(t: Tower, s: (Int,Int,Int))      = 
     new IceDefence  (t,s._1,s._2,s._3,m.g,0.5.toFloat)
+  
+  // not implemented
   def fireDef(t: Tower, s: (Int,Int,Int))     = 
     new FireDefence (t,s._1,s._2,s._3,m.g)
   

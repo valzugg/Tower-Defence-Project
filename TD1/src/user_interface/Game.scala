@@ -55,7 +55,7 @@ class Game extends PApplet {
   }
   
   def player = currentLvl.player
-  val menu   = new Menu(this)
+  val menu   = new GameMenu(this)
   
   // ARENA AND SIZE /////////////////////////////////
   def arena = currentLvl.arena
@@ -77,7 +77,7 @@ class Game extends PApplet {
   val muteButton = Array.ofDim[PImage](2)
   val obstacles = Array.ofDim[PImage](8)
   val defences  = Array.ofDim[PImage](4)
-  val squares   = Array.ofDim[PImage](6)
+  val squares   = Array.ofDim[PImage](3)
   val menuS     = Array.ofDim[PImage](2)
   val mobSprites = Array.ofDim[PImage](3,4)
   val antSprites = Array.ofDim[PImage](4)
@@ -115,6 +115,8 @@ class Game extends PApplet {
   var sounds: Sounds = null
   var font: PFont = null
   
+  /** Inside this method everything is loaded once so that 
+   *  loading won't get in the way in the draw loop. */
   override def setup() {
     
     frameRate(60)
@@ -124,10 +126,7 @@ class Game extends PApplet {
     muteButton(1) = loadImage("imgs/muted.png")
     squares(0) = loadImage("imgs/arena/arena0.png")
     squares(1) = loadImage("imgs/arena/arena1.png")
-    squares(2) = loadImage("imgs/arena/arena2.png")
-    squares(3) = loadImage("imgs/arena/arena3.png")
-    squares(4) = loadImage("imgs/tower.png")
-    squares(5) = loadImage("imgs/towerNo.png") 
+    squares(2) = loadImage("imgs/tower.png")
     
     (0 to 3).foreach(s => antSprites(s)    = loadImage("imgs/ant/" + s + ".png"))
     (0 to 3).foreach(s => beetleSprites(s) = loadImage("imgs/beetle/" + s + ".png"))
@@ -137,7 +136,7 @@ class Game extends PApplet {
     (0 until defences.length).foreach(d => defences(d) = loadImage("imgs/def/" + d + ".png"))
     menuS(0)  = loadImage("imgs/menu.png")
     
-    font = createFont("Arial Bold",16,true)
+    font = createFont("Lora Bold",16,true)
     
     sounds = new Sounds(this)
     sounds.loop(sounds.bg)
@@ -148,31 +147,50 @@ class Game extends PApplet {
     size(aWidth * sqSize + sqSize * mWidth, aHeight * sqSize)
   }
   
+  /** Determines whether or not the game is over */
   def gameOver = player.hp <= 0
   
+  /** Highlights the edges of the square under the cursor. */
   def highlight() = {
     if (!menu.onMenu) {
       image(highlig(0),(mSqX)*sqSize, (mSqY)*sqSize, sqSize, sqSize)
     }
   }
   
+  /** Used to draw the 'Game over' and 'Level complete' */
+  def bigText(t: String) = {
+    noStroke()
+    fill(100,100,150,100)
+    rect(6*sqSize,5*sqSize,12*sqSize,8*sqSize)
+    
+    fill(0,0,0,100)
+    textFont(font,34)
+    text(t, 9*sqSize-1, 8*sqSize-1)
+    textFont(font,18)
+    text("\n\n\n\n(Click anywhere to continue)", 9*sqSize-1, 8*sqSize-1)
+    fill(0)
+    textFont(font,34)
+    text(t, 9*sqSize, 8*sqSize)
+    textFont(font,18)
+    text("\n\n\n\n(Click anywhere to continue)", 9*sqSize, 8*sqSize)
+  }
+  
+  /** The drawing loop of the program. This is executed every frame. */
   override def draw() = {
     
-      // Main menu loop
-    if (introMenu.isOn) {
+    if (introMenu.isOn) { // Main menu loop
       menuLvl.arena.drawArena(menuLvl.width,menuLvl.height)
       introMenu.drawStuff()
       
-      // Main game loop
-    } else if (!gameOver && !currentLvl.isComplete) {
+    } else if (!gameOver && !currentLvl.isComplete) {   // Main game loop
       
       // draws the tiles of the arena
       arena.drawArena(aWidth,aHeight)
     
       highlight()
       
-      // handles the defences
-      arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
+      // handles the defences and projectiles
+      arena.towersDoStuff()
       
       // handles the mobs
       level.currentWave.doStuff()  
@@ -186,16 +204,15 @@ class Game extends PApplet {
         fr += 1
       }
       
-      // Game over
-    } else if (gameOver && !introMenu.isOn) {
+    } else if (gameOver && !introMenu.isOn) {           // in case the Game is over
       arena.drawArena(aWidth,aHeight)
       level.currentWave.doStuff()  
       menu.doStuff()
       if (isFast) toggleRunSpeed()
       bigText("   Game Over")
-    } else if (currentLvl.isComplete && !introMenu.isOn) {
+    } else if (currentLvl.isComplete && !introMenu.isOn) { // in case the Game is won
       arena.drawArena(aWidth,aHeight)
-      arena.towers.flatten.foreach(t => if (t != null) t.doStuff())
+      arena.towersDoStuff()
       menu.doStuff()
       if (isFast) toggleRunSpeed()
       bigText("Level Complete" + "\n    Score: " + score)
@@ -208,40 +225,22 @@ class Game extends PApplet {
     
   }
   
-  def bigText(t: String) = {
-    noStroke()
-    fill(100,100,150,100)
-    rect(6*sqSize,5*sqSize,12*sqSize,8*sqSize)
-    
-    fill(0,0,0,100)
-    textFont(font,34)
-    text(t, 9*sqSize-2, 8*sqSize-2)
-    textFont(font,18)
-    text("\n\n\n\n(Click anywhere to continue)", 9*sqSize-2, 8*sqSize-2)
-    fill(0)
-    textFont(font,34)
-    text(t, 9*sqSize, 8*sqSize)
-    textFont(font,18)
-    text("\n\n\n\n(Click anywhere to continue)", 9*sqSize, 8*sqSize)
-  }
-  
-  
-  
+  /** Determines what happens when the mouse is pressed. */
   override def mousePressed() {
-    if (introMenu.isOn) {
+    if (introMenu.isOn) {                             // main menu
       introMenu.clickingStuff()
-    } else if (isPaused) {
+    } else if (isPaused) {                            // pause menu
       introMenu.clickingPauseMenu()
-    } else if (!currentLvl.isComplete && !gameOver) {
+    } else if (!currentLvl.isComplete && !gameOver) { // game
       menu.clickingStuff()
-    } else if (currentLvl.isComplete) {
+    } else if (currentLvl.isComplete) {               // level complete
       if (levelIndex == progress.available && !progress.hasFinished) 
         progress.unlock()
       progress.setHighscore(levelIndex,score)
       progress.save(introMenu.currentSave)
       introMenu.toggle()
       introMenu.changeState(introMenu.Progress)
-    } else if (gameOver) {
+    } else if (gameOver) {                            // game over
       level.reset()
       introMenu.toggle()
       introMenu.changeState(introMenu.Progress)
@@ -249,7 +248,7 @@ class Game extends PApplet {
     
   }
   
-  
+  /** Determines what happens when a key is pressed. */
   override def keyPressed() {
     if (key == menu.enter && !introMenu.isOn) 
       toggleRunSpeed()

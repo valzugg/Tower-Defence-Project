@@ -15,8 +15,8 @@ import general.Helper
  *  @param spriteArr
  *  @param g The game in which this wave belongs (Game)
  */
-class Wave(val size: Int, val distance: Float, val speed: Double, 
-           hp: Int, mobSize: Double, val spritesIndex: Int, lvl: Level, 
+class Wave(val size: Int, val distance: Float, val speed: Double,
+           mobValue: Int, hp: Int, mobSize: Double, val spritesIndex: Int, lvl: Level, 
            g: Game) extends Helper(g) {
   val game = g.asInstanceOf[PApplet]
   
@@ -26,7 +26,7 @@ class Wave(val size: Int, val distance: Float, val speed: Double,
   
   def resetMobs() = {
     for (m <- 0 until size)
-      mobs(m) = new Mob(this,speed.toFloat,hp,g,m,mobSize.toFloat,lvl)
+      mobs(m) = new Mob(this,speed.toFloat,mobValue,hp,g,m,mobSize.toFloat,lvl)
   }
   
   resetMobs()
