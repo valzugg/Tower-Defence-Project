@@ -18,7 +18,7 @@ class Projectile(d: Defence, speed: Int, dam: Double) {
   var size = 7.0.toFloat
   
   // the time it takes for a new projectile to be made
-  val lifetime = 300/speed.toFloat // limits the maximum range :(
+  val lifetime = 250/speed.toFloat // limits the maximum range :(
   def died = age > lifetime/d.g.runSpeed
   
   // location of the projectile

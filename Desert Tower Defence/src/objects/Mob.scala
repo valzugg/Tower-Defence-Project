@@ -15,7 +15,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int,  val moneyValue: Int, g: Ga
           val i: Int, size: Float = 0.25.toFloat, lvl: Level) extends Helper(g) {
   val hp = new HealthBar(this,hitpoints)
   val originalSpeed = speed
-  val hitboxSize = (size * 40).toInt
+  val hitboxSize = scala.math.max((size * 40).toInt,20) // the hitbox must be at the least 20x20 pixels
   
   private var dist = -sqSize.toFloat // keeps track of how far the mob is along the path
   def distance = abs(dist) // the distance the mob has moved (starts when the mob first comes into view)

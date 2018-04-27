@@ -67,13 +67,13 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
   val allMapTexts  = Vector("Entering the Desert",
                             "Zigzag",
                             "Going in Circles",
-                            "When you least expect it",
+                            "Many Mountains",
                             "They won't stop",
                             "Happy Times",
                             "Broke.",
-                            "Happy Times",
-                            "Happy Times",
-                            "Happy Times",
+                            "Red Ones",
+                            "Stuff 1.0",
+                            "Stuff 2.0",
                             "Strange Sightings",
                             "???")
   /**map text with its highscore if there is one*/          

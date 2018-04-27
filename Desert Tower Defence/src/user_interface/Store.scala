@@ -61,8 +61,8 @@ class Store(m: GameMenu) extends Helper(m.g) {
   }
   
   //the initial stats    r   d  s
-  val crossbowStats   = (110,50,5)
-  val machineStats    = (90, 30,12)
+  val crossbowStats   = (110,40,7)
+  val machineStats    = (100,30,16)
   val iceDefStats     = (150,0, 0)
   
   /**@param i symbol of the thing that is upgraded */
