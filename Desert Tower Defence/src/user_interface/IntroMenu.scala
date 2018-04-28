@@ -162,8 +162,9 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
     goBack.draw()
     textRectangle("  Credits", 
                   "Author Valtteri Kortteisto.\n\n" +
+                  "Programming language:  Scala\nIDE:  Eclipse\n" +
 	                "Graphical Library:  Processing 3.0\n" + 
-	                "Refence:  processing.org/reference/\n" +
+	                "Reference:  processing.org/reference/\n" +
 	                "Tutorials:  youtube.com/thecodingtrain\n\n" +
 	                "Arena Sprites: \nTop-Down Tower Defence Assets by Kenney\n" + 
 	                "(opengameart.org/content/tower-defense-300-tilessprites)\n\n" +
@@ -171,7 +172,7 @@ class IntroMenu(g: Game, p: Progress) extends Helper(g) {
 	                "giphy.com/explore/bug-sticker\n" +
 	                "ianparberry.wordpress.com/2013/02/01/ant-walk-cycles/\n\n" + 
 	                "Sound Library:  Minim Sound Library for Processing\n" +
-	                "Reference: code.compartmental.net/minim/javadoc/ddf/minim\n\n" + 
+	                "Reference: code.compartmental.net/minim/javadoc/ddf/minim\n" + 
 	                "Individual Sounds From:  freesound.org\n\n" + 
 	                "Hospitality: Otto Laitinen")
   }

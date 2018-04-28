@@ -3,7 +3,6 @@ package objects
 
 import user_interface.Game
 import files.Level
-import processing.core.PApplet
 import processing.core.PImage
 import general.Helper
 
@@ -20,14 +19,13 @@ import general.Helper
 class Wave(val size: Int, val distance: Float, val speed: Double,
            mobValue: Int, hp: Int, mobSize: Double, val spritesIndex: Int, lvl: Level, 
            g: Game) extends Helper(g) {
-  val game = g.asInstanceOf[PApplet]
   
   // this is set in the doStuff() method
   // has to be null to begin with, because levels 
   // are created before the images are loaded in the Game
   private var sprite: PImage = null 
   
-  val mobs = Array.ofDim[Mob](size)
+  val mobs = Array.ofDim[Mob](size) // the content of this wave
   
   /** Resets the mobs for a new game. */
   def resetMobs() = {

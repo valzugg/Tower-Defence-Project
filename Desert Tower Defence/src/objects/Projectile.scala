@@ -3,14 +3,14 @@ package objects
 import scala.math._
 import map.Square
 import general.Helper
+import user_interface.Game
 
 /** Represents a single projectile shot by a defence.
  *  A projectile is only a single projectile, a new one is
  *  created each time a defence shoots again. In order for
  *  the defences to shoot at a constant pace, the projectile
  *  has a lifetime, and when it is exceeded, a new one is created.*/
-class Projectile(d: Defence, speed: Int, dam: Double) {
-  val g = d.game
+class Projectile(d: Defence, speed: Int, dam: Double, g: Game) {
   val sqSize = d.sqSize
   private var hasHit = false
   private var age = 0

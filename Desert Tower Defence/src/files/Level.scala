@@ -2,7 +2,6 @@
 package files
 
 import java.io._
-import processing.core.PApplet
 import map._
 import user_interface._
 import objects.Wave
@@ -102,9 +101,9 @@ class Level(file: String, g: Game) {
       r.printStackTrace()
     }
     case e: Exception => {
-      println( " ======== File doesnt follow expected format ======== " )
+      println( " ======== Level file doesnt follow expected format ======== " )
       e.printStackTrace()
-      g.asInstanceOf[PApplet].exit()
+      g.exit()
     }
   }
   

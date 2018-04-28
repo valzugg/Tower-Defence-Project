@@ -6,7 +6,7 @@ import objects._
 import general.Helper
 import processing.core.PImage
 
-/** 
+/** Represents the game's store. Upgrading and buying things happens through these methods.
  *  Extends Helper to get some constants and generally useful methods.*/
 class Store(m: GameMenu) extends Helper(m.g) {
   val towerCost = 5

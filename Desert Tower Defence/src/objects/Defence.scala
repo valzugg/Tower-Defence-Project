@@ -4,7 +4,6 @@ package objects
 import user_interface.Game
 import map._
 import objects._
-import processing.core.PApplet
 import scala.math._
 import general.Helper
 
@@ -17,7 +16,6 @@ import general.Helper
  *  @param g The game of which it is a part */
 abstract class Defence(val tower: Tower, val range: Int, val damage: Double, 
                        val speed: Int, g: Game) extends Helper(g) {
-  val game = g.asInstanceOf[PApplet]
   val location = tower.pos
   
   // the undefined details
@@ -87,7 +85,7 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
       if (bullet == null || bullet.died) chooseTarget()
       if ((bullet == null || bullet.died)) {
         if (withinRange(targetPos)) {
-          bullet = new Projectile(this, speed, damage)
+          bullet = new Projectile(this, speed, damage, g)
           g.sounds.play(g.sounds.arr(soundI))
         }
       } else if (bullet != null && withinRange(targetPos)) {
@@ -105,14 +103,14 @@ abstract class Defence(val tower: Tower, val range: Int, val damage: Double,
    * The speciality() method is also called here. 
    * Note that it is called before shoot().*/
   def doStuff() = {
-    game.image(g.defences(spriteI), location._1 - sqSize/2, 
+    g.image(g.defences(spriteI), location._1 - sqSize/2, 
                location._2 - sqSize/2, sqSize, sqSize)
     // if the mouse is on the store menu, range should not be drawn
     if (isChosen || (!g.menu.storeMenu.mouseOn && 
         (mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location)) {
-      game.noFill()
-      game.stroke(0,0,0,100)
-      game.ellipse(location._1, location._2, range*2, range*2)
+      g.noFill()
+      g.stroke(0,0,0,100)
+      g.ellipse(location._1, location._2, range*2, range*2)
     }
     if (t != null) {
       speciality()
@@ -137,21 +135,21 @@ class BasicDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game)
   
   override def doStuff() = {
     if (bullet != null) {
-      game.pushMatrix()
-      game.translate(location._1,location._2)
-      game.rotate(bullet.angle)
-      game.image(g.defences(spriteI),-sqSize/2,-sqSize/2, sqSize, sqSize)
-      game.popMatrix()
+      g.pushMatrix()
+      g.translate(location._1,location._2)
+      g.rotate(bullet.angle)
+      g.image(g.defences(spriteI),-sqSize/2,-sqSize/2, sqSize, sqSize)
+      g.popMatrix()
     } else {
-      game.image(g.defences(spriteI), location._1 - sqSize/2, 
+      g.image(g.defences(spriteI), location._1 - sqSize/2, 
                  location._2 - sqSize/2, sqSize, sqSize)
     }
     // if the mouse is on the store menu, range should not be drawn
     if (isChosen || (!g.menu.storeMenu.mouseOn && 
         (mSqX*sqSize + sqSize/2,mSqY*sqSize + sqSize/2) == this.location)) {
-      game.noFill()
-      game.stroke(0,0,0,100)
-      game.ellipse(location._1, location._2, range*2, range*2)
+      g.noFill()
+      g.stroke(0,0,0,100)
+      g.ellipse(location._1, location._2, range*2, range*2)
     }
     if (t != null) shoot()
   }
@@ -192,9 +190,9 @@ class IceDefence(tower: Tower, range: Int, damage: Int, speed: Int, g: Game, val
     if (!mobsInRange.isEmpty) {
       circleSize += 2 * g.runSpeed
       mobsInRange.foreach(_.speed = tSpeed.toFloat * (1 - slowBy))
-      game.noFill()
-      game.stroke(0,0,250,200 - circleSize%range*2)
-      game.ellipse(location._1, location._2, circleSize%range*2, circleSize%range*2)
+      g.noFill()
+      g.stroke(0,0,250,200 - circleSize%range*2)
+      g.ellipse(location._1, location._2, circleSize%range*2, circleSize%range*2)
       // sound
       if (circleSize%range*2 == 0) g.sounds.play(g.sounds.arr(soundI))
     } else {

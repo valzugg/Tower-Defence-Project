@@ -40,7 +40,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int,  val moneyValue: Int, g: Ga
   override def toString() = i.toString
   
   /** Checks if mobs hitpoints are up. */
-  def dead = hp.amount < 1
+  def dead = hp.dead
   
   // assists hp in knowing when to display itself
   var hasBeenDamaged = false
@@ -54,11 +54,6 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int,  val moneyValue: Int, g: Ga
       g.player.getPaid()      
       g.sounds.play(g.sounds.antDead)
     }
-  }
-  
-  //the mob's current square
-  def square = {
-    g.arena(x.toInt/sqSize,y.toInt/sqSize)
   }
   
   /** Moves the mob in the given direction and sets 
@@ -156,8 +151,9 @@ class HealthBar(val m: Mob, fullAmount: Double) {
   private val xSize = 35
   private val ySize = 3
   
-  var amount = fullAmount
+  private var amount = fullAmount
   
+  def dead = amount < 1
   def damage(by: Double) = { amount -= by }
   
   /** Drawing of the health bar when called in Game's draw().

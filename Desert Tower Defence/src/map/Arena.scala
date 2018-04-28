@@ -1,7 +1,6 @@
 /**@author Valtteri Kortteisto */
 package map
 
-import processing.core.PApplet
 import user_interface._
 import files.Level
 import scala.collection.mutable.Queue
@@ -12,7 +11,6 @@ import general.Helper
  *  An arena also has a the directions for the path so the mobs can navigate it.
  *  Extends Helper to get some constants and generally useful methods.*/
 class Arena(g: Game, l: Level) extends Helper(g) {
-  val game = g.asInstanceOf[PApplet]
   lazy val dims = (l.width,l.height)
   
   // in order to read the level row by row, it has to be transposed afterwards

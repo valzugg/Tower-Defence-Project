@@ -65,7 +65,7 @@ class Game extends PApplet {
    * resets it, changes the current level 
    * variable and toggles it to show. */
   def startLevel(l: Level) = {
-    if (l.isComplete) l.reset()
+    l.reset()
     currentLvl = l
     introMenu.toggle()
   }

@@ -5,22 +5,20 @@ package map
  *  Obstacle or Tower.*/
 trait Square {
   val i: Int //the index in level creation
-  def doStuff(): Unit
-  val basic: Boolean
+  val basic: Boolean  // tells if the squares type is of empty or path
   override def toString() = i.toString
 }
 
 
 case class Empty(x: Int, y: Int) extends Square { 
-  val i = 0 ; def doStuff() = {} 
+  val i = 0 
   val basic = true
 }
 case class Path(x: Int, y: Int)  extends Square { 
-  val i = 1 ; def doStuff() = {} 
+  val i = 1
   val basic = true
 }
 case class Obstacle(x: Int, y: Int) extends Square { 
-  def doStuff() = {} 
   val basic = false
   // the obstacle sprite is chosen randomly
   val i = scala.util.Random.nextInt(4)
