@@ -219,7 +219,7 @@ class Game extends PApplet {
       if (levelIndex == progress.available && !progress.hasFinished) 
         progress.unlock()
       progress.setHighscore(levelIndex,score)
-      progress.save(introMenu.currentSave)
+      progress.save()
       introMenu.toggle()
       introMenu.changeState(introMenu.Progress)
     } else if (gameOver) {                            // game over

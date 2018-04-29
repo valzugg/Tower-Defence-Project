@@ -38,7 +38,8 @@ class Projectile(d: Defence, speed: Int, dam: Double, g: Game) {
   def xtx = tx - x
   def yty = ty - y
   
-  // the angle at which the projectile is shot
+  // the angle at which the projectile is shot, 
+  // used by the defence to know where to turn
   lazy val angle = {
     if (tx < x)
       atan(yty/xtx).toFloat + scala.math.Pi.toFloat

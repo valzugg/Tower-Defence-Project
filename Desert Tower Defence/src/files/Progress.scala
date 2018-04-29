@@ -31,9 +31,9 @@ class Progress(i: Int = 0) {
       highscores(i) = score
   }
   
-  /** Saving progress onto the given file number. */
-  def save(n: Int) = {
-    val pw = new PrintWriter(new File("saves/" + n + ".prog"))
+  /** Saves progress onto the current save file number. */
+  def save() = {
+    val pw = new PrintWriter(new File("saves/" + saveNumber + ".prog"))
     pw.write(nowUnlocked.toString)
     for (i <- 0 until available) pw.write("\n" + highscore(i))
     pw.close()
