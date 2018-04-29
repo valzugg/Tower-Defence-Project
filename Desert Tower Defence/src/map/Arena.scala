@@ -70,7 +70,7 @@ class Arena(g: Game, l: Level) extends Helper(g) {
   }
   
   /** Adds a given row of squares in the Array.
-   *  Also sets the start and end row correctly for the mobs.*/
+   *  Also sets the start row correctly for the mobs.*/
   def setRow(row: Int, line: Array[String]) = {
     if (line(0) == "1") { start = row } //start row set
     squaresTransposed(row) = line.zipWithIndex.map(x => makeSquare(x._1,x._2,row))

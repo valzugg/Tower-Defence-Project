@@ -41,13 +41,16 @@ class Projectile(d: Defence, speed: Int, dam: Double, g: Game) {
   // the angle at which the projectile is shot
   lazy val angle = {
     if (tx < x)
-      atan((ty - y)/(tx - x)).toFloat + scala.math.Pi.toFloat
+      atan(yty/xtx).toFloat + scala.math.Pi.toFloat
     else
-      atan((ty - y)/(tx - x)).toFloat
+      atan(yty/xtx).toFloat
   }
   
   /** direction in which the projectile should go as a vector with length 1.*/
-  def dir = (xtx/hypot(xtx,yty).toFloat, yty/hypot(xtx,yty).toFloat)
+  def dir = {
+    val hyp = hypot(xtx,yty).toFloat
+    (xtx/hyp,yty/hyp)
+  }
   
   /** Damages the target of the projectile and 
    *  returns a boolean indicating if it hit. */ 
