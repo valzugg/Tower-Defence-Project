@@ -17,7 +17,7 @@ class Store(m: GameMenu) extends Helper(m.g) {
   val crossbowPrice = 5
   val machineTitle  = "Machinegun\nDefence"
   val machineDesc   = "A more effective\nBasic Defence."
-  val machinePrice  = 10
+  val machinePrice  = 12
   val iceDefTitle   = "Ice Defence"
   val iceDefDesc    = "Slows the mobs\nwithin range.\nDoes no damage."
   val iceDefPrice   = 15

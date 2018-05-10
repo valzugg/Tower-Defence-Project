@@ -73,7 +73,7 @@ class Mob(w: Wave ,var speed: Float, hitpoints: Int,  val moneyValue: Int, g: Ga
     this.x = -sqSize
     this.y = sqSize*lvl.pathStart
     // damage the player
-    g.player.hp -= moneyValue * 5
+    g.player.hp -= moneyValue * 10
   }
   
   // assist the mob in moving
