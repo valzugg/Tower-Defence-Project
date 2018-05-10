@@ -1,4 +1,6 @@
-﻿Welcome to the Desert Tower Defence Game 
+# Tower Defence Game
+
+Welcome to the Desert Tower Defence Game 
 by Valtteri Kortteisto.
 
 The program is executed via Game.scala in the folder 
