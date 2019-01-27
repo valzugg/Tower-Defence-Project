@@ -1,17 +1,13 @@
 # Tower Defence Game
+A Project for Programming Studio 2 Course of Aalto University.  
+Implemented with [**Scala**](https://www.scala-lang.org/) and the [**Processing graphical library**](https://processing.org/).
 
-![alt text](https://github.com/valzugg/Tower-Defence-Project/tdthing.gif)
+![Game GIF](https://github.com/valzugg/Tower-Defence-Project/blob/master/tdthing.gif)
 
-Welcome to the Desert Tower Defence Game 
-by Valtteri Kortteisto.
+The program can be executed via Desert%20Tower%20Defence/src/user_interface/Game.scala.  
+An extensive documentation in Finnish can be found [**here**](https://github.com/valzugg/Tower-Defence-Project/blob/master/OS2%20Projekti%20Dokumentti.pdf)
 
-The program is executed via Game.scala in the folder 
-Deser Tower Defence/src/user_interface.
-
-There is a help function in game if you
-are looking for that.
-
-Known bugs in the game:
+## Known bugs in the game
 - the range is limited by the  projectile's 'age',
   if the range exceeds something around 320, the projectiles just dissappear
 - the fastforwarding function sometimes work to the players disadvantage
