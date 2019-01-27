@@ -1,5 +1,7 @@
 # Tower Defence Game
 
+![alt text](https://github.com/valzugg/Tower-Defence-Project/tdthing.gif)
+
 Welcome to the Desert Tower Defence Game 
 by Valtteri Kortteisto.
 
