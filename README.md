@@ -1,4 +1,4 @@
-# Tower Defence Game
+# Tower Defense Game
 A solo project for Ohjelmointistudio 2 Course in spring 2018. Graded 5/5.  
 
 ![Game GIF](https://github.com/valzugg/Tower-Defence-Project/blob/master/tdthing.gif)
